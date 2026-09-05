@@ -1,19 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/casos")({
   head: () => ({
     meta: [
-      { title: "Inicio" },
+      { title: "Casos" },
       { name: "description", content: "" },
-      { property: "og:title", content: "Inicio" },
+      { property: "og:title", content: "Casos" },
       { property: "og:description", content: "" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: Index,
+  component: Casos,
 });
 
-function Index() {
+function Casos() {
   return <main />;
 }
