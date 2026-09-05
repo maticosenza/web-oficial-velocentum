@@ -1,0 +1,58 @@
+[
+  {
+    "archivo": "barras.png",
+    "ancho": 1254,
+    "alto": 1254,
+    "modo": "RGBA",
+    "transparencia": true
+  },
+  {
+    "archivo": "conexion.png",
+    "ancho": 1254,
+    "alto": 1254,
+    "modo": "RGBA",
+    "transparencia": true
+  },
+  {
+    "archivo": "foco.png",
+    "ancho": 1254,
+    "alto": 1254,
+    "modo": "RGBA",
+    "transparencia": true
+  },
+  {
+    "archivo": "rayo.png",
+    "ancho": 1254,
+    "alto": 1254,
+    "modo": "RGBA",
+    "transparencia": true
+  },
+  {
+    "archivo": "velocentum-isotipo-blanco.png",
+    "ancho": 1254,
+    "alto": 1254,
+    "modo": "RGB",
+    "transparencia": false
+  },
+  {
+    "archivo": "velocentum-isotipo-negro.png",
+    "ancho": 1254,
+    "alto": 1254,
+    "modo": "RGBA",
+    "transparencia": true
+  },
+  {
+    "archivo": "velocentum-logotipo-blanco.png",
+    "ancho": 2119,
+    "alto": 742,
+    "modo": "RGB",
+    "transparencia": false
+  },
+  {
+    "archivo": "velocentum-logotipo-negro.png",
+    "ancho": 2117,
+    "alto": 743,
+    "modo": "RGB",
+    "transparencia": false
+  }
+]
