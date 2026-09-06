@@ -38,6 +38,7 @@
 
 import type { CSSProperties } from "react";
 
+import { MedioDeCaso } from "../componentes/MedioDeCaso";
 import { ScrollMedia } from "../componentes/ScrollMedia";
 import { CASOS, LOGOS, type Caso } from "../data/casos";
 
@@ -83,8 +84,8 @@ export function CAS2Lista() {
       </h2>
 
       <p className="etiqueta etiqueta--apagada cas2__pendiente contenido">
-        Pendiente · los logos y las imágenes no existen todavía, las ocho frases están sin aprobar y
-        el uso autorizado de cada cliente está sin confirmar.
+        Pendiente · las ocho frases están sin aprobar y el uso autorizado de cada cliente está sin
+        confirmar.
       </p>
 
       <div className="cas2__lista">
@@ -106,13 +107,10 @@ export function CAS2Lista() {
                 className="cas-caso__cuerpo"
                 izquierda={<Identificacion caso={caso} indice={i} />}
                 medio={
-                  /* PENDIENTE: las imágenes tampoco existen. El
-                     marco lleva la proporción real para que el
-                     bloque no se mueva cuando entren. */
-                  <div
+                  <MedioDeCaso
                     className="cas-caso__medio"
-                    role="img"
-                    aria-label={`Imagen pendiente del caso ${caso.nombre}.`}
+                    medio={caso.medio}
+                    prioritario={i === 0}
                   />
                 }
                 texto={

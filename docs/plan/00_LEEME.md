@@ -132,9 +132,17 @@ criterio de cada componente, no una fase final.
    `Patagonia Vessels` **no es un caso**: es cliente, y va sólo como logo en B7.
 
    Lo que de esto sigue bloqueando publicar:
-   - **Los logos.** No hay uno solo en `public/assets`.
-   - **Las imágenes de cada caso.** Tampoco existen.
-   - **El uso autorizado por cliente**, sin confirmar.
+   - ~~Los logos~~ **RESUELTOS**: los doce están en `public/assets`, blancos
+     con alfa y con su tamaño normalizado por área de tinta.
+   - ~~Las imágenes de cada caso~~ **RESUELTAS**: las ocho, recortadas a 4:3.
+     Cinco son foto y tres video, con póster real.
+   - **El uso autorizado por cliente**, sin confirmar. ⚠ Y no alcanza con que el
+     cliente autorice, porque hay **marcas de terceros a la vista** que no son
+     suyas: `Comercial Pas` muestra un edificio de **HDI Seguros** con su logo, y
+     `Carácter` un auto de Fórmula 1 con **BWT, Alpine, eni, Pirelli y
+     Microsoft**. `Glam Ragazza` además muestra una **persona identificable**.
+     Matías lo sabe y decidió seguir; queda anotado como riesgo abierto, no como
+     resuelto.
    - **Las ocho frases de qué hicimos**, condensadas de las fichas del sitio
      actual y sin aprobar. La de `Carácter` además hay que **reescribirla**, no
      sólo aprobarla: su ficha describe al cliente y no dice qué hicimos, así que

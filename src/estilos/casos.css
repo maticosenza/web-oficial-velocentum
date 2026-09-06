@@ -209,12 +209,19 @@
 
   /* --- El medio --- */
 
-  /* PENDIENTE: las imágenes no existen. La proporción es la real,
-     así que cuando entren no se mueve nada. El radio de 16px sale
-     de la referencia y es `--r-media`. */
+  /* Los ocho medios están recortados a 4:3, así que la proporción
+     se declara y no se deduce: mientras el archivo carga, el bloque
+     ya ocupa su lugar y nada salta. El radio de 16px sale de la
+     referencia y es `--r-media`.
+
+     El fondo queda debajo por si el archivo tarda o falla: mejor un
+     campo del acento que un hueco blanco. */
   .cas-caso__medio {
-    aspect-ratio: 16 / 10;
+    display: block;
+    aspect-ratio: 4 / 3;
     width: 100%;
+    height: auto;
+    object-fit: cover;
     border-radius: var(--r-media);
     background: color-mix(in srgb, var(--acento) 22%, var(--fondo));
   }
