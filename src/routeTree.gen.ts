@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CasosRouteImport } from './routes/casos'
 import { Route as ContactoRouteImport } from './routes/contacto'
 import { Route as MetodoRouteImport } from './routes/metodo'
+import { Route as PruebasRouteCurtainRouteImport } from './routes/pruebas/route-curtain'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,18 +35,25 @@ const MetodoRoute = MetodoRouteImport.update({
   path: '/metodo',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PruebasRouteCurtainRoute = PruebasRouteCurtainRouteImport.update({
+  id: '/pruebas/route-curtain',
+  path: '/pruebas/route-curtain',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/casos': typeof CasosRoute
   '/contacto': typeof ContactoRoute
   '/metodo': typeof MetodoRoute
+  '/pruebas/route-curtain': typeof PruebasRouteCurtainRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/casos': typeof CasosRoute
   '/contacto': typeof ContactoRoute
   '/metodo': typeof MetodoRoute
+  '/pruebas/route-curtain': typeof PruebasRouteCurtainRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,20 @@ export interface FileRoutesById {
   '/casos': typeof CasosRoute
   '/contacto': typeof ContactoRoute
   '/metodo': typeof MetodoRoute
+  '/pruebas/route-curtain': typeof PruebasRouteCurtainRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/casos' | '/contacto' | '/metodo'
+  fullPaths: '/' | '/casos' | '/contacto' | '/metodo' | '/pruebas/route-curtain'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/casos' | '/contacto' | '/metodo'
-  id: '__root__' | '/' | '/casos' | '/contacto' | '/metodo'
+  to: '/' | '/casos' | '/contacto' | '/metodo' | '/pruebas/route-curtain'
+  id:
+    | '__root__'
+    | '/'
+    | '/casos'
+    | '/contacto'
+    | '/metodo'
+    | '/pruebas/route-curtain'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +82,7 @@ export interface RootRouteChildren {
   CasosRoute: typeof CasosRoute
   ContactoRoute: typeof ContactoRoute
   MetodoRoute: typeof MetodoRoute
+  PruebasRouteCurtainRoute: typeof PruebasRouteCurtainRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,6 +115,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MetodoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pruebas/route-curtain': {
+      id: '/pruebas/route-curtain'
+      path: '/pruebas/route-curtain'
+      fullPath: '/pruebas/route-curtain'
+      preLoaderRoute: typeof PruebasRouteCurtainRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,6 +130,7 @@ const rootRouteChildren: RootRouteChildren = {
   CasosRoute: CasosRoute,
   ContactoRoute: ContactoRoute,
   MetodoRoute: MetodoRoute,
+  PruebasRouteCurtainRoute: PruebasRouteCurtainRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

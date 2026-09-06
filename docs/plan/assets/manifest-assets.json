@@ -31,28 +31,28 @@
     "archivo": "velocentum-isotipo-blanco.png",
     "ancho": 1254,
     "alto": 1254,
-    "modo": "RGB",
-    "transparencia": false
+    "modo": "RGBA",
+    "transparencia": true
   },
   {
     "archivo": "velocentum-isotipo-negro.png",
-    "ancho": 1254,
-    "alto": 1254,
+    "ancho": 794,
+    "alto": 904,
     "modo": "RGBA",
     "transparencia": true
   },
   {
     "archivo": "velocentum-logotipo-blanco.png",
-    "ancho": 2119,
-    "alto": 742,
-    "modo": "RGB",
-    "transparencia": false
+    "ancho": 2117,
+    "alto": 743,
+    "modo": "RGBA",
+    "transparencia": true
   },
   {
     "archivo": "velocentum-logotipo-negro.png",
     "ancho": 2117,
     "alto": 743,
-    "modo": "RGB",
-    "transparencia": false
+    "modo": "RGBA",
+    "transparencia": true
   }
 ]

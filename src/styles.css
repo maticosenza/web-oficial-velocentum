@@ -1,31 +1,178 @@
 @import "tailwindcss" source(none);
 @source "../src";
-@import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+/* Tipografías autoalojadas. */
+@import "./fuentes.css";
 
-/*
- * Design system definition.
- *
- * The @theme inline block maps CSS custom properties to Tailwind utility
- * classes (e.g. --color-primary -> bg-primary, text-primary).
- *
- * The :root and .dark blocks define the actual color values using oklch.
- * All colors MUST use oklch format.
- *
- * To add a new semantic color:
- * 1. Add the variable to :root (light value) and .dark (dark value)
- * 2. Register it in @theme inline as --color-<name>: var(--<name>)
- */
+/* ===========================================================
+   FUENTE DE VERDAD DEL SISTEMA VISUAL
+   Se importa el archivo del plan directamente, sin copiarlo:
+   una sola definición, cero deriva entre spec e implementación.
+   Si se mueve o se borra, el build falla — que es lo que queremos.
+   =========================================================== */
+@import "../docs/plan/01_sistema/tokens.css";
 
+/* ===========================================================
+   PUENTE A TAILWIND
+   Expone los tokens como utilidades (bg-fondo, text-tinta,
+   font-display...). Los valores viven en tokens.css: acá sólo
+   se referencian. No duplicar hex en este bloque.
+   =========================================================== */
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  /* Las familias NO se remapean acá: tokens.css ya usa los
+     nombres `--font-display/-texto/-mono`, así que declararlos
+     de nuevo daría `--font-display: var(--font-display)`, una
+     referencia circular. Se usan con `var()` directo. */
+
+  --color-fondo: var(--fondo);
+  --color-tinta: var(--tinta);
+  --color-texto-2: var(--texto-2);
+
+  --color-acento-1: var(--acento-1);
+  --color-acento-2: var(--acento-2);
+  --color-acento-3: var(--acento-3);
+  --color-acento-4: var(--acento-4);
+  --color-acento-5: var(--acento-5);
+
+  /* El par texto-sobre-X no es opcional: existe como utilidad
+     para que usar el acento sin su texto sea el camino difícil. */
+  --color-sobre-1: var(--texto-sobre-1);
+  --color-sobre-2: var(--texto-sobre-2);
+  --color-sobre-3: var(--texto-sobre-3);
+  --color-sobre-4: var(--texto-sobre-4);
+  --color-sobre-5: var(--texto-sobre-5);
+
+  --color-marca: var(--marca);
+  --color-sobre-marca: var(--texto-sobre-marca);
+  --color-cielo: var(--cielo);
+
+  --radius-card: var(--r-card);
+  --radius-media: var(--r-media);
+  --radius-campo: var(--r-campo);
+  --radius-pill: var(--r-pill);
+
+  --ease-velo: var(--motion-ease);
+}
+
+/* ===========================================================
+   BASE
+   =========================================================== */
+@layer base {
+  html {
+    /* El scroll suave nativo pelea con las mecánicas atadas a
+       scroll y con la restauración de posición del router. */
+    scroll-behavior: auto;
+  }
+
+  body {
+    background-color: var(--fondo);
+    color: var(--tinta);
+    font-family: var(--font-texto);
+    font-size: 18px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @media (max-width: 809px) {
+    body {
+      font-size: 16px;
+    }
+  }
+
+  /* Foco visible desde el primer componente, no al final.
+     `currentColor` garantiza contraste sobre cualquier acento. */
+  :focus-visible {
+    outline: 3px solid currentColor;
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Los objetos 3D nunca deben desbordar su caja. */
+  img,
+  svg,
+  video {
+    max-width: 100%;
+  }
+}
+
+/* ===========================================================
+   UTILIDADES PROPIAS
+   =========================================================== */
+@layer components {
+  /* Destino del foco tras una navegación con cortina. No debe
+     dibujar anillo: el foco es programático, no del teclado. */
+  .destino-de-foco:focus {
+    outline: none;
+  }
+
+  /* La cortina de RouteCurtain. En reposo es scaleY(0): ocupa
+     la pantalla entera pero está aplastada contra el borde.
+     `pointer-events: none` es sólo para que no capture clicks
+     mientras se anima; el bloqueo real lo hace `inert` sobre el
+     contenido, porque pointer-events no saca nada del orden de
+     tabulación. */
+  .cortina {
+    position: fixed;
+    inset: 0;
+    z-index: var(--layer-curtain);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  /* Sólo para lectores de pantalla. */
+  .solo-lectores {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Salto al contenido: visible sólo al enfocarse con teclado. */
+  .saltar-al-contenido {
+    position: fixed;
+    top: var(--space-3);
+    left: var(--space-3);
+    z-index: calc(var(--layer-curtain) + 1);
+    padding: var(--space-3) var(--space-4);
+    background: var(--tinta);
+    color: var(--fondo);
+    border-radius: var(--r-pill);
+    font-family: var(--font-texto);
+    font-weight: 700;
+    text-decoration: none;
+    transform: translateY(-200%);
+  }
+
+  .saltar-al-contenido:focus-visible {
+    transform: translateY(0);
+  }
+}
+
+/* ===========================================================
+   CAPA DE COMPATIBILIDAD — shadcn/ui
+   NO ES EL SISTEMA DE VELOCENTUM. El sistema es tokens.css.
+
+   Existe sólo para que los 48 componentes de
+   `src/components/ui/` sigan funcionando el día que haga falta
+   uno accesible ya resuelto —un Dialog, un Select—. Sin estos
+   tokens, esos componentes renderizan sin estilo: dependen de
+   utilidades como `bg-background` y `border-border`.
+
+   Reglas:
+   - No usar estos nombres para construir páginas del sitio.
+   - Si se monta un componente de `ui/`, ajustarlo a los tokens
+     de Velocentum en el punto de uso, no editando este bloque.
+   - No hay modo oscuro en el sitio: el footer es un bloque
+     oscuro, que es otra cosa. Por eso no se define `.dark`.
+   =========================================================== */
+@theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -45,20 +192,11 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-ring-offset-background: var(--background);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
 :root {
@@ -82,63 +220,4 @@
   --border: oklch(0.929 0.013 255.508);
   --input: oklch(0.929 0.013 255.508);
   --ring: oklch(0.704 0.04 256.788);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
-}
-
-.dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
-}
-
-@layer base {
-  * {
-    border-color: var(--color-border);
-  }
-
-  body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-  }
 }

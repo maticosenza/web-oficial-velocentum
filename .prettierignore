@@ -6,3 +6,13 @@ pnpm-lock.yaml
 package-lock.json
 bun.lock
 routeTree.gen.ts
+
+# Documentación: se escribe a mano y se lee a mano. Prettier
+# realinea tablas y rompe listas numeradas sin aportar nada.
+# `AGENTS.md` además lo gestiona Lovable.
+*.md
+
+# El plan es la fuente de verdad y se cita textualmente en el código.
+# Prettier reformatea sus tablas y rompe sus listas numeradas.
+# `src/styles.css` importa docs/plan/01_sistema/tokens.css: no se toca.
+docs/
