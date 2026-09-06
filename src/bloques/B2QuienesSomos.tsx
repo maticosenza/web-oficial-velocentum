@@ -28,6 +28,10 @@ export function B2QuienesSomos() {
       color="var(--fondo)"
       sobre="var(--tinta)"
       borde="arriba"
+      /* La única onda de la página con línea de tinta. Ver
+         `SectionEdge.tsx`: es la que separa el hero de la primera
+         sección blanca, igual que en la referencia. */
+      contorno
       className="b2"
       aria-labelledby="b2-titulo"
     >

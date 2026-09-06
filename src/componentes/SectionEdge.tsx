@@ -20,6 +20,17 @@
       elemento aparte, `aria-hidden` y sin eventos de puntero, y
       el contenido de la sección nunca pasa por acá.
 
+   EL CONTORNO ES OPCIONAL Y VA APAGADO POR DEFECTO
+   `contorno` dibuja una línea fina de tinta sobre la silueta, la
+   misma que tiene la referencia entre su hero y el bloque que
+   sube. Se enciende sólo en B2. En el pie festoneado de B3, en B8
+   y en el footer sería ruido: ahí la onda separa dos campos de
+   color y no necesita subrayarse.
+
+   El detalle de por qué el relleno y el contorno son dos
+   pseudoelementos hermanos —y no un `border`, ni un `::after`
+   dentro del elemento enmascarado— está en `componentes.css`.
+
    La dirección no es un color invertido: el borde siempre lleva
    el color de la sección que ENTRA. "Nube blanca sobre azul" y
    "nube azul sobre blanco" son el mismo componente con distinto
@@ -42,6 +53,7 @@ export function SectionEdge({
   color = "var(--fondo)",
   borde = "arriba",
   alto,
+  contorno = false,
   className,
 }: {
   /** Color de la sección que entra. */
@@ -50,6 +62,12 @@ export function SectionEdge({
   borde?: Borde;
   /** Alto de la franja. Por defecto, el del sistema. */
   alto?: string;
+  /**
+   * Dibuja la línea de tinta sobre la silueta. Apagado por
+   * defecto: es correcta en la onda que separa el hero de B2 y
+   * sería ruido en el pie de B3, en B8 o en el footer.
+   */
+  contorno?: boolean;
   className?: string;
 }) {
   /* Sólo custom properties: son datos que alimentan la regla de
@@ -64,6 +82,7 @@ export function SectionEdge({
       aria-hidden="true"
       className={["borde-onda", className].filter(Boolean).join(" ")}
       data-borde={borde}
+      data-contorno={contorno ? "sí" : undefined}
       style={tokens}
     />
   );
@@ -78,6 +97,7 @@ export function SeccionConBorde({
   sobre,
   borde = "arriba",
   alto,
+  contorno = false,
   children,
   className,
   ...resto
@@ -89,6 +109,7 @@ export function SeccionConBorde({
   sobre: string;
   borde?: Borde;
   alto?: string;
+  contorno?: boolean;
   children: ReactNode;
 } & HTMLAttributes<HTMLElement>) {
   return (
@@ -100,7 +121,7 @@ export function SeccionConBorde({
       {/* `alto` se pasa sólo si existe: con
           `exactOptionalPropertyTypes`, mandar `undefined` a una
           prop opcional no es lo mismo que omitirla. */}
-      <SectionEdge color={color} borde={borde} {...(alto ? { alto } : {})} />
+      <SectionEdge color={color} borde={borde} contorno={contorno} {...(alto ? { alto } : {})} />
       <div className="seccion-con-borde__contenido">{children}</div>
     </section>
   );

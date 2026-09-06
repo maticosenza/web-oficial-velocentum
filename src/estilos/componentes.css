@@ -39,13 +39,67 @@
     left: 0;
     right: 0;
     height: var(--edge-alto, var(--borde-onda-alto));
+    pointer-events: none;
+  }
+
+  /* EL RELLENO VIVE EN `::before`, NO EN EL ELEMENTO. Y no es
+     cosmética: una máscara recorta al elemento Y A TODOS SUS
+     DESCENDIENTES, pseudoelementos incluidos. Con la máscara
+     puesta en `.borde-onda`, cualquier contorno dibujado en
+     `::after` quedaría recortado por la silueta del relleno: se
+     vería sólo la mitad de adentro del trazo, más fino en las
+     partes convexas que en las cóncavas.
+
+     Separando relleno y contorno en dos pseudoelementos hermanos,
+     cada uno lleva su propia máscara y ninguno recorta al otro.
+     Para todas las ondas que no piden contorno esto no cambia un
+     píxel: mismo alto, misma caja, misma máscara. */
+  .borde-onda::before {
+    content: "";
+    position: absolute;
+    inset: 0;
     background: var(--edge-color, var(--fondo));
     mask-image: url("/assets/borde-onda.svg");
     mask-position: center;
     mask-size: 100% 100%;
     mask-repeat: no-repeat;
     mask-mode: alpha;
-    pointer-events: none;
+  }
+
+  /* EL CONTORNO — SÓLO DONDE SE PIDE.
+     Va por opción explícita (`contorno` en el componente), no por
+     defecto: la línea es correcta en la onda que separa el hero de
+     B2 y sería ruido en el pie festoneado de B3, en B8 o en el
+     footer.
+
+     La silueta es EL MISMO TRAZADO. `borde-onda-contorno.svg`
+     lleva el `d` de la curva superior copiado carácter por
+     carácter del relleno —que sólo le agrega `V140 H0Z` para
+     cerrar los laterales y la base— y el mismo `viewBox`,
+     `preserveAspectRatio` y `mask-size`. Por construcción no puede
+     quedar corrido de la curva.
+
+     `vector-effect="non-scaling-stroke"` es lo que mantiene el
+     grosor parejo. La franja se estira de forma anisotrópica
+     —1440×140 del viewBox contra el ancho real por 88px, o 48 en
+     móvil—, así que un trazo normal saldría más fino en los
+     tramos horizontales que en los verticales. Con el efecto, el
+     grosor se evalúa después del estirado y la línea mide lo
+     mismo en toda su longitud.
+
+     Pintado después del relleno, o sea por encima. Y como es hijo
+     de la misma franja, viaja con B2 durante el sticky sin
+     necesidad de repetir posición ni transform. */
+  .borde-onda[data-contorno="sí"]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--tinta);
+    mask-image: url("/assets/borde-onda-contorno.svg");
+    mask-position: center;
+    mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+    mask-mode: alpha;
   }
 
   .borde-onda[data-borde="arriba"] {
