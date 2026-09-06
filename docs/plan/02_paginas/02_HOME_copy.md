@@ -474,10 +474,28 @@ display condensado. Se puede recuperar como bajada, o dejarla para `/casos`.
 
 ### Estado en obra `[CONSTRUIDO CON MARCADORES]`
 
-**Cuatro piezas, en dos filas de dos.** Eran dos. Sólo se conocen dos clientes
-—`Patagonia Vessels` (17 car.) y `Comercial Pas` (13), dentro del rango medido
-de 4–23— así que las otras dos ranuras llevan el mismo marcador que B7, para que
-se lean como el mismo hueco y no como dos clientes distintos.
+**Cuatro piezas, en dos filas de dos.** Ya no hay marcadores de cliente: son los
+**cuatro primeros casos**, en el orden de la lista.
+
+| | Cliente | Rubro |
+|---|---|---|
+| 1 | Snake Store | Moda |
+| 2 | Carácter | Productora |
+| 3 | Glam Ragazza | Indumentaria |
+| 4 | Vinotique | Gastronomía |
+
+Salen de `src/data/casos.ts`, la misma fuente que arma `/casos`, y no de una
+lista paralela: con dos copias, una se actualiza y la otra no.
+
+El nombre más largo de los cuatro es `Glam Ragazza`, **12 caracteres**, bien
+adentro del rango medido de 4–23. Antes acá decía 17 por `Patagonia Vessels`,
+que **ya no es una de las piezas**: es cliente, no caso, y va únicamente como
+logo en el marquee de B7.
+
+La categoría bajo cada pieza tampoco es marcador: es el rubro que definió
+Matías. Ojo, **no sale del campo «Industria» de las fichas viejas del sitio**,
+que en varios casos trae el canal — Snake Store y Glam Ragazza figuran ahí como
+«E-Commerce», que es por dónde venden, no a qué se dedican.
 
 ### La entrada: una sola regla para las dos filas
 
@@ -811,10 +829,20 @@ bloque muestra solo. Lo que sigue vigente está en esta ficha.
 
 ### Estado en obra `[CONSTRUIDO CON MARCADORES]`
 
-**Nada del contenido de este bloque existe:** no hay un solo logo de cliente en
-`public/assets`, de los doce nombres se conocen dos —los de B3— y el uso
-autorizado por cliente sigue sin confirmar. Van doce marcadores y el bloque lo
-dice una vez arriba, no doce veces.
+**El orden del marquee está cerrado:** los **ocho casos** en el orden de
+`/casos` —Snake Store, Carácter, Glam Ragazza, Vinotique, Ilsapore, Armbruster,
+Greenpac y Comercial Pas—, después `Patagonia Vessels`, y **tres marcadores**
+hasta que Matías defina los que faltan.
+
+Que arranque con los ocho no es cosmético: la home y `/casos` tienen que leerse
+como un mismo conjunto y no como dos listas distintas, y la única forma de
+garantizarlo es que sean la misma lista. Sale de `src/data/casos.ts`.
+
+`Patagonia Vessels` va acá y **no** en `/casos`: es cliente, no caso.
+
+**Lo que sigue faltando son los logos:** no hay uno solo en `public/assets` y el
+uso autorizado por cliente sigue sin confirmar. Las nueve ranuras con nombre
+muestran el nombre; las tres restantes, el marcador.
 
 Se construye con los **doce** y no con tres o cuatro para que el loop y la
 máscara del Ticker queden probados con el ancho de pista real. El nombre
@@ -1033,9 +1061,10 @@ contexto en los dos lugares donde aparece el botón: en el hero y en el cierre.
 45–49 de la referencia, y con **cuatro** columnas en vez de tres el techo baja a
 ~45. Por eso las acorté arriba.
 
-**4. Los nombres de cliente.** `Patagonia Vessels` son 17 caracteres contra 4–7
-de la referencia, que usa nombres inventados y cortos. Con 12 logos reales de
-nombre largo, el anillo necesita más aire lateral del que usa la referencia.
+**4. Los nombres de cliente.** El más largo de los nueve definidos es
+`Patagonia Vessels`, 17 caracteres, contra 4–7 de la referencia, que usa nombres
+inventados y cortos. Con logos reales de nombre largo, el anillo necesita más
+aire lateral del que usa la referencia.
 
 **5. Los títulos de proceso.** `Recomendamos` son 12 contra 4–7. Siguen siendo
 una palabra, así que entran, pero la tipografía va a verse más chica que en la

@@ -46,11 +46,21 @@ import type { CSSProperties } from "react";
 
 import { Ticker } from "../componentes/Ticker";
 import { Reveal } from "../componentes/Reveal";
+import { MARCAS_DEL_MARQUEE } from "../data/casos";
 
 /* PENDIENTE: 17 caracteres, contra un techo de 18 para el nombre
    bajo el logo. Queda al filo a propósito, así el nombre real
    entra después sin mover el anillo. */
 const CLIENTE_PENDIENTE = "Cliente pendiente";
+
+/* El marquee arranca con los ocho casos en su orden, sigue con
+   `Patagonia Vessels` —que es cliente pero no caso, así que acá
+   está y en `/casos` no— y cierra con tres marcadores hasta que
+   Matías defina los que faltan.
+
+   Sale de `data/casos.ts`: la home y `/casos` tienen que leerse
+   como un mismo conjunto y no como dos listas distintas, y la
+   única forma de garantizarlo es que sean la misma lista. */
 
 const ACENTOS = [
   "var(--acento-1)",
@@ -60,9 +70,11 @@ const ACENTOS = [
   "var(--acento-5)",
 ];
 
-/* Doce ranuras. El índice es la ranura, no el cliente: cuando
-   lleguen los logos reales se reemplaza esta lista. */
-const RANURAS = Array.from({ length: 12 }, (_, i) => i);
+/* Doce ranuras: nueve con nombre y tres todavía vacías. Se
+   construye con las doce, y no con las nueve que ya tienen
+   nombre, para que el loop y la máscara del Ticker queden
+   probados con el ancho de pista real. */
+const RANURAS = MARCAS_DEL_MARQUEE;
 
 export function B7Clientes() {
   return (
@@ -75,8 +87,8 @@ export function B7Clientes() {
         </div>
 
         <Ticker etiqueta="Marcas que confían en Velocentum" className="b7__ticker">
-          {RANURAS.map((i) => (
-            <div key={i} className="b7-cliente">
+          {RANURAS.map((marca, i) => (
+            <div key={marca ?? `ranura-${i}`} className="b7-cliente">
               {/* El anillo es decorativo mientras no haya logo: lo
                 que nombra a la ranura es el texto de abajo. Sin
                 esto el lector leería doce veces la misma
@@ -88,7 +100,7 @@ export function B7Clientes() {
               >
                 <span className="etiqueta b7-cliente__nota">Logo</span>
               </div>
-              <p className="etiqueta b7-cliente__nombre">{CLIENTE_PENDIENTE}</p>
+              <p className="etiqueta b7-cliente__nombre">{marca ?? CLIENTE_PENDIENTE}</p>
             </div>
           ))}
         </Ticker>

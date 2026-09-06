@@ -122,8 +122,26 @@ criterio de cada componente, no una fase final.
    **No se enlaza a `velocentum.agency`:** decisión explícita.
    Sigue sin haber teléfono — la home no lo usa, así que no bloquea.
 5. Los 16 entregables de la Home B4, confirmados operativamente.
-6. Copy de los casos, e inventario por cliente: uso autorizado, medio, poster,
-   categoría. No rellenar hasta ocho por estética.
+6. **Los ocho casos están definidos**, en este orden: Snake Store · Carácter ·
+   Glam Ragazza · Vinotique · Ilsapore · Armbruster · Greenpac · Comercial Pas.
+   Con su rubro, que **definió Matías** y no sale del campo «Industria» de las
+   fichas viejas: ahí Snake Store y Glam Ragazza figuran como «E-Commerce», que
+   es el canal y no el rubro. Viven en `src/data/casos.ts`, que es también lo
+   que arma B3 y el marquee de B7 en la home.
+
+   `Patagonia Vessels` **no es un caso**: es cliente, y va sólo como logo en B7.
+
+   Lo que de esto sigue bloqueando publicar:
+   - **Los logos.** No hay uno solo en `public/assets`.
+   - **Las imágenes de cada caso.** Tampoco existen.
+   - **El uso autorizado por cliente**, sin confirmar.
+   - **Las ocho frases de qué hicimos**, condensadas de las fichas del sitio
+     actual y sin aprobar. La de `Carácter` además hay que **reescribirla**, no
+     sólo aprobarla: su ficha describe al cliente y no dice qué hicimos, así que
+     la frase salió de sus dos etiquetas del índice.
+   - **Los porcentajes del sitio actual quedaron descartados** (140%, 200%…): no
+     dicen de qué son ni contra qué base, y arrastran el mismo problema de
+     atribución que la cifra de $629M.
 7. Los 13 playback IDs verificados.
 8. **No usar la cifra de $629M hasta resolver su atribución**, ni derivar de ella
    un promedio.

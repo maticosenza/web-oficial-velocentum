@@ -1,0 +1,330 @@
+/* ===========================================================
+   PÁGINA CASOS — CAS-1 y CAS-2.
+   El nav, el cierre y el footer se reutilizan de la home y sus
+   estilos viven en `home.css`.
+   =========================================================== */
+
+@layer components {
+  /* =========================================================
+     CAS-1 · HERO
+     ========================================================= */
+
+  /* Chico a propósito, y sin `100dvh`: el peso visual de esta
+     página lo lleva el titular pinneado de la lista. Reserva la
+     banda del nav igual que los otros heroes. */
+  .cas1 {
+    position: relative;
+    background: var(--fondo);
+    color: var(--tinta);
+  }
+
+  .cas1__contenido {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: var(--space-4);
+    padding-top: calc(var(--alto-nav, 96px) + var(--space-6));
+    padding-bottom: var(--space-6);
+  }
+
+  .cas1__titular {
+    font-family: var(--font-display);
+    /* Más chico que el de Método —132px— porque no compite solo:
+       abajo viene el titular pinneado en grande. */
+    font-size: clamp(36px, 7vw, 92px);
+    line-height: 1.05;
+    text-transform: uppercase;
+    margin: 0;
+    max-width: 16ch;
+  }
+
+  .cas1__bajada {
+    font-size: clamp(18px, 2vw, 22px);
+    line-height: 1.4;
+    color: var(--texto-2);
+    max-width: 46ch;
+    margin: 0;
+  }
+
+  /* =========================================================
+     CAS-2 · LA LISTA
+     ========================================================= */
+
+  .cas2 {
+    position: relative;
+    background: var(--fondo);
+    color: var(--tinta);
+    /* El acento de la página. Los marcadores de logo e imagen lo
+       usan, así que viaja por la sección en vez de repetirse. */
+    --acento: var(--acento-3);
+    --sobre: var(--texto-sobre-3);
+  }
+
+  .cas2__pendiente {
+    padding-bottom: var(--space-5);
+  }
+
+  /* LAS TRES CAPAS, EN UNA SOLA CELDA DE GRILLA.
+     Las dos capas fijadas y la lista comparten `grid-area`, así
+     que se superponen sin que ninguna aporte alto propio. Si el
+     titular fijado fuera un bloque más en el flujo, sumaría
+     `100dvh` de aire antes del primer caso.
+
+     `isolation` crea el contexto de apilado: los `z-index` de acá
+     adentro se ordenan entre ellos y no compiten con el nav ni
+     con el cierre. */
+  .cas2__lista {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    isolation: isolate;
+  }
+
+  .cas2__pin,
+  .cas2__casos,
+  .cas2__bordes {
+    grid-area: 1 / 1;
+  }
+
+  /* --- Capa 1: el titular pinneado al pie --- */
+
+  /* `align-self: start` con alto de viewport: sin eso el elemento
+     se estiraría a todo el alto de la fila —ocho casos— y `sticky`
+     no tendría contra qué pegarse. */
+  .cas2__pin {
+    z-index: 0;
+    align-self: start;
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    display: grid;
+    align-content: end;
+    justify-items: center;
+    padding-bottom: var(--space-4);
+    /* ⚠ LOS DOS SON OBLIGATORIOS.
+       Sin `pointer-events: none` el titular tapa toda la pantalla
+       y se come los clics de las tarjetas y del nav. Y sin
+       `user-select: none` cualquier arrastre sobre un caso
+       selecciona la palabra de atrás, que es un efecto raro
+       porque el texto no se ve encima. */
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .cas2__pin-texto {
+    font-family: var(--font-display);
+    /* Grande de verdad: es la palabra que acompaña todo el
+       recorrido. `min()` la ata al ancho para que no se corte en
+       ventanas angostas. */
+    font-size: min(22vw, 260px);
+    line-height: 0.85;
+    text-transform: uppercase;
+    color: var(--acento-3);
+    margin: 0;
+  }
+
+  /* --- Capa 2: los casos --- */
+
+  .cas2__casos {
+    z-index: 1;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* UN CASO POR PANTALLA, SIN SCROLL-SNAP NI JS.
+     Cada bloque mide `--alto-caso` y con eso el siguiente queda
+     justo fuera de cuadro. Es toda la mecánica.
+
+     ⚠ `min-height` Y NO `height`, QUE ES LO QUE HACE LA
+     REFERENCIA. Con alto fijo, al ampliar al 200% el contenido
+     desborda la caja y se recorta: el texto crece pero el bloque
+     no. Con mínimo, el bloque crece con su contenido y se pierde
+     —sólo en ese caso— que entre uno por pantalla. Es el
+     intercambio correcto: la mecánica es decorativa, poder leer no
+     lo es. */
+  .cas-caso {
+    min-height: var(--alto-caso);
+    display: grid;
+    align-content: center;
+    padding-inline: var(--page-gutter);
+  }
+
+  .cas-caso__cuerpo {
+    width: 100%;
+    max-width: var(--max-contenido);
+    margin-inline: auto;
+  }
+
+  /* --- La columna de identificación --- */
+
+  .cas-caso__id {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: var(--space-2);
+  }
+
+  /* PENDIENTE: el logo no existe. La caja va del tamaño real para
+     que el bloque quede medido y no se mueva cuando entre. */
+  .cas-caso__logo {
+    display: grid;
+    place-items: center;
+    width: 88px;
+    aspect-ratio: 1;
+    border-radius: var(--r-media);
+    background: color-mix(in srgb, var(--acento) 18%, var(--fondo));
+    color: var(--texto-2);
+  }
+
+  .cas-caso__nombre {
+    font-family: var(--font-display);
+    /* El nombre más largo de los ocho es `Comercial Pas`, 13
+       caracteres, holgado dentro del rango medido de 4–23. */
+    font-size: clamp(24px, 2.6vw, 34px);
+    line-height: 1.05;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  /* El rubro en gris, debajo del nombre. Lo definió Matías: no
+     sale del campo «Industria» de las fichas viejas, que en varios
+     casos trae el canal. Ver `data/casos.ts`. */
+  .cas-caso__rubro {
+    color: var(--texto-2);
+    margin: 0;
+  }
+
+  /* --- El medio --- */
+
+  /* PENDIENTE: las imágenes no existen. La proporción es la real,
+     así que cuando entren no se mueve nada. El radio de 16px sale
+     de la referencia y es `--r-media`. */
+  .cas-caso__medio {
+    aspect-ratio: 16 / 10;
+    width: 100%;
+    border-radius: var(--r-media);
+    background: color-mix(in srgb, var(--acento) 22%, var(--fondo));
+  }
+
+  /* --- La frase --- */
+
+  /* Una frase y nada más. Sin chips y sin párrafo largo: el plan
+     los tenía y quedaron derogados. */
+  .cas-caso__frase {
+    font-size: clamp(17px, 1.6vw, 20px);
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  /* --- Capa 3: los degradados de borde --- */
+
+  /* Van arriba de los casos porque su trabajo es taparlos al
+     entrar y al salir. Fijada igual que el titular, con el mismo
+     `align-self: start`. */
+  .cas2__bordes {
+    z-index: 2;
+    align-self: start;
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    pointer-events: none;
+  }
+
+  /* NO SON BLUR, Y ESO ESTÁ VERIFICADO. En la referencia los
+     bloques se llaman `Top Blur` y `Bottom Blur`, pero no hay una
+     sola declaración de `filter` ni `backdrop-filter` en toda la
+     página: son degradados planos del color de fondo a
+     transparente. Sale mucho más barato y no castiga el
+     rendimiento en teléfonos. */
+  .cas2__borde {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: var(--degradado-borde);
+  }
+
+  .cas2__borde--arriba {
+    top: 0;
+    background: linear-gradient(180deg, var(--fondo) 0%, transparent 100%);
+  }
+
+  .cas2__borde--abajo {
+    bottom: 0;
+    background: linear-gradient(180deg, transparent 0%, var(--fondo) 100%);
+  }
+
+  /* =========================================================
+     RESPONSIVE
+     ========================================================= */
+
+  /* Bajo 810px las tres columnas se apilan: medio, identificación
+     y frase. El medio primero porque es lo que se mira; el nombre
+     y el rubro debajo; la frase al final.
+
+     Y EL BLOQUE DEJA DE SER 80vh. Tres elementos apilados no
+     entran en el 80% de la pantalla de un teléfono: pasa a alto
+     natural con aire propio. Con el mínimo puesto, el contenido
+     quedaba centrado en una caja que le sobraba arriba y abajo. */
+  @media (max-width: 809px) {
+    .cas-caso {
+      min-height: 0;
+      padding-block: var(--space-6);
+    }
+
+    .cas-caso__cuerpo {
+      gap: var(--space-4);
+    }
+
+    /* ⚠ EL `order` VA EN LOS ENVOLTORIOS DE `ScrollMedia`, NO EN
+       EL CONTENIDO. Los ítems de la grilla son
+       `.scroll-medio__izquierda`, `__marco` y `__texto`; ponerle
+       `order` a `.cas-caso__id`, que vive adentro del primero, no
+       mueve nada — es un hijo, no un ítem.
+
+       El orden del DOM se deja como está —identificación, medio,
+       frase— y sólo cambia el visual. Para un lector de pantalla
+       el cliente se sigue anunciando antes que su imagen, que es
+       el orden que tiene sentido leído, y no hay ningún elemento
+       enfocable adentro del caso, así que no se abre la brecha
+       entre orden visual y orden de tabulación que haría de esto
+       un problema. */
+    .cas-caso__cuerpo > .scroll-medio__marco {
+      order: 1;
+    }
+
+    .cas-caso__cuerpo > .scroll-medio__izquierda {
+      order: 2;
+    }
+
+    .cas-caso__cuerpo > .scroll-medio__texto {
+      order: 3;
+    }
+
+    /* Apilado, el bloque se lee centrado: la identificación deja
+       de alinearse a la izquierda de su columna. */
+    .cas-caso__id {
+      justify-items: center;
+      text-align: center;
+    }
+
+    .cas-caso__frase {
+      text-align: center;
+    }
+
+    /* El titular pinneado se achica: a 22vw de un teléfono la
+       palabra se sale de la pantalla. */
+    .cas2__pin-texto {
+      font-size: min(30vw, 140px);
+    }
+  }
+
+  /* En escritorio la identificación y la frase se alinean con el
+     medio, no al centro de su columna. */
+  @media (min-width: 810px) {
+    .cas-caso__id {
+      justify-items: start;
+      text-align: start;
+    }
+  }
+}

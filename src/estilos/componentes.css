@@ -446,11 +446,56 @@
     will-change: transform;
   }
 
-  /* El texto acompaña con desplazamiento. NO escala: escalar
-     texto lo desenfoca y le rompe el tamaño a quien tiene zoom. */
+  /* Las columnas laterales acompañan con desplazamiento. NO
+     escalan: escalar texto lo desenfoca en el camino y le rompe el
+     tamaño a quien tiene zoom.
+
+     `--entra-desde` es el signo del desplazamiento. -1 es el valor
+     que tenía la variante de dos columnas y sigue siendo el
+     defecto, así que ese uso no cambia. En la de tres, la columna
+     izquierda entra desde la izquierda y la derecha desde la
+     derecha: simétricas respecto del medio. */
+  .scroll-medio__izquierda,
   .scroll-medio__texto {
-    transform: translateX(calc((1 - var(--progreso, 1)) * -47px));
+    transform: translateX(calc((1 - var(--progreso, 1)) * var(--entra-desde, -1) * 47px));
     will-change: transform;
+  }
+
+  /* Tres columnas: identificación · medio · frase. El medio pesa
+     más que las dos laterales juntas, que es la proporción de la
+     referencia. Abajo de 810px la variante apila, y el orden lo
+     define cada página. */
+  @media (min-width: 810px) {
+    .scroll-medio--tres {
+      grid-template-columns: 1fr 2.2fr 1fr;
+    }
+  }
+
+  .scroll-medio--tres .scroll-medio__izquierda {
+    --entra-desde: -1;
+  }
+
+  .scroll-medio--tres .scroll-medio__texto {
+    --entra-desde: 1;
+  }
+
+  /* ⚠ APILADO NO HAY CORRIMIENTO LATERAL, Y NO ES ESTÉTICA.
+     Abajo de 810px las tres columnas pasan a una sola de ancho
+     completo. Un corrimiento de 47px sobre una columna que ya
+     ocupa todo el ancho la empuja fuera de la pantalla: medido a
+     390px, la de la derecha llegaba a 406 y aparecía scroll
+     horizontal en toda la página. Con el ancho completo, además,
+     el deslizamiento lateral no se lee como entrada sino como un
+     defecto.
+
+     Sólo alcanza a la variante de tres columnas. La de dos queda
+     como estaba: su corrimiento es negativo, así que no genera
+     scroll. */
+  @media (max-width: 809px) {
+    .scroll-medio--tres .scroll-medio__izquierda,
+    .scroll-medio--tres .scroll-medio__texto {
+      --entra-desde: 0;
+    }
   }
 
   .scroll-medio__placeholder {
@@ -462,6 +507,7 @@
   @media (prefers-reduced-motion: reduce) {
     .scroll-medio__marco,
     .scroll-medio__interior,
+    .scroll-medio__izquierda,
     .scroll-medio__texto {
       transform: none;
       will-change: auto;

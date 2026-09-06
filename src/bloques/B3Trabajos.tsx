@@ -87,28 +87,36 @@
 import { useRef } from "react";
 
 import { SectionEdge } from "../componentes/SectionEdge";
+import { CASOS_EN_LA_HOME } from "../data/casos";
 import { EnlaceConCortina } from "../componentes/RouteCurtain";
 import { Reveal } from "../componentes/Reveal";
 import { Flecha } from "../componentes/Flecha";
 import { useProgresoDeScroll } from "../lib/progresoDeScroll";
 
-/* PENDIENTE: la categoría por cliente no está confirmada. El
-   marcador mide 19 caracteres, dentro del rango medido de 13–20,
-   así el copy real entra sin mover el layout. */
-const CATEGORIA_PENDIENTE = "Categoría pendiente";
+/* La categoría dejó de ser marcador: es el rubro que definió
+   Matías, el mismo que se muestra en `/casos`. Sale de
+   `data/casos.ts` y no de una lista aparte, porque son el mismo
+   dato mirado desde dos lugares — con dos copias, una se
+   actualiza y la otra no.
 
-/* PENDIENTE: sólo se conocen dos clientes, y las piezas son
-   cuatro. Los dos nombres reales salen de `03_referencia` y
-   `04_CASOS`, donde están medidos. Las otras dos ranuras llevan
-   el mismo marcador que usa B7, para que se lean como el mismo
-   hueco y no como dos clientes distintos.
-   17 caracteres, dentro del rango medido de 4-23. */
-const CLIENTE_PENDIENTE = "Cliente pendiente";
+   Quedan más cortos que el rango medido en la referencia, 13–20:
+   el más largo de los cuatro es `Indumentaria`, 12. Sobra lugar,
+   que es el lado bueno del problema. */
 
-/* Cuatro piezas, en dos filas de dos. El orden es el de la
-   grilla: 0 y 2 caen en la columna izquierda, 1 y 3 en la
-   derecha. */
-const PIEZAS = ["Patagonia Vessels", "Comercial Pas", CLIENTE_PENDIENTE, CLIENTE_PENDIENTE];
+/* Los cuatro clientes ya no son marcadores: son los cuatro
+   primeros de la lista de casos, en su mismo orden, y salen de
+   `data/casos.ts` para que la home y `/casos` no puedan divergir.
+
+   El nombre más largo de los cuatro es `Glam Ragazza`, 12
+   caracteres — bien adentro del rango medido de 4-23.
+
+   `Patagonia Vessels`, que ocupaba la primera ranura mientras no
+   había lista cerrada, salió: es cliente, no caso, y va
+   únicamente como logo en el marquee de B7.
+
+   Dos filas de dos. El orden es el de la grilla: 0 y 2 caen en la
+   columna izquierda, 1 y 3 en la derecha. */
+const PIEZAS = CASOS_EN_LA_HOME;
 
 /** Indice par -> columna izquierda -> entra por la izquierda. */
 function direccionDe(indice: number): number {
@@ -136,13 +144,18 @@ export function B3Trabajos() {
         </div>
 
         <p className="etiqueta etiqueta--apagada b3__pendiente">
-          Pendiente · los videos y los posters no existen todavía, dos de las cuatro piezas no
-          tienen cliente asignado, y el uso autorizado de cada cliente está sin confirmar.
+          Pendiente · los videos y los posters no existen todavía, y el uso autorizado de cada
+          cliente está sin confirmar.
         </p>
 
         <div className="b3__piezas">
-          {PIEZAS.map((nombre, i) => (
-            <Trabajo key={`${nombre}-${i}`} nombre={nombre} direccion={direccionDe(i)} />
+          {PIEZAS.map((caso, i) => (
+            <Trabajo
+              key={caso.nombre}
+              nombre={caso.nombre}
+              rubro={caso.rubro}
+              direccion={direccionDe(i)}
+            />
           ))}
         </div>
       </div>
@@ -150,7 +163,15 @@ export function B3Trabajos() {
   );
 }
 
-function Trabajo({ nombre, direccion }: { nombre: string; direccion: number }) {
+function Trabajo({
+  nombre,
+  rubro,
+  direccion,
+}: {
+  nombre: string;
+  rubro: string;
+  direccion: number;
+}) {
   /* El hook mide la capa de afuera, que no se mueve. Ver la nota
      de arriba: medir la capa transformada traba el bloque. */
   const ref = useRef<HTMLElement>(null);
@@ -179,7 +200,7 @@ function Trabajo({ nombre, direccion }: { nombre: string; direccion: number }) {
 
         {/* Categoría chica arriba, nombre grande abajo. */}
         <div className="b3-trabajo__pie">
-          <p className="etiqueta etiqueta--apagada">{CATEGORIA_PENDIENTE}</p>
+          <p className="etiqueta etiqueta--apagada">{rubro}</p>
           <h3 className="b3-trabajo__nombre">{nombre}</h3>
         </div>
       </div>

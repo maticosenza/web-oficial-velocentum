@@ -6,6 +6,82 @@ Analizada en el código del mirror **y en la página en vivo**.
 
 ---
 
+# ⚠ LA PÁGINA SE SIMPLIFICÓ. QUÉ QUEDÓ DEROGADO DE ESTE DOCUMENTO
+
+Lo que sigue **manda sobre el resto de la ficha**. El documento describe una
+versión más cargada de la que se construyó, y esas partes quedaron sin efecto.
+
+Cada caso lleva **tres columnas y nada más**: identificación a la izquierda
+—logo, nombre y rubro en gris—, medio al centro con radio de 16px, y **una
+frase** de qué hicimos a la derecha.
+
+| Derogado | Por qué |
+|---|---|
+| **Los chips de intervención** de la columna derecha | Va una frase, nada más. Estaba como decisión cerrada más abajo: ya no lo es. |
+| **El párrafo de 122–155 caracteres** | Es una frase corta. |
+| **El paginado «Ver más»** | Son ocho casos fijos: no hay nada que paginar. |
+| **El centinela `Heading Disappear`** | Existía para el paginado. Era la pieza más frágil de la página —había que recalcularlo al cambiar el alto de la lista— y se fue con él. Sin paginado, el `sticky` se suelta solo al terminar el contenedor y el titular sale con la sección. |
+| **Los porcentajes de resultado** (140%, 200%…) del sitio actual | **No se usan.** No dicen de qué son ni contra qué base, y arrastran el mismo problema de atribución que la cifra de $629M. |
+| **Las subpáginas por caso** | El único destino de la página es el CTA del cierre. |
+
+## Los ocho casos, cerrados
+
+| | Cliente | Rubro |
+|---|---|---|
+| 01 | Snake Store | Moda |
+| 02 | Carácter | Productora |
+| 03 | Glam Ragazza | Indumentaria |
+| 04 | Vinotique | Gastronomía |
+| 05 | Ilsapore | Gastronomía |
+| 06 | Armbruster | Real Estate |
+| 07 | Greenpac | Agricultura |
+| 08 | Comercial Pas | Seguros |
+
+Viven en `src/data/casos.ts`, tipados, uno por entrada. La página se construye
+contra ese archivo, y también B3 y el marquee de B7 en la home: con una sola
+lista, la home y `/casos` no pueden divergir.
+
+**El rubro lo definió Matías.** ⚠ **No** sale del campo «Industria» de las
+fichas viejas de `/work/clients-…`: ahí Snake Store y Glam Ragazza figuran como
+«E-Commerce», que es el canal y no el rubro. Si alguien vuelve a la ficha vieja,
+eso **no** es un dato a corregir.
+
+**`Patagonia Vessels` no es un caso.** Estuvo en B3 mientras no había lista
+cerrada. Es cliente, y va únicamente como logo en el marquee de B7.
+
+## Las ocho frases están sin aprobar
+
+Son condensaciones del texto que ya está escrito en cada ficha del sitio actual.
+Ninguna agrega cifras, períodos ni resultados que no estén ahí — de hecho no
+agregan ninguno. **Ninguna se publica sin que Matías la confirme.**
+
+La de `Carácter` va marcada aparte y hay que **reescribirla**, no sólo
+aprobarla: su ficha describe al cliente —«productora de eventos con experiencia
+en diseño y producción de experiencias de marca»— y en ningún momento dice qué
+hicimos nosotros. La frase salió de sus dos categorías del índice, Diseño Web y
+Publicidad de Performance, así que no inventa nada, pero tampoco cuenta el
+trabajo.
+
+## Dos cosas que se resolvieron distinto de la referencia
+
+**`min-height` y no `height` en el bloque de 80vh.** Con alto fijo, al ampliar
+al 200% el contenido desborda la caja y se recorta. Con mínimo, el bloque crece
+y se pierde —sólo en ese caso— que entre uno por pantalla. Verificado forzando
+contenido más alto que el 80vh: el bloque pasó de 640px a 835 sin recortar nada.
+
+**Los degradados van en una capa por encima de los casos, y el titular en una
+por debajo.** En la referencia comparten contenedor, y así el titular termina
+delante de las tarjetas. Los degradados tienen que tapar; el titular, no.
+
+## Lo que sigue bloqueando publicar
+
+- **Los logos.** No hay uno solo en `public/assets`.
+- **Las imágenes de cada caso.** Tampoco existen.
+- **El uso autorizado por cliente**, sin confirmar.
+- **Las ocho frases**, sin aprobar.
+
+---
+
 ## ⚠ CORRECCIÓN A LO QUE HABÍA ANOTADO
 
 Yo había escrito que esta página tiene *"overlay fijo con blur arriba y abajo"*.

@@ -931,9 +931,10 @@
 
   .b3-trabajo__nombre {
     font-family: var(--font-display);
-    /* `Patagonia Vessels` son 17 caracteres, el más largo de los
-       cuatro, dentro del rango medido de 4–23. Subió con el pie:
-       el nombre es lo que identifica la pieza. */
+    /* El más largo de los cuatro es `Glam Ragazza`, 12 caracteres,
+       bien adentro del rango medido de 4–23. Antes acá decía 17
+       por `Patagonia Vessels`, que ya no es una de las piezas.
+       Subió con el pie: el nombre es lo que identifica la pieza. */
     font-size: clamp(32px, 4.2vw, 56px);
     line-height: 1;
     text-transform: uppercase;
@@ -1528,6 +1529,11 @@
     .b9__redes {
       flex-wrap: nowrap;
       gap: var(--space-2);
+      /* Centradas en la fila. Los tres botones miden 305px contra
+         los 358 de la fila, así que esto reparte los 53 que
+         sobran en vez de dejarlos todos a la derecha. No toca
+         tamaños ni padding: sólo el reparto. */
+      justify-content: center;
     }
 
     .b9__redes .boton {

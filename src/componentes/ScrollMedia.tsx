@@ -25,6 +25,19 @@
    una transformación con componente de profundidad que la
    justifique.
 
+   DOS O TRES COLUMNAS
+   Nació con dos —medio y texto— y Casos pide tres: la
+   identificación del cliente a la izquierda, el medio al centro y
+   la frase a la derecha. Se resuelve con una prop opcional, como
+   `HeroSticky` con su `offset`, y no con un componente nuevo: la
+   mecánica es exactamente la misma.
+
+   Con `izquierda`, las dos columnas laterales entran SIMÉTRICAS:
+   la de la izquierda desde la izquierda y la de la derecha desde
+   la derecha, con el mismo desplazamiento de 47px que ya estaba
+   medido. En la variante de dos columnas nada cambia — el signo
+   por defecto es el que tenía.
+
    NO ES Reveal. Es continuo y reversible.
    =========================================================== */
 
@@ -35,19 +48,31 @@ import { useProgresoDeScroll } from "../lib/progresoDeScroll";
 export function ScrollMedia({
   medio,
   texto,
+  izquierda,
   className,
 }: {
   /** La imagen o el video. Va dentro del marco que se abre. */
   medio: ReactNode;
-  /** La columna de texto. No escala. */
+  /** La columna de texto, a la derecha del medio. No escala. */
   texto?: ReactNode;
+  /**
+   * Columna a la IZQUIERDA del medio. Al pasarla, el bloque pasa
+   * a tres columnas y las dos laterales entran simétricas.
+   */
+  izquierda?: ReactNode;
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   useProgresoDeScroll(ref, { recorrido: 0.75 });
 
   return (
-    <div ref={ref} className={["scroll-medio", className].filter(Boolean).join(" ")}>
+    <div
+      ref={ref}
+      className={["scroll-medio", izquierda ? "scroll-medio--tres" : null, className]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      {izquierda ? <div className="scroll-medio__izquierda">{izquierda}</div> : null}
       <div className="scroll-medio__marco">
         <div className="scroll-medio__interior">{medio}</div>
       </div>
