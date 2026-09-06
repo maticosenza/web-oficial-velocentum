@@ -38,6 +38,30 @@
    medido. En la variante de dos columnas nada cambia — el signo
    por defecto es el que tenía.
 
+   ⚠ TRAMPA AL APILAR: EL `order` VA EN LOS ENVOLTORIOS
+   Los ítems de la grilla son los tres envoltorios que crea este
+   componente —`__izquierda`, `__marco` y `__texto`—, no lo que
+   se le pasa por prop. Al apilar en móvil y querer reordenar,
+   `order` sobre el contenido no mueve NADA: es un hijo del ítem,
+   no el ítem. Va sobre el envoltorio.
+
+     ✗ .mi-columna            { order: 2 }
+     ✓ .mi-caso > .scroll-medio__izquierda { order: 2 }
+
+   Y falla en silencio, que es lo peor: la regla es válida, el
+   navegador no se queja y las columnas quedan en el orden del
+   DOM. Pasó construyendo Casos.
+
+   Al reordenar, además, sólo cambia el orden VISUAL: el del DOM
+   queda como está. Mientras no haya nada enfocable adentro no
+   abre brecha con el orden de tabulación, pero si algún día la
+   hay, hay que reordenar el DOM y no el `order`.
+
+   ⚠ Y APILADO, APAGAR EL CORRIMIENTO LATERAL. Ver el bloque de
+   `@media (max-width: 809px)` en `componentes.css`: sobre una
+   columna de ancho completo, los 47px la empujan fuera de la
+   pantalla y aparece scroll horizontal en toda la página.
+
    NO ES Reveal. Es continuo y reversible.
    =========================================================== */
 

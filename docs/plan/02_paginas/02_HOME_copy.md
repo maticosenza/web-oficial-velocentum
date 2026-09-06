@@ -492,10 +492,21 @@ adentro del rango medido de 4–23. Antes acá decía 17 por `Patagonia Vessels`
 que **ya no es una de las piezas**: es cliente, no caso, y va únicamente como
 logo en el marquee de B7.
 
-La categoría bajo cada pieza tampoco es marcador: es el rubro que definió
-Matías. Ojo, **no sale del campo «Industria» de las fichas viejas del sitio**,
-que en varios casos trae el canal — Snake Store y Glam Ragazza figuran ahí como
-«E-Commerce», que es por dónde venden, no a qué se dedican.
+La categoría bajo cada pieza tampoco es marcador: es el **rubro del cliente**,
+el mismo que se muestra en `/casos`. Ojo, **no sale del campo «Industria» de las
+fichas viejas del sitio**, que en varios casos trae el canal — Snake Store y
+Glam Ragazza figuran ahí como «E-Commerce», que es por dónde venden, no a qué se
+dedican.
+
+**Va el rubro y no una categoría de la pieza** `[DECIDIDO]`. La alternativa era
+etiquetar cada pieza por lo que muestra el video, y tiene dos problemas: sería
+un dato nuevo que **no existe en ningún lado** —habría que escribirlo pieza por
+pieza y sumarlo a los pendientes que bloquean publicar— y no aporta nada que el
+rubro no diga ya.
+
+Con el rubro, `src/data/casos.ts` queda como **fuente única de verdad para las
+dos vistas**, y desaparece la posibilidad de que la home y `/casos` digan cosas
+distintas del mismo cliente.
 
 ### La entrada: una sola regla para las dos filas
 

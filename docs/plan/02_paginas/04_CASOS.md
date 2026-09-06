@@ -49,6 +49,21 @@ eso **no** es un dato a corregir.
 **`Patagonia Vessels` no es un caso.** Estuvo en B3 mientras no había lista
 cerrada. Es cliente, y va únicamente como logo en el marquee de B7.
 
+## El rubro es el mismo dato en las dos vistas `[DECIDIDO]`
+
+Bajo cada pieza de B3, en la home, va el **rubro del cliente** — el mismo que
+muestra esta página. No una categoría propia de la pieza.
+
+La alternativa —etiquetar cada pieza por lo que muestra su video— sería un dato
+**nuevo, que no existe en ningún lado**: habría que escribirlo pieza por pieza y
+sumarlo a la lista de pendientes que bloquean publicar. Y no aporta nada que el
+rubro no diga ya.
+
+Con el rubro, `src/data/casos.ts` es **fuente única de verdad para las dos
+vistas**, y desaparece la posibilidad de que la home y `/casos` digan cosas
+distintas del mismo cliente. Es la misma razón por la que las cuatro piezas de
+B3 y las doce ranuras de B7 salen de acá y no de listas paralelas.
+
 ## Las ocho frases están sin aprobar
 
 Son condensaciones del texto que ya está escrito en cada ficha del sitio actual.
