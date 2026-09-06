@@ -1,10 +1,17 @@
 /* ===========================================================
-   B7 · CONFÍAN EN NOSOTROS
+   B7 · MARCAS
 
-   Titular a la izquierda y doce anillos de color en loop
-   horizontal, con el logo adentro y el nombre debajo. El bloque
-   queda fijado mientras B8 sube por encima: eso lo resuelve
-   `HeroSticky`, que envuelve a los dos. Ver su nota.
+   Titular display corto a la IZQUIERDA y la banda de anillos a
+   la derecha, en la misma línea, como la referencia. Sin párrafo
+   debajo: el bloque es el título y la banda, nada más.
+
+   La banda sangra hasta el borde derecho de la ventana a
+   propósito — la máscara del Ticker desvanece ese borde, así que
+   cortarla contra la columna de contenido desperdiciaría el
+   efecto y haría la banda más corta de lo necesario.
+
+   El bloque queda fijado mientras B8 sube por encima: eso lo
+   resuelve `HeroSticky`, que envuelve a los dos. Ver su nota.
 
    EL ANILLO ES BORDE, NO RELLENO
    El plan es explícito: círculo con `border` de color, no un
@@ -55,38 +62,39 @@ const RANURAS = Array.from({ length: 12 }, (_, i) => i);
 export function B7Clientes() {
   return (
     <section className="b7" aria-labelledby="b7-titulo">
-      <div className="b7__contenido contenido">
-        <Reveal as="h2" indice={0} id="b7-titulo" className="b7__titular">
-          Confían en nosotros
-        </Reveal>
+      <div className="b7__fila">
+        <div className="b7__cabecera">
+          <Reveal as="h2" indice={0} id="b7-titulo" className="b7__titular">
+            Marcas
+          </Reveal>
 
-        <Reveal indice={1} className="b7__bajada">
-          <p className="b7__bajada-texto">Detrás de cada una hay un plan escrito.</p>
+          {/* El andamio se queda aunque el párrafo de copy se haya
+              ido: sin él el bloque parece terminado y no lo está. */}
           <p className="etiqueta etiqueta--apagada b7__pendiente">
             Pendiente · los doce logos no existen, sólo se conocen dos de los doce nombres, y el uso
             autorizado de cada cliente está sin confirmar.
           </p>
-        </Reveal>
-      </div>
+        </div>
 
-      <Ticker etiqueta="Clientes de Velocentum" className="b7__ticker">
-        {RANURAS.map((i) => (
-          <div key={i} className="b7-cliente">
-            {/* El anillo es decorativo mientras no haya logo: lo
+        <Ticker etiqueta="Marcas que confían en Velocentum" className="b7__ticker">
+          {RANURAS.map((i) => (
+            <div key={i} className="b7-cliente">
+              {/* El anillo es decorativo mientras no haya logo: lo
                 que nombra a la ranura es el texto de abajo. Sin
                 esto el lector leería doce veces la misma
                 descripción de un marco vacío. */}
-            <div
-              className="b7-cliente__anillo"
-              aria-hidden="true"
-              style={{ "--anillo": ACENTOS[i % ACENTOS.length] } as CSSProperties}
-            >
-              <span className="etiqueta b7-cliente__nota">Logo</span>
+              <div
+                className="b7-cliente__anillo"
+                aria-hidden="true"
+                style={{ "--anillo": ACENTOS[i % ACENTOS.length] } as CSSProperties}
+              >
+                <span className="etiqueta b7-cliente__nota">Logo</span>
+              </div>
+              <p className="etiqueta b7-cliente__nombre">{CLIENTE_PENDIENTE}</p>
             </div>
-            <p className="etiqueta b7-cliente__nombre">{CLIENTE_PENDIENTE}</p>
-          </div>
-        ))}
-      </Ticker>
+          ))}
+        </Ticker>
+      </div>
     </section>
   );
 }

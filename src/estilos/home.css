@@ -586,36 +586,174 @@
   }
 
   /* =========================================================
+     B5 · PÍLDORAS
+     Banda baja. Sin titular, sin CTA: es un respiro entre B4 y B6.
+     ========================================================= */
+
+  .b5 {
+    padding-block: var(--space-6);
+  }
+
+  /* =========================================================
+     B6 · NUESTRO PROCESO
+     ========================================================= */
+
+  .b6__contenido {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-7);
+    padding-block: var(--space-section);
+  }
+
+  .b6__titular {
+    font-family: var(--font-display);
+    /* `Nuestro proceso` son 15 caracteres, bajo el techo de 20. */
+    font-size: clamp(40px, 7vw, 96px);
+    line-height: 1;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 0;
+  }
+
+  /* Cuatro columnas en desktop, 2×2 en tablet, una en móvil. */
+  .b6__pasos {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 600px) {
+    .b6__pasos {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (min-width: 960px) {
+    .b6__pasos {
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-5);
+    }
+  }
+
+  .b6-paso {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: var(--space-3);
+    align-content: start;
+  }
+
+  .b6-paso__n {
+    color: var(--texto-2);
+    margin: 0;
+  }
+
+  /* El contenedor es de 150×150 y el objeto entra adentro, no al
+     revés: los cuatro PNG no tienen el mismo margen interno, y
+     atarlos a un contenedor fijo es lo que hace que los cuatro se
+     vean del mismo tamaño en la fila. */
+  .b6-paso__objeto {
+    display: grid;
+    place-items: center;
+    width: 150px;
+    height: 150px;
+  }
+
+  .b6-paso__objeto img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .b6-paso__titulo {
+    font-family: var(--font-display);
+    /* `Recomendamos` son 12 caracteres, bajo el techo de 14. */
+    font-size: clamp(24px, 2.6vw, 32px);
+    line-height: 1;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .b6-paso__bajada {
+    /* Techo de 45 caracteres con cuatro columnas, para que no pase
+       de dos líneas. La más larga —`Un plan con presupuesto y
+       prioridad. Escrito.`— mide exactamente 45: está en el techo,
+       no debajo. Si el copy crece un carácter, se va a tres
+       líneas y desalinea la fila. */
+    max-width: 26ch;
+    font-size: 16px;
+    margin: 0;
+  }
+
+  @media (max-width: 809px) {
+    .b6-paso__objeto {
+      width: 100px;
+      height: 100px;
+    }
+  }
+
+  /* =========================================================
      B7 · CONFÍAN EN NOSOTROS
      ========================================================= */
 
   .b7 {
     display: grid;
     align-content: center;
-    gap: var(--space-6);
     background: var(--fondo);
     padding-block: var(--space-6);
+    /* Aire entre la banda y la onda azul de B8. Sin esto la onda
+       sube pegada a los nombres: la reserva cubre justo el alto
+       del borde y no sobra nada. */
+    --aire-onda: var(--space-7);
+  }
+
+  /* Título a la izquierda y banda a la derecha, en la misma
+     línea. El borde izquierdo se alinea con la columna de
+     contenido del resto de la página; el derecho no existe: la
+     banda sangra hasta el borde de la ventana, que es donde su
+     máscara la desvanece. */
+  .b7__fila {
+    display: grid;
+    gap: var(--space-5);
+    padding-left: max(var(--page-gutter), calc((100% - var(--max-contenido)) / 2));
+  }
+
+  @media (min-width: 810px) {
+    .b7__fila {
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: center;
+      gap: var(--space-7);
+    }
+  }
+
+  /* Bajo 810px el título y la banda no entran juntos, así que la
+     grilla de una sola columna los apila. La banda sigue
+     sangrando; lo único que toma el margen es el título. */
+  @media (max-width: 809px) {
+    .b7__cabecera {
+      padding-right: var(--page-gutter);
+    }
   }
 
   .b7__titular {
     font-family: var(--font-display);
-    /* `Confían en nosotros` son 19 caracteres, apenas bajo el
-       techo de 20 del titular display de un renglón. */
-    font-size: clamp(36px, 6vw, 88px);
+    /* `Marcas` son 6 caracteres: entra en un renglón en todo el
+       rango y deja el resto del ancho para la banda. */
+    font-size: clamp(44px, 7vw, 104px);
     line-height: 1;
     text-transform: uppercase;
     margin: 0;
   }
 
-  .b7__bajada-texto {
-    font-size: 20px;
-    max-width: var(--medida-parrafo);
-    margin: var(--space-3) 0 0;
-  }
-
   .b7__pendiente {
     color: var(--texto-2);
-    max-width: var(--medida-parrafo);
+    /* Acotado para que el andamio no ensanche la columna del
+       título y le coma ancho a la banda. */
+    max-width: 32ch;
     margin: var(--space-3) 0 0;
   }
 
@@ -651,29 +789,6 @@
   .b7-cliente__nombre {
     margin: 0;
     text-align: center;
-  }
-
-  /* EL CONTROL DE PAUSA VA ARRIBA DE LA PISTA, SÓLO ACÁ.
-     B8 sube y tapa a B7 de abajo hacia arriba. Con el botón en su
-     lugar normal —debajo de la pista— queda tapado ANTES que los
-     anillos, y durante ese tramo el ticker se ve moviéndose sin
-     que haya forma de detenerlo. Es exactamente lo que prohíbe
-     WCAG 2.2.2, y `prefers-reduced-motion` no lo cubre: son cosas
-     distintas.
-
-     Subiéndolo, el orden de tapado se invierte: lo primero que
-     desaparece es el movimiento y lo último el control. Mientras
-     se vea un anillo, el botón está a la vista.
-
-     Es un `order` y no un cambio en el Ticker porque el problema
-     no es del componente: aparece sólo cuando algo lo tapa de
-     abajo hacia arriba. En B5 el botón va donde va.
-
-     El orden del DOM no se toca, así que el foco sigue llegando
-     al botón igual. No hay nada más enfocable en la pista: los
-     anillos son texto, no controles. */
-  .b7__ticker .ticker__pausa {
-    order: -1;
   }
 
   @media (max-width: 809px) {

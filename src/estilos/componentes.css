@@ -208,11 +208,13 @@
     }
   }
 
-  .ticker__pausa {
-    /* Alcanzable siempre, no sólo al pasar el mouse: un control
-       que aparece con hover no existe para teclado ni para touch. */
-    font-size: 15px;
-    min-height: var(--control-min-height);
+  /* La banda es una parada de tabulación: es lo que le da al
+     teclado una forma de frenarla, ya que no hay botón dibujado.
+     El anillo de foco lo pone la regla global de `base.css`, y
+     va por fuera de la máscara para que no se lo coma el
+     degradado de los bordes. */
+  .ticker:focus-visible {
+    outline-offset: 6px;
   }
 
   /* Con movimiento reducido no alcanza con detener la animación:
@@ -410,7 +412,14 @@
      En el hijo, el campo sigue llenando y lo que se corre es el
      contenido centrado, que es lo que queríamos. */
   .hero-sticky__hero:has(+ .hero-sticky__siguiente .borde-onda[data-borde="arriba"]) > * {
-    padding-bottom: var(--borde-onda-alto);
+    /* Aditiva, igual que la reserva general de más arriba. Antes
+       era el alto de la onda a secas, y eso deja el borde pegado
+       al último renglón del bloque: la onda cubre exactamente lo
+       reservado y no sobra un píxel. Quien quiera aire declara
+       `--aire-onda` y se le suma.
+       Sin declararlo el resultado es el de antes, así que B1 no
+       se mueve. */
+    padding-bottom: calc(var(--aire-onda, 0px) + var(--borde-onda-alto));
   }
 
   /* Bajo 810px el pin se suelta: un hero fijado se come el

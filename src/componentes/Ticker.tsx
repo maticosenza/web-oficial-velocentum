@@ -10,14 +10,29 @@
    lado es el número medido en la referencia, y es lo que hace
    que se vea prolijo en lugar de recortado.
 
-   LA PAUSA NO ES OPCIONAL
+   LA PAUSA NO ES OPCIONAL, PERO NO ES UN BOTÓN DIBUJADO
    WCAG 2.2.2: cualquier contenido que se mueva solo más de
-   cinco segundos junto a otro contenido necesita un control
-   para detenerlo. `prefers-reduced-motion` NO lo reemplaza —
-   son cosas distintas: una es una preferencia del sistema, la
-   otra es un control que el usuario tiene que poder accionar
-   en el momento. Por eso hay un botón de verdad, visible,
-   alcanzable con teclado y con `aria-pressed`.
+   cinco segundos junto a otro contenido necesita un mecanismo
+   para detenerlo. Acá el mecanismo son dos, y ninguno ocupa
+   lugar en la composición:
+
+   - **Puntero:** la banda se detiene al pasar el mouse.
+   - **Teclado:** la banda es una parada de tabulación con
+     nombre accesible, y se detiene al recibir el foco.
+
+   Las dos condiciones son independientes: salir con el mouse
+   mientras el foco sigue adentro no reanuda nada.
+
+   `prefers-reduced-motion` es una tercera vía y NO reemplaza a
+   las otras dos: es una preferencia del sistema, no algo que el
+   usuario accione en el momento. Con ella la banda ni arranca.
+
+   ⚠ LO QUE ESTE MECANISMO NO CUBRE
+   En una pantalla táctil no hay hover, y sin teclado ni lector
+   no hay foco. Ahí el único freno que queda es
+   `prefers-reduced-motion`. Un botón visible cubría también ese
+   caso; se sacó a pedido, para que la banda quede como la
+   referencia. Queda dicho por si más adelante aparece.
 
    LA PISTA DUPLICADA Y EL LECTOR DE PANTALLA
    Para que el loop no tenga saltos, la lista va dos veces y se
@@ -31,7 +46,7 @@
    anchos se muevan a la misma velocidad aparente.
    =========================================================== */
 
-import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 
 import { prefiereMenosMovimiento } from "../lib/tokens";
 
@@ -50,9 +65,11 @@ export function Ticker({
   className?: string;
 }) {
   const pistaRef = useRef<HTMLDivElement>(null);
-  const [pausado, setPausado] = useState(false);
+  /* Dos frenos independientes. Con un solo booleano, sacar el
+     mouse reanudaría la banda aunque el foco siguiera adentro. */
+  const [puntero, setPuntero] = useState(false);
+  const [foco, setFoco] = useState(false);
   const [reducido, setReducido] = useState(false);
-  const idPista = useId();
 
   /* La duración sale del ancho real: media pista a `velocidad`
      píxeles por segundo. Se recalcula si cambia el contenido o
@@ -83,17 +100,26 @@ export function Ticker({
     return () => mq.removeEventListener("change", leer);
   }, []);
 
-  const enMovimiento = !reducido && !pausado;
+  const enMovimiento = !reducido && !puntero && !foco;
 
   return (
-    <section className={["ticker", className].filter(Boolean).join(" ")} aria-label={etiqueta}>
+    <section
+      className={["ticker", className].filter(Boolean).join(" ")}
+      aria-label={etiqueta}
+      /* La parada de tabulación es lo que le da al teclado una
+         forma de frenar la banda. Si no hay movimiento tampoco
+         hay nada que frenar, así que deja de ser parada: un stop
+         que no hace nada es ruido en el recorrido.
+         `onFocus`/`onBlur` en React burbujean, así que también
+         atrapan el foco de cualquier cosa enfocable de adentro. */
+      tabIndex={reducido ? undefined : 0}
+      onMouseEnter={() => setPuntero(true)}
+      onMouseLeave={() => setPuntero(false)}
+      onFocus={() => setFoco(true)}
+      onBlur={() => setFoco(false)}
+    >
       <div className="ticker__ventana">
-        <div
-          ref={pistaRef}
-          id={idPista}
-          className="ticker__pista"
-          data-animando={enMovimiento ? "sí" : "no"}
-        >
+        <div ref={pistaRef} className="ticker__pista" data-animando={enMovimiento ? "sí" : "no"}>
           <div className="ticker__grupo">{children}</div>
           {/* Copia visual. Fuera del árbol accesible y del orden
               de tabulación: el contenido ya se anunció una vez. */}
@@ -102,20 +128,6 @@ export function Ticker({
           </div>
         </div>
       </div>
-
-      {/* El control no se muestra si no hay nada moviéndose:
-          con movimiento reducido no habría qué pausar. */}
-      {!reducido && (
-        <button
-          type="button"
-          className="boton boton--contorno ticker__pausa"
-          aria-pressed={pausado}
-          aria-controls={idPista}
-          onClick={() => setPausado((p) => !p)}
-        >
-          {pausado ? "Reanudar" : "Pausar"}
-        </button>
-      )}
     </section>
   );
 }

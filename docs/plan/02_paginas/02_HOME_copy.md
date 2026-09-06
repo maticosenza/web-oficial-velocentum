@@ -223,13 +223,28 @@ B9. B4 no está en esa lista.
 
 ---
 
-## B5 · PÍLDORAS `[APROBADO]`
+## B5 · PÍLDORAS `[APROBADO]` — construido, sin marcadores
 
 Banda baja, una fila flotando hacia un costado. Sin titular.
 
 > Meta Ads · Tracking con CAPI · Google Ads · Atribución real · Product Ads ·
 > Optimización de ficha · Contenido para pauta · GA4 · Influencer marketing ·
 > Diseño de marca · Web y conversión
+
+**Es el primer bloque de la home sin un solo marcador:** las once capacidades ya
+estaban escritas y entraron tal cual. La más larga, `Optimización de ficha`, mide
+21 contra un techo de 20 — se pasa por uno y entra igual, así que la banda queda
+probada al filo del presupuesto.
+
+### El plan pedía "texto oscuro" y no se hizo
+
+Cada píldora lleva su color de fondo, eso sí. Pero el texto no es oscuro en las
+cinco: va el `--texto-sobre-N` de cada acento, y dos de los cinco piden blanco.
+Con tinta sobre `--acento-1` o `--acento-4` el contraste se cae, y el sistema
+define ese par justamente para que no se decida a ojo.
+
+El ciclo de color queda cortado —once sobre cinco— y no se fuerza a que cierre:
+manda la lista de capacidades, no la paleta.
 
 ---
 
@@ -250,19 +265,61 @@ La referencia usa 3 columnas a `flex: 1 0 0`; con 4 cada tarjeta baja de ~393px
 a ~292px sobre un contenido de 1200px. El objeto de 150×150 sigue entrando
 cómodo, pero **la bajada tiene que quedar en dos líneas**: ver presupuesto.
 
-## B7 · CONFÍAN EN NOSOTROS `[NUEVO]`
+### Estado en obra `[CONSTRUIDO]`
 
-**Titular display a la izquierda**
-> CONFÍAN EN NOSOTROS
+Sin marcadores: el copy corto ya estaba. Objeto en contenedor de 150×150, que
+baja a 100×100 bajo 810px. El contenedor es fijo y el objeto entra adentro con
+`object-fit: contain`, porque los cuatro PNG no traen el mismo margen interno y
+sin contenedor se verían de tamaños distintos en la misma fila.
 
-Doce logos en anillos de color, con el nombre del cliente debajo.
+**Ojo con la bajada de `Recomendamos`:** `Un plan con presupuesto y prioridad.
+Escrito.` mide **exactamente 45**, que es el techo con cuatro columnas. Está en
+el límite, no debajo. Un carácter más y pasa a tres líneas, que desalinea la fila.
 
-**Nota:** la línea aprobada *"Detrás de cada una hay un plan escrito"* funciona
-como bajada acá si querés conservarla.
+### Los objetos, asignados por significado
+
+Según `01_sistema/identidad.md`. Tres de los cuatro son exactos:
+
+| Paso | Objeto | Significado en identidad.md |
+|---|---|---|
+| 01 Preguntamos | foco | Entender, diagnosticar |
+| 02 Medimos | barras | Medir y proyectar |
+| 03 Proyectamos | conexión | Coordinar disciplinas |
+| 04 Recomendamos | rayo | Activar una **prioridad** |
+
+**⚠ El 03 no cierra, y conviene saberlo.** `Proyectamos` querría barras, porque
+el significado de barras es "medir **y proyectar**": los pasos 02 y 03 se pelean
+el mismo objeto. Repetirlo en una fila de cuatro se leería como un error, así
+que al 03 le toca conexión, que es el que sobra y el que peor encaja —
+"coordinar disciplinas" no es proyectar.
+
+Es la asignación menos mala, no una buena. Si aparece un quinto objeto, o si
+preferís repetir barras en 02 y 03, se cambia en `B6Proceso.tsx`.
+
+## B7 · MARCAS `[DECIDIDO]`
+
+**Titular display corto a la izquierda**
+> MARCAS
+
+Doce logos en anillos de color, con el nombre del cliente debajo, en una banda
+a la derecha del titular y **en la misma línea**, como la referencia.
+
+**Cambió el titular:** era `CONFÍAN EN NOSOTROS` (19 caracteres) y quedó
+`MARCAS` (6). El formato de la referencia es un display corto a la izquierda con
+la banda al lado, y un titular de 19 caracteres no deja ancho para la banda.
+
+**Salió la bajada.** La línea *"Detrás de cada una hay un plan escrito"* no va:
+el bloque es el titular y la banda, sin párrafo debajo. Si se quiere recuperar,
+va en `/casos`, no acá.
+
+**La banda sangra hasta el borde derecho de la ventana.** La máscara del Ticker
+desvanece ese borde, así que cortarla contra la columna de contenido
+desperdiciaría el efecto y acortaría la banda sin ganar nada.
+
+**Bajo 810px el titular y la banda se apilan.** El titular toma el margen; la
+banda sigue sangrando.
 
 ### Estado en obra `[CONSTRUIDO CON MARCADORES]`
-
-Se conservó la bajada *"Detrás de cada una hay un plan escrito."*
 
 **Nada del contenido de este bloque existe:** no hay un solo logo de cliente en
 `public/assets`, de los doce nombres se conocen dos —los de B3— y el uso
@@ -280,17 +337,27 @@ logo oscuro adentro se pierde contra media paleta.
 cae en acento-2, no en acento-5— y así queda. Forzar que cierre justo pediría
 diez o quince clientes, y la cantidad la manda el cliente real, no la paleta.
 
-### El control de pausa va ARRIBA de la pista, sólo acá
+### La pausa del Ticker ya no es un botón dibujado
 
-B8 sube y tapa a B7 de abajo hacia arriba. Con el botón en su lugar normal
-—debajo de la pista— quedaba tapado **antes** que los anillos, y en ese tramo el
-ticker se veía moviéndose sin forma de detenerlo. Es exactamente lo que prohíbe
-WCAG 2.2.2, y `prefers-reduced-motion` no lo cubre: son cosas distintas.
+**Cambio en el componente, así que vale para B5 y B7.** Se sacó el botón visible
+de `Pausar`. El mecanismo de WCAG 2.2.2 ahora son dos, y ninguno ocupa lugar en
+la composición:
 
-Subiéndolo se invierte el orden de tapado: primero desaparece el movimiento y
-último el control. Es un `order` local y no un cambio en el Ticker, porque el
-problema no es del componente — aparece sólo cuando algo lo tapa de abajo hacia
-arriba. En B5 el botón va donde va.
+- **Puntero:** la banda se detiene al pasar el mouse por encima.
+- **Teclado:** la banda es una parada de tabulación con nombre accesible y se
+  detiene al recibir el foco.
+
+Las dos condiciones son independientes: salir con el mouse mientras el foco
+sigue adentro no reanuda nada. `prefers-reduced-motion` es una tercera vía y no
+reemplaza a las otras dos — con ella la banda ni arranca.
+
+Con el botón fuera, desaparece de paso el arreglo anterior de subirlo arriba de
+la pista para que B8 no lo tapara antes que a los anillos.
+
+**⚠ Lo que este mecanismo no cubre.** En una pantalla táctil no hay hover, y sin
+teclado ni lector no hay foco. Ahí el único freno que queda es
+`prefers-reduced-motion`. El botón visible cubría también ese caso. Queda dicho
+por si más adelante aparece.
 
 ---
 
