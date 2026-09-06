@@ -202,14 +202,23 @@ Lo que era cierto —y sigue siéndolo— es que no hay loop: con el puntero qui
 no pasa nada.
 
 Construido con **dos capas**, y son dos justamente para que haya profundidad: si
-se movieran igual sería una imagen corriéndose. Medido con el puntero en una
-esquina: el degradado se desplaza 5px y las nubes 12.
+se movieran igual sería una imagen corriéndose.
+
+**Las amplitudes se subieron después de la primera versión, y hay una lección
+en eso.** La primera pasada quedó medible pero invisible: el recorrido de punta
+a punta eran 17px y 0.58° de rotación, repartidos en una pantalla entera. Al
+revisarlo con `getComputedStyle` todo daba "funciona" —el listener disparaba,
+la animación existía, el transform cambiaba— y a ojo el hero estaba quieto.
+**Que un efecto se mida no quiere decir que se vea.**
+
+Medido después de subirlo, moviendo el mouse de una esquina a la otra: **51px
+en x y 44px en y**, con **1.76°** de rotación del contenedor.
 
 Con el scroll, las dos van **más lento que el contenido**. Medido a 300px de
 scroll: el contenido se mueve 300, el degradado 258 y las nubes 206.
 
 **El seguimiento del puntero va suavizado,** no directo: el valor aplicado se
-acerca al del puntero un 8% por cuadro. Directo se lee como un elemento
+acerca al del puntero un 11% por cuadro. Directo se lee como un elemento
 persiguiendo al mouse; con retardo se lee como profundidad. Y ese bucle **se
 detiene solo** cuando llega: con el puntero quieto no queda un
 `requestAnimationFrame` girando por el seguimiento.
@@ -224,9 +233,15 @@ tiene loop es el seguimiento del cursor, que es otra cosa.
 - **El contenedor** sigue al puntero: desplazamiento, más una rotación mínima
   —del orden de 0.9°— y una escala apenas por encima de 1. Esa rotación y esa
   escala son lo que separa un desplazamiento plano de algo con volumen.
-- **La nube de adentro gira sobre sí misma** en loop continuo, 200s por vuelta.
-  Son ~1.8° cada diez segundos: se lee como deriva, no como un carrusel. Es
-  independiente del puntero.
+- **La nube de adentro gira sobre sí misma** en loop continuo, **60s por
+  vuelta**. Llegó a estar en 200s, que son 1.8° cada diez segundos: eso es
+  imperceptible. A 60s son 6° por segundo, que se nota en un par de segundos de
+  mirar sin llegar a leerse como un carrusel. Verificado: avanzó 136° en 23
+  segundos de observación.
+
+  Las manchas además se hicieron más densas —de 0.62 de opacidad máxima a
+  0.85—: una nube casi transparente moviéndose despacio es dos veces
+  invisible.
 
 Va sobredimensionada y cuadrada —170vmax— para que al girar no asome ninguna
 esquina, y centrada por `top`/`left` más margen negativo en vez de por

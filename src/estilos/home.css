@@ -272,10 +272,13 @@
       radial-gradient(55% 40% at 22% 88%, #ffc0cb 0%, #ffc0cb00 100%),
       radial-gradient(70% 55% at 50% 108%, #fff3c4 0%, #fff3c400 100%),
       linear-gradient(180deg, #8ec5ff 0%, var(--cielo) 55%, #dceeff 100%);
-    /* El degradado se mueve POCO: es el plano de fondo. */
+    /* El degradado se mueve POCO: es el plano de fondo. Subió de
+       10 a 24px de recorrido — con 10 el desplazamiento total de
+       punta a punta eran 20px sobre una pantalla entera, o sea
+       nada. */
     transform: translate3d(
-      calc(var(--px, 0) * 10px),
-      calc(var(--py, 0) * 10px + var(--scroll, 0) * 0.12px),
+      calc(var(--px, 0) * 24px),
+      calc(var(--py, 0) * 24px + var(--scroll, 0) * 0.12px),
       0
     );
   }
@@ -289,14 +292,18 @@
      tener volumen. Los valores del original eran del orden de
      -0.8° y 1.018. */
   .b1__nubes {
-    inset: -12%;
+    inset: -14%;
     overflow: hidden;
+    /* Amplitudes subidas para que se VEA, no sólo para que se
+       mida. Antes eran 26px y 0.9°, que de punta a punta daban 52
+       píxeles y 1.8 grados repartidos en una pantalla entera:
+       medible con `getComputedStyle` e invisible a ojo. */
     transform: translate3d(
-        calc(var(--px, 0) * 26px),
-        calc(var(--py, 0) * 26px + var(--scroll, 0) * 0.26px),
+        calc(var(--px, 0) * 70px),
+        calc(var(--py, 0) * 70px + var(--scroll, 0) * 0.26px),
         0
       )
-      rotate(calc(var(--px, 0) * -0.9deg)) scale(calc(1.012 + var(--py, 0) * 0.008));
+      rotate(calc(var(--px, 0) * -2.4deg)) scale(calc(1.03 + var(--py, 0) * 0.02));
   }
 
   /* Y la NUBE de adentro gira sobre sí misma, en loop lento y
@@ -322,12 +329,18 @@
     width: 170vmax;
     height: 170vmax;
     margin: -85vmax 0 0 -85vmax;
+    /* Más densas y más contrastadas que antes: una nube casi
+       transparente moviéndose despacio es dos veces invisible. */
     background:
-      radial-gradient(16% 9% at 34% 38%, rgb(255 255 255 / 0.62) 0%, rgb(255 255 255 / 0) 70%),
-      radial-gradient(13% 7% at 62% 34%, rgb(255 255 255 / 0.5) 0%, rgb(255 255 255 / 0) 70%),
-      radial-gradient(20% 8% at 48% 29%, rgb(255 255 255 / 0.4) 0%, rgb(255 255 255 / 0) 72%),
-      radial-gradient(12% 6% at 70% 46%, rgb(255 255 255 / 0.34) 0%, rgb(255 255 255 / 0) 70%);
-    animation: nube-girar 200s linear infinite;
+      radial-gradient(17% 10% at 33% 37%, rgb(255 255 255 / 0.85) 0%, rgb(255 255 255 / 0) 72%),
+      radial-gradient(14% 8% at 63% 33%, rgb(255 255 255 / 0.72) 0%, rgb(255 255 255 / 0) 72%),
+      radial-gradient(21% 9% at 47% 28%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 74%),
+      radial-gradient(13% 7% at 70% 45%, rgb(255 255 255 / 0.55) 0%, rgb(255 255 255 / 0) 72%),
+      radial-gradient(15% 8% at 38% 55%, rgb(255 255 255 / 0.45) 0%, rgb(255 255 255 / 0) 72%);
+    /* 200s eran 1.8° cada diez segundos: imperceptible. A 60s son
+       6° por segundo, que se nota en un par de segundos de mirar
+       sin llegar a leerse como un carrusel. */
+    animation: nube-girar 60s linear infinite;
     will-change: transform;
   }
 

@@ -38,7 +38,7 @@ import { useEffect, type RefObject } from "react";
 import { prefiereMenosMovimiento } from "./tokens";
 
 /** Cuánto se acerca el valor aplicado al del puntero por cuadro. */
-const SUAVIZADO = 0.08;
+const SUAVIZADO = 0.11;
 /** Bajo esta distancia se considera llegado y el bucle para. */
 const QUIETO = 0.001;
 
