@@ -72,26 +72,38 @@ Condensa las tres secciones de argumento que hoy ocupan tres pantallas.
 > QUIÉNES SOMOS
 
 **Titular** `[DECIDIDO]`
-> UN EQUIPO DE CRECIMIENTO PARA TU NEGOCIO
+> UN EQUIPO PARA TU NEGOCIO
 
-### Este slot admite 40 caracteres, no 20
+**Se acortó.** Era `UN EQUIPO DE CRECIMIENTO PARA TU NEGOCIO`, de 40 caracteres.
+Ahora son **25**, en dos renglones.
 
-El presupuesto general da **20 caracteres** al titular de sección display. Este
-titular tiene **40** y se queda igual: **el slot de B2 admite 40 en dos
-renglones.**
+### El slot sigue siendo de dos renglones, con techo 25
 
-**Por qué no es una excepción arbitraria.** Los 20 salieron de medir
-`Our works` y `Our services` en la referencia, que son titulares de una línea.
-Este no es de una línea: es un titular de dos renglones que envuelve dentro de
-`--medida-titular` (850px). Son dos slots distintos con el mismo nombre.
+El presupuesto general da **20 caracteres** al titular de sección display, pero
+esos 20 salieron de medir `Our works` y `Our services`, que son de **un
+renglón**. Este envuelve en **dos** dentro de `--medida-titular` (850px): son
+dos slots distintos con el mismo nombre, y esa distinción se mantiene.
 
-**Medido en el navegador, no estimado.** Con la fuente cargada da **dos
-renglones a 390, 500 y 1370px de ancho**, y también a zoom 200%. No llega a tres
-en ningún punto del rango: arriba de 1259px el cuerpo se topa en 68px y la caja
-en 850px, así que la peor relación cuerpo/caja ya está medida.
+**Lo que se cayó es el número.** La excepción de 40 quedaba sin objeto al
+acortarse el titular: el techo del slot es ahora **25**.
 
-**La regla que queda:** no achicar el cuerpo para meterlo en un renglón. Envuelve
-en dos, y así está construido en `src/estilos/home.css`.
+**La regla que queda:** no achicar el cuerpo para meterlo en un renglón.
+Envuelve en dos, y así está construido.
+
+### Recompuesto en dos columnas de verdad
+
+Eyebrow, titular, párrafo y CTA van **todos en la columna izquierda**, y la
+imagen en la derecha. Antes el titular cruzaba el ancho completo y la imagen
+arrancaba recién a la altura del párrafo, así que quedaba flotando.
+
+Las dos columnas empiezan a la misma altura: **medido, el borde superior de la
+imagen queda a 0px del eyebrow y el inferior a 0px de la base del CTA.**
+
+Por eso el marco **no declara proporción en desktop**: el alto se lo da la
+columna de texto. Si se fijara una proporción, tendría que ceder la alineación o
+la proporción, y lo que se pidió es la alineación. Cuando exista la foto real
+entra con `object-fit: cover`. Apilado, bajo 810px, sí lleva 4:3, porque ya no
+hay columna al lado que le dé el alto.
 
 **Párrafo**
 > Coordinamos estrategia, contenido, pauta y conversión para que cada decisión

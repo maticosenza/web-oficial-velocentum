@@ -19,13 +19,10 @@
 
 import { TitularPorLetras } from "../componentes/TitularPorLetras";
 import { Flecha } from "../componentes/Flecha";
-import { CursorPropio } from "../componentes/CursorPropio";
 
 export function B1Hero() {
   return (
     <div className="b1">
-      <CursorPropio />
-
       {/* Capa decorativa: la atmósfera nunca toca el texto. */}
       <div className="b1__atmosfera" aria-hidden="true" />
 

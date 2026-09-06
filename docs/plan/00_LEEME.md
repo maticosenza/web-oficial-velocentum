@@ -78,6 +78,10 @@ Salieron de medir. **No las "corrijas":**
 2. **No hay `@keyframes` en la home.** Casi todo el efecto es `sticky` puro.
    *(Ausencia de keyframes no prueba ausencia de animación: puede venir de JS.)*
 3. **El movimiento del mouse es un cursor custom**, no parallax.
+   **Va montado en la raíz de la página, nunca adentro de un bloque.** Un
+   ancestro con `sticky`, `transform` u `opacity` le crea contexto de apilado,
+   su `z-index` deja de competir contra la página y queda tapado — con el
+   cursor del sistema escondido, o sea sin puntero. Ver `CursorPropio.tsx`.
 4. **En reposo la página está estática.** Las nubes no flotan.
 5. **Los "blur" de Casos no son blur:** degradados blancos planos de `10vh`.
 6. **`mask-image: url(...) 50%/cover no-repeat alpha` NO ES VÁLIDO.**

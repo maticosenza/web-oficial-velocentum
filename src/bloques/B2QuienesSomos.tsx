@@ -25,21 +25,29 @@ export function B2QuienesSomos() {
       className="b2"
       aria-labelledby="b2-titulo"
     >
+      {/* Dos columnas de verdad: TODO el texto a la izquierda y la
+          imagen a la derecha. Antes el titular cruzaba el ancho
+          completo y la imagen arrancaba recién a la altura del
+          párrafo, así que quedaba flotando contra el bloque.
+          Ahora las dos columnas empiezan a la misma altura. */}
       <div className="b2__contenido contenido">
-        <Reveal indice={0}>
-          <p className="etiqueta etiqueta--apagada">Quiénes somos</p>
-        </Reveal>
+        <div className="b2__texto">
+          <Reveal indice={0}>
+            <p className="etiqueta etiqueta--apagada">Quiénes somos</p>
+          </Reveal>
 
-        <Reveal as="h2" indice={1} id="b2-titulo" className="b2__titular">
-          Un equipo de crecimiento para tu negocio
-        </Reveal>
+          <Reveal as="h2" indice={1} id="b2-titulo" className="b2__titular">
+            Un equipo para tu negocio
+          </Reveal>
 
-        <div className="b2__cuerpo">
-          <Reveal indice={2} className="b2__texto">
+          <Reveal indice={2}>
             <p className="b2__parrafo">
               Coordinamos estrategia, contenido, pauta y conversión para que cada decisión responda
               al mismo plan y puedas ver qué está funcionando.
             </p>
+          </Reveal>
+
+          <Reveal indice={3}>
             <p className="b2__accion">
               <EnlaceConCortina to="/metodo" className="boton boton--contorno">
                 Cómo trabajamos
@@ -47,29 +55,29 @@ export function B2QuienesSomos() {
               </EnlaceConCortina>
             </p>
           </Reveal>
-
-          <Reveal indice={3} className="b2__medio">
-            {/* PENDIENTE: la foto de backstage no existe. Marco con
-                la proporción correcta, dicho en el nombre accesible
-                para que no se confunda con una pieza real. */}
-            <div
-              className="b2__placeholder"
-              role="img"
-              aria-label="Marco reservado para una foto de backstage. La imagen real todavía no existe."
-            >
-              <img
-                className="b2__objeto"
-                src="/assets/conexion.png"
-                alt=""
-                aria-hidden="true"
-                width={1254}
-                height={1254}
-                loading="lazy"
-              />
-              <p className="etiqueta b2__placeholder-nota">Foto pendiente · backstage</p>
-            </div>
-          </Reveal>
         </div>
+
+        <Reveal indice={4} className="b2__medio">
+          {/* PENDIENTE: la foto de backstage no existe. Marco con
+              la proporción correcta, dicho en el nombre accesible
+              para que no se confunda con una pieza real. */}
+          <div
+            className="b2__placeholder"
+            role="img"
+            aria-label="Marco reservado para una foto de backstage. La imagen real todavía no existe."
+          >
+            <img
+              className="b2__objeto"
+              src="/assets/conexion.png"
+              alt=""
+              aria-hidden="true"
+              width={1254}
+              height={1254}
+              loading="lazy"
+            />
+            <p className="etiqueta b2__placeholder-nota">Foto pendiente · backstage</p>
+          </div>
+        </Reveal>
       </div>
     </SeccionConBorde>
   );

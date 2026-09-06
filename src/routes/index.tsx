@@ -11,6 +11,7 @@ import { B7Clientes } from "../bloques/B7Clientes";
 import { B8Cierre } from "../bloques/B8Cierre";
 import { B9Footer } from "../bloques/B9Footer";
 import { NavProvisional } from "../componentes/AndamioF0";
+import { CursorPropio } from "../componentes/CursorPropio";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -37,6 +38,13 @@ export const Route = createFileRoute("/")({
 function Inicio() {
   return (
     <>
+      {/* Al tope de la página y fuera de todo bloque: el cursor es
+          `fixed` con `z-index` alto, y adentro de un bloque con
+          contexto de apilado —el hero sticky, por ejemplo— ese
+          z-index deja de competir contra la página y queda tapado.
+          Ver la nota larga de `CursorPropio.tsx`. */}
+      <CursorPropio />
+
       {/* PROVISIONAL: el nav real es B0 y todavía no se construyó.
           Se reemplaza en la tanda que lo incluya. */}
       <NavProvisional />
