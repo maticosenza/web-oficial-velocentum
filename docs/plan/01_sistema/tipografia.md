@@ -27,7 +27,7 @@ para cumplir un máximo.**
 | Bajada de hero | 120 car. |
 | Texto de botón | 22 car. |
 | Párrafo expresivo de Home | 190 car. |
-| Titular de sección display | 20 car. |
+| Titular de sección display | 20 car. en un renglón · **40 en dos renglones** |
 | Título de tarjeta de servicio | 24 car. |
 | Descripción de tarjeta de servicio | 120 car. |
 | Entregable | 34 car. |
@@ -40,3 +40,14 @@ para cumplir un máximo.**
 El castellano corre 20-25% más largo que el inglés y el layout de la referencia
 está calibrado para inglés. Donde no entre, se acorta el texto antes que
 agrandar la caja.
+
+### La excepción de dos renglones
+
+`Titular de sección display` son dos slots con un mismo nombre. Los 20
+caracteres salieron de medir `Our works` y `Our services`, que son de **un
+renglón**. Un titular que envuelve en **dos** dentro de `--medida-titular`
+admite **40**, y no hay que achicarle el cuerpo para forzarlo a uno.
+
+Caso construido: el titular de B2, `UN EQUIPO DE CRECIMIENTO PARA TU NEGOCIO`,
+40 caracteres. Medido con la fuente cargada: dos renglones a 390, 500 y 1370px,
+y a zoom 200%. Ver `02_paginas/02_HOME_copy.md`.

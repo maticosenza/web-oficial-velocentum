@@ -20,27 +20,47 @@ vive en el hero y en el cierre. Sumarlo acá le saca peso a los otros dos.
 
 ---
 
-## B1 · HERO `[ABIERTO]`
+## B1 · HERO `[DECIDIDO]` — construido
 
-Titular en tres líneas, la tercera en color de acento. Sin eyebrow si el titular
-ya nombra el segmento.
+Titular en tres líneas, la tercera en color de marca.
 
-**Elegir una:**
+**Eyebrow** `[DECIDIDO]`
+> EQUIPO DE CRECIMIENTO
 
-**A.** HACEMOS CRECER / TIENDAS QUE / **YA VENDEN**
-**B.** CRECIMIENTO / PARA E-COMMERCE / **CON CONTROL**
-**C.** MÁS VENTAS, / LOS NÚMEROS / **BAJO CONTROL**
-**D.** TU TIENDA VENDE. / NOSOTROS LA / **HACEMOS ESCALAR**
+**Titular** `[DECIDIDO]`
+> ESTAMOS EN EL / NEGOCIO DE HACER / **CRECER NEGOCIOS**
 
-**Dependencia:** con la **A** no hace falta eyebrow, el titular ya dice a quién
-le habla. Con B, C o D hay que agregar arriba `PARA TIENDAS QUE YA VENDEN`.
+*(13, 16 y 15 caracteres. Techo: 16 por línea. Entra sin tocar el cuerpo.)*
 
-**Bajada** `[NUEVO]`
+**Las cuatro opciones A–D quedaron sin usar.** No se eligió ninguna: el titular
+decidido es una quinta. Se borran del documento para que nadie las reabra.
+
+**Cae con ellas la regla del eyebrow condicional.** Decía que sólo hacía falta
+eyebrow con B, C o D, y que debía ser `PARA TIENDAS QUE YA VENDEN`. No aplica:
+hay eyebrow, y dice otra cosa.
+
+**Consecuencia registrada:** el hero ya no nombra al segmento e-commerce. Es una
+decisión, no un olvido. Si hace falta nombrarlo arriba de todo, se resuelve en
+otro slot.
+
+**Bajada** `[NUEVO — divergencia sin resolver]`
+
+El documento tenía:
 > Estrategia, contenido, pauta y conversión en un solo equipo.
 > Primero medimos tu negocio. Después armamos el plan.
 
+Lo construido dice:
+> Estrategia, contenido, pauta y conversión. Un mismo equipo, un plan claro y
+> decisiones con tus números.
+
+*(103 caracteres, bajo el techo de 120.)* **Las dos están sin aprobar.**
+Elegir una y borrar la otra.
+
 **CTA** `[APROBADO]`
 > Reservá tu análisis ↗
+
+**Estado en obra:** el botón va deshabilitado y con el pendiente escrito al
+lado, porque el destino de la agenda no está decidido.
 
 ---
 
@@ -52,11 +72,37 @@ Condensa las tres secciones de argumento que hoy ocupan tres pantallas.
 **Eyebrow**
 > QUIÉNES SOMOS
 
-**Párrafo**
-> Tu tienda ya vende. Coordinamos estrategia, contenido, pauta y conversión para
-> que cada decisión responda al mismo plan y puedas ver qué está funcionando.
+**Titular** `[DECIDIDO]`
+> UN EQUIPO DE CRECIMIENTO PARA TU NEGOCIO
 
-*(154 caracteres. La versión anterior tenía 325 contra un techo de 190.)*
+### Este slot admite 40 caracteres, no 20
+
+El presupuesto general da **20 caracteres** al titular de sección display. Este
+titular tiene **40** y se queda igual: **el slot de B2 admite 40 en dos
+renglones.**
+
+**Por qué no es una excepción arbitraria.** Los 20 salieron de medir
+`Our works` y `Our services` en la referencia, que son titulares de una línea.
+Este no es de una línea: es un titular de dos renglones que envuelve dentro de
+`--medida-titular` (850px). Son dos slots distintos con el mismo nombre.
+
+**Medido en el navegador, no estimado.** Con la fuente cargada da **dos
+renglones a 390, 500 y 1370px de ancho**, y también a zoom 200%. No llega a tres
+en ningún punto del rango: arriba de 1259px el cuerpo se topa en 68px y la caja
+en 850px, así que la peor relación cuerpo/caja ya está medida.
+
+**La regla que queda:** no achicar el cuerpo para meterlo en un renglón. Envuelve
+en dos, y así está construido en `src/estilos/home.css`.
+
+**Párrafo**
+> Coordinamos estrategia, contenido, pauta y conversión para que cada decisión
+> responda al mismo plan y puedas ver qué está funcionando.
+
+*(134 caracteres, techo 190. La versión anterior tenía 325.)*
+
+**Se cayó `Tu tienda ya vende.` del arranque del párrafo** al entrar el titular:
+con el titular arriba, esa frase quedaba diciendo dos veces a quién le habla.
+Es una consecuencia del titular, no un recorte suelto.
 
 **CTA**
 > Cómo trabajamos ↗ → `/metodo`
@@ -109,6 +155,38 @@ entregás: confirmalos, corregilos o reemplazalos uno por uno.**
 | 02 | ROAS de equilibrio y CPA objetivo | Shootings de producto y marca | Google Ads | Tracking con CAPI |
 | 03 | Plan de inversión por canal | Diseño de marca y piezas | Product Ads y Shopping | GA4 y eventos |
 | 04 | Proyección a 90 días | Influencer marketing | Optimización de ficha en ML | Medición y atribución por canal |
+
+### Estado en obra `[CONSTRUIDO CON MARCADORES]`
+
+**La tabla de arriba NO está en el sitio.** El bloque se construyó con las
+dieciséis filas mostrando `Pendiente · entregable sin confirmar`, igual que el
+CTA del hero: antes que publicar dieciséis afirmaciones sin confirmar sobre lo
+que la agencia entrega, el bloque dice que faltan.
+
+El marcador mide **36 caracteres** contra un techo de 34, a propósito: el layout
+queda probado apenas por encima del peor caso, así el copy real entra después
+sin mover nada.
+
+Para reemplazarlos: `ENTREGABLE_PENDIENTE` en `src/bloques/B4Servicios.tsx`.
+
+**Cuatro tarjetas — confirmado.** Nombres de 10 a 16 caracteres, bajo el techo
+de 24.
+
+**Un acento por tarjeta, en orden:** acento-1 azul, 2 bermellón, 3 verde,
+4 violeta, cada uno con su `--texto-sobre-N`.
+
+*Observación, no error:* esos cuatro acentos son también los colores de las
+cuatro páginas en el nav y en los rectángulos del footer. La paleta tiene cinco
+y el quinto está tomado por los ciclos, así que la coincidencia es inevitable
+mientras el color de servicio salga de la misma paleta.
+
+**Imagen vertical a 3:4.** El plan pedía "imagen vertical" sin fijar
+proporción. Queda **3:4**, el retrato estándar, con marco punteado y el nombre
+accesible diciendo de qué tarjeta es. Si las fotos reales vienen en otra
+proporción, se cambia `aspect-ratio` en `.b4-tarjeta__medio` y nada más se mueve.
+
+**Sin borde de onda.** El hilo conductor de la nube pasa por B2, B3, B7, B8 y
+B9. B4 no está en esa lista.
 
 ---
 
@@ -180,7 +258,8 @@ velocentum.agency. No se inventan.
 | # | Decisión | Bloquea |
 |---|---|---|
 | 1 | **Los 16 entregables** | B4 — el bloque principal |
-| 2 | Titular del hero: A, B, C o D | B1 y el tono de toda la página |
+| ~~2~~ | ~~Titular del hero: A, B, C o D~~ **RESUELTO** — ver B1 | — |
+| 2b | Cuál de las dos bajadas de hero queda | B1 |
 | 4 | "Inicio" o "Home" | B0 y B9 |
 | 5 | Destino del CTA de cierre | B8 y la publicación |
 | 6 | Mail y redes reales | B9 |
@@ -199,7 +278,7 @@ este largo**, así el copy definitivo entra después sin romper nada.
 | Bajada hero | — | 120 total, 2 líneas |
 | Texto de botón | 10 (`Contact Us`) · 20 (`Book a Strategy Call`) | **22** |
 | Párrafo de B2 | 169 | **190** |
-| Titular de sección display | 9–12 (`Our works`, `Our services`) | **20** |
+| Titular de sección display | 9–12 (`Our works`, `Our services`) | **20** en un renglón · **40 en dos**, ver B2 |
 | Título de tarjeta de servicio | 14–20 | **24** |
 | Descripción de tarjeta de servicio | 85–118 | **120**, 2 líneas |
 | Entregable | 15–34 | **34** |

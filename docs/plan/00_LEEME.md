@@ -121,8 +121,29 @@ criterio de cada componente, no una fase final.
 
 | # | Decisión |
 |---|---|
-| 1 | Titular del hero: A, B, C o D |
+| ~~1~~ | ~~Titular del hero: A, B, C o D~~ — **DECIDIDO Y CONSTRUIDO.** Ver abajo |
 | 2 | "Inicio" u "Home" en el nav |
 | 3 | Panel izquierdo de Contacto: campo oscuro con objeto, o foto |
 | 4 | Qué reemplaza al botón por caso, al no haber subpáginas. Propuesta: chips de intervención |
 | 5 | Si `RouteCurtain` es viable en el stack real |
+
+---
+
+## TITULAR DEL HERO — DECIDIDO
+
+No se eligió ninguna de las cuatro opciones A–D del documento de copy. El
+titular es:
+
+> EQUIPO DE CRECIMIENTO *(eyebrow)*
+> **ESTAMOS EN EL / NEGOCIO DE HACER / CRECER NEGOCIOS**
+
+Construido en `src/bloques/B1Hero.tsx`. Las tres líneas miden 13, 16 y 15
+caracteres, dentro del techo de 16 por línea.
+
+**Queda derogada la dependencia "eyebrow según la opción elegida"** del
+documento de copy: el eyebrow es `EQUIPO DE CRECIMIENTO`, no
+`PARA TIENDAS QUE YA VENDEN`.
+
+**Consecuencia registrada, no un error:** con este titular el hero ya no nombra
+al segmento e-commerce. Si se quiere que la home lo diga arriba de todo, hay que
+resolverlo en otro slot, no volviendo a abrir el titular.
