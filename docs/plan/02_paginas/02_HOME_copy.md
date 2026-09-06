@@ -129,8 +129,28 @@ Titular en tres líneas, la tercera en color de marca.
 **Bajada** — ~~`Estrategia, contenido, pauta y conversión…`~~ **SE SACÓ.**
 
 En el hero quedan el titular y el CTA, nada más. Con el lugar que dejaron los
-dos, **el titular creció**: de `clamp(34px, 7.4vw, 118px)` a
-`clamp(40px, 8.8vw, 146px)`, y en ventanas bajas de 76 a 96px de tope.
+dos, **el titular creció hasta el límite medido**: `clamp(40px, 12.2vw, 160px)`.
+
+Los tres números salen de una medición, no de probar a ojo. La línea más larga
+—`NEGOCIO DE HACER`— **ocupa 6.949 veces el cuerpo** con esta fuente y este
+`letter-spacing`:
+
+- **Tope 160px.** La caja de contenido son 1168px, así que el máximo absoluto
+  sería 168. Se deja en 160 para que el texto quede al **95%** de la caja y no
+  al 99: si la fuente carga tarde y entra el respaldo, un 99% se corta y
+  `nowrap` lo empuja fuera.
+- **12.2vw.** El peor caso es la ventana más angosta: a 390px da 92% de
+  ocupación, a 320px el mínimo de 40px toma el relevo y da 97%. Nunca desborda.
+- **Mínimo 40px.**
+
+*Si el copy del titular cambia, estos números hay que recalcularlos: el 6.949 es
+de este titular.*
+
+**⚠ El tope de ventanas bajas NO subió: queda en 96px.** Es el valor con el que
+se midió que el hero entraba —a 654px de alto quedaban 23px entre el CTA y la
+onda—, y como el titular ocupa 2,85 veces su cuerpo en tres renglones, subirlo a
+112 se comería esa holgura y volvería a cortar. No se pudo verificar en una
+ventana baja real, así que se dejó el valor medido.
 
 **El marcador del CTA no desapareció, cambió de forma.** Competía visualmente
 con el titular, así que dejó de estar a la vista y pasó a ser la descripción
@@ -162,11 +182,25 @@ titular, chocaría con el CTA en el camino.
 hermano de quien se mueve —B1—. Por eso el valor se escribe en el contenedor
 común, y por eso `useProgresoDeScroll` ganó un parámetro `destino`.
 
-**⚠ La regla vive dentro de `@media (prefers-reduced-motion: no-preference)`.**
-El hook deja `--cobertura` en 1 con movimiento reducido, porque para sus otros
-consumidores 1 es el estado final neutro. Acá 1 significa "tapado del todo":
-aplicar la regla dejaría el titular hundido e invisible. Apagándola desde el
-media query, con movimiento reducido el texto queda quieto, entero y legible.
+**⚠ La regla tiene DOS condiciones, y ninguna es decorativa.**
+
+1. **`prefers-reduced-motion: no-preference`.** El hook deja `--cobertura` en 1
+   con movimiento reducido, porque para sus otros consumidores 1 es el estado
+   final neutro. Acá 1 significa "tapado del todo": aplicar la regla dejaría el
+   titular hundido e invisible.
+
+2. **`min-width: 810px`.** Abajo de eso el pin del hero está apagado, y sin pin
+   el efecto no se degrada: **se rompe.** El hero pasa a `min-height: 76vh`, así
+   que B2 arranca dentro del viewport y la cobertura nace distinta de cero con
+   la página arriba de todo. **Medido reproduciendo la condición: 0.0678 de
+   entrada, o sea el titular naciendo al 88% de opacidad y quedándose ahí** — el
+   gris que se veía en móvil. En un teléfono, con el hero más corto respecto del
+   viewport, la fracción es peor.
+
+   Y no es sólo el valor inicial: sin pin el hero se scrollea con la página, así
+   que "cuánto lo tapó la nube" deja de significar lo que el efecto asume.
+
+Con las dos apagadas el texto queda quieto, entero y legible.
 
 **Titular** `[DECIDIDO]`
 > ESTAMOS EN EL / NEGOCIO DE HACER / **CRECER NEGOCIOS**
@@ -720,6 +754,24 @@ píldora es texto más flecha; cuando existan, entran acá.
 **Los rectángulos llevan el acento de su página** con su `--texto-sobre-N`, el
 mismo par que su link en el nav. El hover sube la tarjeta y la aclara: no es
 sólo color, así que se percibe aunque el color no se distinga.
+
+### Barra de cierre
+
+Línea divisoria fina arriba; debajo, el isotipo y `velocentum` a la izquierda y
+`Diseñado por Velocentum · © 2026 · Todos los derechos reservados` a la derecha.
+En móvil se apila centrada.
+
+**La palabra va como texto, no como el logotipo.** El wordmark ya está arriba en
+el mismo bloque; repetirlo acá lo convertiría en decoración. Acá es una firma.
+Por eso el isotipo va `aria-hidden`: la palabra de al lado ya dice el nombre, y
+sin eso un lector leería "Velocentum velocentum".
+
+**El año está escrito, no calculado.** Un `getFullYear()` en servidor y cliente
+puede no coincidir, y esto no vale una discrepancia de hidratación. **Hay que
+actualizarlo a mano cada enero.**
+
+La línea divisoria usa un alfa sobre `currentColor`, que ya es el par verificado
+del campo oscuro: así acompaña al texto en vez de quedar escrita aparte.
 
 ⚠ **Los nombres tienen que coincidir con los del nav, y la decisión 2 —"Inicio"
 u "Home"— sigue abierta.** Si cambia, cambia en los dos lados a la vez.

@@ -287,14 +287,30 @@
      No es un reveal: es un valor continuo, así que se deshace solo
      al scrollear para arriba.
 
-     LA REGLA VIVE DENTRO DE `no-preference` A PROPÓSITO.
-     El hook deja `--cobertura` en 1 con movimiento reducido,
-     porque para sus otros consumidores 1 es el estado final
-     neutro. Acá 1 significa "tapado del todo": aplicar la regla
-     dejaría el titular hundido e invisible. Apagándola desde el
-     media query, con movimiento reducido el texto queda quieto,
-     entero y legible. */
-  @media (prefers-reduced-motion: no-preference) {
+     DOS CONDICIONES, Y NINGUNA ES DECORATIVA.
+
+     1. `no-preference`. El hook deja `--cobertura` en 1 con
+        movimiento reducido, porque para sus otros consumidores 1
+        es el estado final neutro. Acá 1 significa "tapado del
+        todo": aplicar la regla dejaría el titular hundido e
+        invisible.
+
+     2. `min-width: 810px`. Abajo de eso el pin del hero está
+        apagado, y sin pin el efecto no se degrada: se rompe. El
+        hero pasa a `min-height: 76vh`, así que B2 arranca DENTRO
+        del viewport y la cobertura nace distinta de cero con la
+        página arriba de todo. Medido a 854px de ventana: 0.0678
+        de entrada, o sea el titular naciendo al 88% de opacidad y
+        quedándose ahí. En un teléfono, con el hero más corto
+        respecto del viewport, la fracción es peor.
+
+        Y no es sólo el valor inicial: sin pin el hero se va
+        scrolleando con la página, así que "cuánto lo tapó la
+        nube" deja de significar lo que el efecto asume.
+
+     Con las dos apagadas el texto queda quieto, entero y legible,
+     que es el peor caso aceptable. */
+  @media (min-width: 810px) and (prefers-reduced-motion: no-preference) {
     .b1__contenido {
       transform: translateY(calc(var(--cobertura, 0) * 16vh));
       opacity: calc(1 - var(--cobertura, 0) * 1.7);
@@ -369,12 +385,24 @@
 
   .titular-letras {
     font-family: var(--font-display);
-    /* Calculado para que la línea más larga —16 caracteres de
-       Anton— entre en un renglón a 1200px de contenido y a 390px
-       de móvil. Si el copy crece, este número baja.
-       Subió con el lugar que dejaron el eyebrow y la bajada: el
-       titular es lo único que abre el hero, así que se lo lleva. */
-    font-size: clamp(40px, 8.8vw, 146px);
+    /* MEDIDO, NO ESTIMADO.
+       La línea más larga —`NEGOCIO DE HACER`— ocupa 6.949 veces
+       el cuerpo, con esta fuente y este `letter-spacing`. De ahí
+       salen los tres números:
+
+       · Tope 160px: la caja de contenido son 1168px (1200 menos
+         los gutters), así que el máximo absoluto sería 168. Se
+         deja en 160 para que el texto quede al 95% de la caja y
+         no al 99: si la fuente carga tarde y entra el respaldo,
+         un 99% se corta y `nowrap` lo empuja fuera.
+       · 12.2vw: el peor caso es la ventana más angosta. A 390px
+         da 92% de ocupación, a 320px el mínimo de 40px toma el
+         relevo y da 97%. Nunca desborda.
+       · Mínimo 40px.
+
+       Si el copy crece, estos números bajan: el factor 6.949 es
+       de ESTE titular. */
+    font-size: clamp(40px, 12.2vw, 160px);
     line-height: 0.95;
     text-transform: uppercase;
     letter-spacing: 0.01em;
@@ -490,6 +518,16 @@
       padding-top: calc(var(--alto-nav, 96px) + var(--space-4));
     }
 
+    /* NO SUBE CON EL DE ARRIBA, Y ES A PROPÓSITO.
+       Este tope es el que evita que el hero se corte en ventanas
+       bajas, y 96px es el valor con el que se midió que entraba:
+       a 654px de alto quedaban 23px de holgura entre el CTA y la
+       onda. El titular ocupa 2,85 veces su cuerpo en tres
+       renglones, así que subirlo a 112 se comería esos 23px y
+       volvería a cortar.
+
+       Se deja en 96 hasta poder medirlo de nuevo en una ventana
+       baja de verdad. */
     .titular-letras {
       font-size: clamp(40px, 7.4vw, 96px);
     }
@@ -1370,6 +1408,68 @@
 
     .b9-pagina:hover {
       transform: none;
+    }
+  }
+
+  /* --- La barra de cierre --- */
+
+  .b9__barra {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    /* La línea divisoria. El alfa va sobre el color del texto,
+       que ya es el par verificado del campo oscuro: así la línea
+       se aclara u oscurece con él y no queda escrita aparte. */
+    border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  }
+
+  .b9__firma {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0;
+    font-weight: 700;
+    font-size: 16px;
+  }
+
+  .b9__firma-iso {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--r-pill);
+    /* Campo claro con la V oscura no: acá el campo ya es oscuro y
+       la V blanca se apoya directo, sin contenedor de color. El
+       círculo es sólo el recorte. */
+    background: color-mix(in srgb, currentColor 12%, transparent);
+    padding: 5px;
+  }
+
+  .b9__firma-iso img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* Opacidad plena. `--texto-2` está calculado contra el fondo
+     crema y sobre el campo oscuro no dice nada verificable. */
+  .b9__legal {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  /* Apilada y centrada. */
+  @media (max-width: 809px) {
+    .b9__barra {
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      gap: var(--space-4);
     }
   }
 }

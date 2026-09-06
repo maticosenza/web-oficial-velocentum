@@ -132,6 +132,34 @@ export function B9Footer() {
             </EnlaceConCortina>
           ))}
         </nav>
+
+        {/* Barra de cierre: línea fina arriba, firma a la
+            izquierda y la línea legal a la derecha.
+
+            La palabra va como TEXTO y no como el logotipo: el
+            wordmark ya está arriba, y repetirlo acá lo
+            convertiría en decoración. Acá es una firma, no una
+            marca.
+
+            El isotipo es decorativo —`aria-hidden`— porque la
+            palabra de al lado ya dice el nombre; si no, un lector
+            leería "Velocentum velocentum". */}
+        <div className="b9__barra">
+          <p className="b9__firma">
+            <span className="b9__firma-iso" aria-hidden="true">
+              <img src="/assets/velocentum-isotipo-blanco.png" alt="" width={794} height={904} />
+            </span>
+            velocentum
+          </p>
+
+          {/* El año está escrito, no calculado: un `getFullYear()`
+              en el servidor y en el cliente puede no coincidir, y
+              esto no vale una discrepancia de hidratación.
+              Hay que actualizarlo a mano cada enero. */}
+          <p className="b9__legal">
+            Diseñado por Velocentum · © 2026 · Todos los derechos reservados
+          </p>
+        </div>
       </div>
     </SeccionConBorde>
   );
