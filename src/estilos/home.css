@@ -1045,11 +1045,6 @@
     margin: 0;
   }
 
-  .b4__pendiente {
-    color: var(--texto-2);
-    margin: var(--space-4) 0 0;
-  }
-
   .b4__pila {
     padding-bottom: var(--space-section);
   }
@@ -1119,28 +1114,45 @@
 
   /* --- El marco de la imagen vertical --- */
 
-  .b4-tarjeta__medio {
-    display: grid;
-    place-items: center;
-    /* Vertical. El plan no fija la proporción, así que queda 3:4,
-       que es el retrato estándar. Si la foto real viene en otra,
-       se cambia acá y nada más se mueve. */
-    aspect-ratio: 3 / 4;
-    border-radius: var(--r-media);
-    background: color-mix(in srgb, var(--sobre) 10%, transparent);
-    border: 1.5px dashed color-mix(in srgb, var(--sobre) 55%, transparent);
-  }
+  /* ⚠ EL SLOT PASÓ DE 3:4 A 1:1, Y LO DECIDIÓ LA IMAGEN.
+     Los cuatro objetos son cuadrados, 1254×1254 con alfa. Probadas
+     las tres opciones sobre las tarjetas reales:
 
-  .b4-tarjeta__medio-nota {
-    color: var(--sobre);
+     - `contain` en 3:4: el objeto entra completo pero se dimensiona
+       por el ancho, así que sobra un cuarto de slot vacío arriba y
+       abajo y el objeto flota en el medio de una caja que no llena.
+     - `cover` en 3:4: llena, pero recorta los costados — y ahí es
+       donde están los elementos flotantes que rodean al objeto
+       principal. Cortados por el canto se leen como un error de
+       encuadre, no como sangrado.
+     - 1:1: el marco toma la proporción del archivo. El objeto entra
+       entero, llena su caja y no sobra nada.
+
+     El marco es nuestro y las imágenes ya no, así que se movió el
+     marco. `object-fit: contain` queda declarado igual: con el slot
+     y el archivo en la misma proporción no recorta nada, y si algún
+     día entra una pieza que no sea cuadrada, la deja entera en vez
+     de comérsela en silencio.
+
+     Centrado y no arriba: así el objeto queda enfrentado a la lista
+     de entregables en vez de al titular, que ya pesa solo. */
+  .b4-tarjeta__medio {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    align-self: center;
   }
 
   @media (min-width: 810px) {
     .b4-tarjeta {
-      /* Texto a la izquierda, imagen vertical a la derecha. La
-         columna de la imagen va acotada: a 3:4 sin techo, la
-         imagen sola decidiría el alto de la tarjeta y el apilado
-         terminaría con tarjetas más altas que el viewport. */
+      /* Texto a la izquierda, objeto a la derecha. La columna del
+         objeto va acotada: sin techo, la imagen sola decidiría el
+         alto de la tarjeta y el apilado terminaría con tarjetas más
+         altas que el viewport. Con el slot en 1:1 el techo aprieta
+         menos que con 3:4 —un cuadrado de 300px mide 300 de alto y
+         no 400— pero se deja igual: lo que limita es la tarjeta. */
       grid-template-columns: 1fr clamp(200px, 26%, 300px);
       gap: var(--space-7);
       min-height: 480px;

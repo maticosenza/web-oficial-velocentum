@@ -70,6 +70,7 @@ type Servicio = {
   nombre: string;
   bajada: string;
   entregables: [string, string, string, string];
+  imagen: string;
   acento: string;
   sobre: string;
 };
@@ -87,6 +88,7 @@ const SERVICIOS: Servicio[] = [
       "Plan de inversión por canal",
       "Proyección a 90 días",
     ],
+    imagen: "/assets/b4-estrategia.webp",
     acento: "var(--acento-1)",
     sobre: "var(--texto-sobre-1)",
   },
@@ -100,6 +102,7 @@ const SERVICIOS: Servicio[] = [
       "Diseño de marca y piezas",
       "Influencer marketing",
     ],
+    imagen: "/assets/b4-creatividad.webp",
     acento: "var(--acento-2)",
     sobre: "var(--texto-sobre-2)",
   },
@@ -113,6 +116,7 @@ const SERVICIOS: Servicio[] = [
       "Product Ads y Shopping",
       "Optimización de ficha en ML",
     ],
+    imagen: "/assets/b4-adquisicion.webp",
     acento: "var(--acento-3)",
     sobre: "var(--texto-sobre-3)",
   },
@@ -126,6 +130,7 @@ const SERVICIOS: Servicio[] = [
       "GA4 y eventos",
       "Medición y atribución por canal",
     ],
+    imagen: "/assets/b4-web-conversion.webp",
     acento: "var(--acento-4)",
     sobre: "var(--texto-sobre-4)",
   },
@@ -143,12 +148,6 @@ export function B4Servicios() {
           <p className="b4__bajada-texto">
             Un equipo. Cuatro motores funcionando juntos. Cada motor tiene su oficio, y la medición
             los atraviesa a todos.
-          </p>
-          {/* Dicho una vez para todo el bloque, en vez de repetirlo
-              en las cuatro tarjetas. Los entregables ya no están
-              acá: quedaron confirmados. */}
-          <p className="etiqueta etiqueta--apagada b4__pendiente">
-            Pendiente · las cuatro imágenes verticales no existen todavía.
           </p>
         </Reveal>
       </div>
@@ -187,17 +186,11 @@ export function B4Servicios() {
                 </ol>
               </div>
 
-              {/* PENDIENTE: las cuatro imágenes verticales no
-                  existen. Va el marco con la proporción, y el
-                  nombre accesible dice de qué tarjeta es para que
-                  no suenen los cuatro iguales. */}
-              <div
-                className="b4-tarjeta__medio"
-                role="img"
-                aria-label={`Marco reservado para la imagen vertical de ${s.nombre}. La imagen real todavía no existe.`}
-              >
-                <p className="etiqueta b4-tarjeta__medio-nota">Imagen pendiente</p>
-              </div>
+              {/* Decorativa: el objeto ilustra el motor que la
+                  tarjeta ya nombra en su título y explica en su
+                  bajada. Un `alt` describiendo el render sería
+                  ruido para quien usa lector de pantalla. */}
+              <img className="b4-tarjeta__medio" src={s.imagen} alt="" loading="lazy" />
             </article>
           ))}
         </ServiceStack>

@@ -626,8 +626,45 @@ columna entera, y esa línea es la que sostiene la estructura. El texto corto
 sobre la línea larga se lee deliberado, no faltante. Y las cuatro tarjetas miden
 lo mismo: 490px las cuatro, medido.
 
-El párrafo de aviso que tenía el bloque ya no habla de los entregables. Queda
-sólo por las cuatro imágenes verticales, que siguen sin existir.
+**B4 no tiene un solo marcador.** El párrafo de aviso se sacó entero: los
+entregables están confirmados y las cuatro imágenes entraron.
+
+### Las cuatro imágenes `[CONSTRUIDO]`
+
+Renders 3D con alfa real, 1254×1254 cada uno, en WebP: **3,8 MB → 800 KB**.
+
+**El slot pasó de 3:4 vertical a 1:1**, y lo decidió la imagen. Probadas las
+tres opciones sobre las tarjetas reales: con `contain` en 3:4 el objeto entra
+completo pero sobra un cuarto de slot vacío y flota en el medio; con `cover`
+llena pero recorta los costados, que es justo donde están los elementos
+flotantes —cortados por el canto se leen como un error de encuadre, no como
+sangrado—; con 1:1 el objeto entra entero y llena su caja. El marco es nuestro
+y las imágenes ya no, así que se movió el marco.
+
+**Cada objeto evita el tono de su tarjeta**, verificado: amarillo sobre azul,
+azul sobre bermellón, violeta sobre verde, verde sobre violeta. Ninguno de los
+cuatro objetos principales se pierde contra su campo.
+
+⚠ **Lo que sí pierde definición son elementos flotantes sueltos que comparten
+el tono del campo.** Medido como porcentaje de la tinta que queda por debajo de
+1.25:1 contra su fondo: Adquisición 0%, Creatividad 2.1%, Estrategia 3.0% —las
+esferitas azules sobre el azul— y Web & Conversión 4.9%, que es la más
+afectada: la tarjeta de imagen azul y el anillo violeta sobre el campo violeta.
+Son elementos decorativos de segundo plano y no se tocan, pero queda dicho.
+
+⚠ **ESTAS PIEZAS INTRODUCEN TONOS QUE NO SON DEL SISTEMA.** La paleta del sitio
+son cinco acentos; los renders traen vecinos:
+
+| Tono | Aparece en | Acento más cercano | Distancia RGB |
+|---|---|---|---|
+| Coral `#F87173` aprox. | los cuatro | `--marca` rosa `#FF1F6B` | 70 a 101 |
+| Azul eléctrico oscuro `#0018A8` | Creatividad | `--acento-1` `#1F6BFF` | 124 |
+| Violeta oscuro `#6018A8` | Adquisición | `--acento-4` `#8A3FFC` | 102 |
+
+Los dos azules y violetas oscuros son sombreado del color principal, no matices
+nuevos. El coral sí es un tono propio, y está en las cuatro piezas. Son parte
+del render y no se tocan: queda anotado porque la paleta declarada ya no
+describe del todo lo que se ve en pantalla.
 
 <!-- histórico: el marcador medía 36 caracteres contra un techo de 34, a
 propósito, para que el layout quedara probado apenas por encima del peor caso.

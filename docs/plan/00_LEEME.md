@@ -126,7 +126,11 @@ criterio de cada componente, no una fase final.
    estaba en `02_paginas/02_HOME_copy.md`, y cargados en el bloque. Los
    dieciséis entran bajo el techo de 34 caracteres — los dos más largos tienen
    33— y ninguno corta en dos renglones de 480px para arriba.
-   De B4 sigue faltando sólo **las cuatro imágenes verticales**.
+   ~~De B4 sigue faltando sólo las cuatro imágenes verticales.~~ **También
+   entraron**, y con ellas **B4 queda sin un solo marcador**. El slot pasó de
+   3:4 a 1:1 porque los renders son cuadrados. ⚠ Esas piezas introducen tonos
+   vecinos a la paleta —un coral que no es `--marca`— anotado en
+   `02_paginas/02_HOME_copy.md`.
 6. **Los ocho casos están definidos**, en este orden: Snake Store · Carácter ·
    Glam Ragazza · Vinotique · Ilsapore · Armbruster · Greenpac · Comercial Pas.
    Con su rubro, que **definió Matías** y no sale del campo «Industria» de las
