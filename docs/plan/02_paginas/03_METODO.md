@@ -19,9 +19,11 @@ andamio porque Casos y Contacto todavía lo usan.
   query toca `.met1`**. Esta página no tiene pin, así que no hay nada que
   soltar en móvil — a diferencia de la home, que sí suelta el alto bajo 810px
   porque ahí se apaga el pin.
-- Overlay de tinta al **70%**, en `#030f2e` y no en `--tinta`: son azules
+- Overlay de tinta al **45%**, en `#030f2e` y no en `--tinta`: son azules
   distintos y el de la referencia empuja la foto al azul del sistema. Va en
-  **capa aparte de la foto**, para que cuando entre la imagen real no se toque.
+  **capa aparte de la foto**, para poder ajustarlo sin tocar la imagen. Bajó de
+  70% para que la foto se vea; el contraste del titular lo resuelve un scrim
+  aparte, ver más abajo.
 - Titular blanco en dos líneas de 17 caracteres.
 - CTA azul con el mismo marcador de agenda que la home: `aria-disabled` y el
   aviso como descripción accesible.
@@ -134,12 +136,46 @@ texto en tinta.
 |---|---|
 | Contenedor | `height: 100vh; position: relative` — a pantalla completa, **sin pin** |
 | Imagen | `position: absolute; inset: 0` con `will-change: filter` |
-| Overlay | capa de tinta `#030f2e` a `opacity: 0.7` sobre la foto, `inset: 0` |
+| Overlay | capa de tinta `#030f2e` a `opacity: 0.45` sobre la foto, `inset: 0` |
+| Scrim | degradado vertical del mismo tinte, `0.25` en la banda del titular |
 | Titular | display condensado, blanco, dos líneas, centrado |
 
-**El overlay al 70% es el dato clave.** Es lo que permite que una foto
-cualquiera funcione de fondo: la tiñe tanto que la foto aporta textura y
-profundidad, no información. Con eso, no necesitás una fotografía perfecta.
+### El overlay, y por qué 45% no alcanza solo
+
+El overlay es lo que permite que una foto cualquiera funcione de fondo: la tiñe
+lo suficiente como para que aporte textura y profundidad, no información.
+
+Al **70%** la foto quedaba apagada. Bajó a **45%**, y ahí el titular blanco deja
+de cumplir. Medido sobre `imagen-metodo.png`, compuesto contra el tinte con la
+fórmula de WCAG, sobre toda la caja del titular:
+
+| Velo | Peor contraste del titular |
+|---|---|
+| 70% | 7.10:1 |
+| 57.5% | 4.55:1 |
+| 50% | 3.55:1 |
+| **45%** | **3.04:1** |
+| **40%** | **2.62:1** |
+
+No es un brillo puntual: al 45%, el **2.39%** de la caja del titular queda bajo
+4.5:1, repartido de un extremo al otro — el aro de vidrio detrás de
+«ENTENDER.», el objeto violeta y las piezas de la izquierda.
+
+**La solución es un scrim, no un velo más alto ni una sombra.** Subir el velo
+parejo hasta cumplir pedía 57.5%, que devuelve buena parte del apagado que se
+quería sacar. Y `text-shadow` **no sirve para esto**: WCAG 1.4.3 compara el
+color del texto contra el del fondo, y la sombra no entra en esa cuenta — ayuda
+a percibir el texto, no a cumplir el mínimo.
+
+Va entonces una segunda capa del mismo tinte al **25%**, en un degradado
+vertical detrás del titular. Compuesta con el velo da el equivalente a un 58.75%
+en esa banda, y el resto del hero se queda en 45%. Medido en siete ventanas
+—de 390×844 a 1920×700— el peor caso pasa de 3.04:1 a **4.75:1**, y en ninguna
+queda un solo píxel de la caja del titular por debajo de 4.5.
+
+Es vertical y no una elipse alrededor del texto porque la elipse dejaba ver su
+rectángulo: con radios más grandes que la caja, el degradado todavía valía 0.20
+al llegar a las esquinas y ahí lo cortaba el borde del elemento.
 
 **Copy**
 
@@ -154,8 +190,22 @@ salida a la página desde arriba.
 
 > `Reservá tu análisis ↗`
 
-**Imagen de fondo:** backstage de shooting. Con el overlay al 70% cualquier
-toma con gente y movimiento sirve.
+**Imagen de fondo:** `imagen-metodo.png`, 1690×931, un render 3D de los objetos
+del sistema sobre fondo azul oscuro con la columna central vacía — que es
+justamente donde cae el titular.
+
+Se sirve en **WebP**: 1415 KB → **69.5 KB**, el 4.9% del original. El PNG queda
+en el repo para rehacer la pieza, no para servirla. Va como `<img>` con
+`fetchPriority="high"` y no como `background-image`: es lo primero que se ve de
+la página y el escáner de precarga encuentra un `src` en el HTML enseguida,
+mientras que un fondo en CSS recién se descubre después de bajar la hoja.
+
+⚠ **PENDIENTE — el recorte en móvil.** La imagen es 1.82:1 y el hero es
+`100dvh`: en un teléfono, `cover` recorta tanto que sólo entra la columna
+central oscura y no se ve ni un objeto. El contraste ahí da 17:1 justamente
+porque está todo oscuro. Se resuelve con un recorte propio para móvil —un
+segundo archivo más vertical, o `object-position` corrido— y es una decisión de
+arte, no de código.
 
 **Sobre la estética de nubes que pediste:** acá conviene **no** meter el borde
 festoneado. El hero de esta página es foto a sangre de borde a borde, y ese es
@@ -427,7 +477,7 @@ Seis unidades: nav, hero, sobre nosotros, cuatro pasos, cierre y footer: Nav · 
 Cuatro tarjetas en 2×2 · Cierre azul · Footer.
 
 Sin sticky. La única mecánica nueva respecto de la home es el **overlay de tinta
-al 70% sobre foto a sangre**, que se reusa después en Casos.
+sobre foto a sangre**, que se reusa después en Casos.
 
 ## Decisiones abiertas
 

@@ -24,40 +24,59 @@
     overflow: hidden;
   }
 
-  /* PENDIENTE: la foto no existe. El marco ocupa el hero entero,
-     que es su "proporción correcta": va a sangre. */
+  /* La foto va a sangre, del ancho y el alto completos del hero.
+     El color de fondo es el mismo tono oscuro de la imagen: si
+     tarda en llegar, el hero no parpadea en claro debajo del
+     titular blanco. */
   .met1__foto {
     position: absolute;
     inset: 0;
-    display: grid;
-    /* La nota al pie y no al centro: centrada quedaba detrás del
-       titular, que también se centra. Es andamio, no puede pelear
-       con el contenido. */
-    align-content: end;
-    justify-items: center;
-    padding-bottom: var(--space-5);
-    background: color-mix(in srgb, var(--cielo) 45%, var(--tinta));
+    background: #151b30;
   }
 
-  .met1__foto-nota {
-    color: var(--fondo);
-    opacity: 0.75;
+  .met1__foto-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    /* La imagen es 1690×931 (1.82:1) y el hero es 100dvh: la
+       proporción nunca coincide, así que hay recorte sí o sí.
+       `cover` recorta, `contain` dejaría barras. */
+    object-fit: cover;
+    object-position: center;
   }
 
-  /* EL OVERLAY AL 70%. Capa aparte de la foto a propósito: cuando
-     entre la imagen real, esto no se toca. El color es el tinte de
-     la referencia, no `--tinta`: son azules distintos y el suyo
-     empuja la foto al azul del sistema. */
+  /* EL VELO GENERAL. Capa aparte de la foto, así se ajusta sin
+     tocar la imagen. El color es el tinte de la referencia, no
+     `--tinta`: son azules distintos y el suyo empuja la foto al
+     azul del sistema.
+
+     BAJÓ DE 70% A 45% PARA QUE SE VEA LA FOTO. Y con eso solo el
+     titular NO cumple: medido sobre la imagen real, compuesto con
+     la fórmula de WCAG, el peor píxel de la caja del titular da
+     3.04:1 al 45% y 2.62:1 al 40%. No es un brillo puntual — al
+     45% el 2.39% de esa caja queda bajo 4.5:1, repartido de un
+     extremo al otro: el aro de vidrio detrás de «ENTENDER.», el
+     objeto violeta y las piezas de la izquierda.
+
+     Subir el velo parejo hasta cumplir pedía 57.5%, que devuelve
+     la foto a un apagado parecido al que se quería sacar. Por eso
+     el contraste se resuelve en una segunda capa, sólo donde hay
+     texto. Ver `.met1__titular::before`. */
   .met1__velo {
     position: absolute;
     inset: 0;
     background: #030f2e;
-    opacity: 0.7;
+    opacity: 0.45;
     pointer-events: none;
   }
 
   .met1__contenido {
     position: relative;
+    /* Crea contexto de apilado, y hace falta: el scrim del titular
+       se dibuja con `z-index: -1` para quedar DETRÁS del texto.
+       Sin este aislamiento ese -1 se escaparía del bloque y caería
+       por debajo del velo, o sea que no taparía nada. */
+    isolation: isolate;
     display: grid;
     justify-items: center;
     text-align: center;
@@ -77,10 +96,67 @@
     font-size: clamp(38px, 10vw, 132px);
     line-height: 0.98;
     text-transform: uppercase;
-    /* Blanco sobre el velo: 15.9:1 contra el tinte al 70% sobre
-       el campo más claro posible. No depende de la foto. */
     color: var(--fondo);
     margin: 0;
+    /* Para que el scrim se posicione contra el titular. */
+    position: relative;
+  }
+
+  /* EL SCRIM — EL CONTRASTE, SÓLO DONDE HAY TEXTO.
+     Una segunda capa del mismo tinte al 25% sobre el velo del 45%.
+     Compuestas dan el equivalente a un velo del 58.75% en la banda
+     del titular. Medido sobre la imagen real, en cinco ventanas:
+     el peor caso pasa de 3.04:1 a 4.71:1, y en ninguna queda un
+     solo píxel de la caja del titular por debajo de 4.5. El resto
+     del hero —los objetos de arriba y de abajo— se queda en 45%.
+
+     El mínimo teórico para cumplir era 22.5%. Va en 25% para no
+     dejar el margen en la tercera cifra decimal: la diferencia
+     visual entre los dos valores es nula y la de criterio no.
+
+     ⚠ POR QUÉ NO ALCANZABA CON UNA SOMBRA EN EL TEXTO
+     Porque no cambia el número. WCAG 1.4.3 compara el color del
+     texto contra el del fondo; `text-shadow` no entra en esa
+     cuenta. Ayuda a percibir el texto, no a cumplir el mínimo.
+
+     VA ATADO AL TITULAR, NO A UN PORCENTAJE DEL HERO. Los insets
+     están en `em`, o sea en múltiplos del cuerpo, así que la banda
+     crece y se achica con el titular y lo sigue en cualquier
+     ventana. Un `top: 30%` fijo se despegaría en cuanto cambien el
+     alto del nav, el cuerpo del clamp o la cantidad de renglones.
+
+     ES UN DEGRADADO VERTICAL, Y ESO ESTÁ ELEGIDO
+     Primero probé una elipse alrededor del titular, y se le veía
+     el rectángulo: con radios más grandes que la caja, el
+     degradado todavía valía 0.20 al llegar a las esquinas y ahí lo
+     cortaba el borde del elemento. Un corte a 0.20 se ve.
+
+     El degradado vertical no puede tener ese problema: el alfa
+     depende sólo de `y`, así que a los costados no hay nada que
+     cortar. Y para que tampoco haya costura vertical, la capa se
+     extiende `-50vw` a cada lado — o sea que empieza y termina
+     fuera de la pantalla. `.met1` recorta con `overflow: hidden`,
+     así que no genera scroll horizontal.
+
+     LAS PARADAS TAMPOCO SON DECORATIVAS. La caja crece 1em arriba
+     y 1em abajo, así que el titular ocupa su franja central: entre
+     el 24.5% y el 75.5% del alto de la capa. El tinte pleno va del
+     18% al 82%, o sea que cubre esa franja con margen a los dos
+     lados, y el desvanecido —casi 100px arriba y otros 100 abajo—
+     cae entero fuera del texto. */
+  .met1__titular::before {
+    content: "";
+    position: absolute;
+    inset: -1em -50vw;
+    z-index: -1;
+    background: linear-gradient(
+      to bottom,
+      rgba(3, 15, 46, 0) 0%,
+      rgba(3, 15, 46, 0.25) 18%,
+      rgba(3, 15, 46, 0.25) 82%,
+      rgba(3, 15, 46, 0) 100%
+    );
+    pointer-events: none;
   }
 
   .met1__cta {

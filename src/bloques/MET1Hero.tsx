@@ -1,8 +1,8 @@
 /* ===========================================================
    MET-1 · HERO DE MÉTODO
 
-   Foto a sangre de borde a borde, overlay de tinta al 70% y el
-   titular blanco encima. Sin pin, sin nube.
+   Foto a sangre de borde a borde, overlay de tinta y el titular
+   blanco encima. Sin pin, sin nube.
 
    NO LLEVA BORDE DE ONDA, Y ES LO QUE LO DEFINE
    El hero de la home entra en la nube: éste es una foto plana de
@@ -16,11 +16,15 @@
    verificado en la referencia — no hay una sola regla responsive
    para el contenedor de este hero.
 
-   EL OVERLAY AL 70% ES EL DATO CLAVE
-   Es lo que permite que una foto cualquiera funcione de fondo: la
-   tiñe tanto que aporta textura y profundidad, no información. Y
-   es lo que hace que el titular blanco se lea sin depender de qué
-   hay en la imagen.
+   EL VELO BAJÓ A 45%, Y EL CONTRASTE SE RESUELVE APARTE
+   Al 70% la foto quedaba apagada. Al 45% se ve, pero el titular
+   blanco deja de cumplir: 3.04:1 sobre el peor píxel de su caja,
+   medido sobre la imagen real. Subir el velo parejo hasta llegar a
+   4.5:1 pedía 57.5%, que devuelve buena parte del apagado.
+
+   Así que el velo general se queda en 45% y el contraste lo
+   resuelve un scrim que va sólo detrás del titular. El detalle,
+   con los números, está en `estilos/metodo.css`.
    =========================================================== */
 
 import { useId, type CSSProperties } from "react";
@@ -32,21 +36,35 @@ export function MET1Hero() {
 
   return (
     <section className="met1" aria-labelledby="met1-titulo">
-      {/* PENDIENTE: la foto de backstage no existe. Va el marco
-          con la proporción del hero —pantalla completa— y dicho en
-          el nombre accesible, para que no se confunda con una
-          pieza real. Cuando exista, se reemplaza el fondo de esta
-          capa y el overlay queda igual. */}
-      <div
-        className="met1__foto"
-        role="img"
-        aria-label="Marco reservado para una foto de backstage a sangre. La imagen real todavía no existe."
-      >
-        <p className="etiqueta met1__foto-nota">Foto pendiente · backstage</p>
+      {/* DECORATIVA, Y POR ESO `alt=""`. El significado del bloque
+          lo lleva el titular; la imagen aporta textura y
+          profundidad. Un texto alternativo acá sería ruido para un
+          lector de pantalla, que ya escucha el H1.
+
+          Va como `<img>` y no como `background-image` a propósito:
+          es lo primero que se ve de la página, y el escáner de
+          precarga encuentra un `src` en el HTML enseguida — un
+          fondo en CSS recién se descubre después de bajar y
+          aplicar la hoja de estilos. `fetchPriority="high"` la
+          adelanta todavía más.
+
+          `width` y `height` son los del archivo: reservan la
+          proporción y evitan que el hero salte al cargarla. El
+          recorte real lo hace `object-fit: cover`. */}
+      <div className="met1__foto">
+        <img
+          className="met1__foto-img"
+          src="/assets/imagen-metodo.webp"
+          alt=""
+          width={1690}
+          height={931}
+          fetchPriority="high"
+          decoding="async"
+        />
       </div>
 
-      {/* La tinta al 70%. Capa aparte de la foto: cuando entre la
-          imagen real, esto no se toca. */}
+      {/* La tinta. Capa aparte de la foto: se puede ajustar sin
+          tocar la imagen. */}
       <div className="met1__velo" aria-hidden="true" />
 
       <div className="met1__contenido contenido">
