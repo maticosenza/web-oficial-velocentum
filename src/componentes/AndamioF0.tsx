@@ -6,9 +6,9 @@
 
    Lo que queda acá es sólo lo que todavía no tiene reemplazo:
    `parDeColor`, que usan las páginas de prueba de F0, y
-   `PaginaProvisional`, que sostiene Método, Casos y Contacto
-   hasta que se construyan. Cuando existan las tres, este archivo
-   se borra.
+   `PaginaProvisional`, que ya sólo sostiene Casos y Contacto —
+   Método se construyó y dejó de usarla. Cuando existan las dos
+   que quedan, este archivo se borra.
    =========================================================== */
 
 import { type CSSProperties } from "react";

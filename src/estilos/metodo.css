@@ -1,0 +1,288 @@
+/* ===========================================================
+   PÁGINA MÉTODO — MET-1 a MET-3.
+   El nav, el cierre y el footer se reutilizan de la home y sus
+   estilos viven en `home.css`.
+   =========================================================== */
+
+@layer components {
+  /* =========================================================
+     MET-1 · HERO
+     ========================================================= */
+
+  /* `100vh` en los TRES breakpoints. La home suelta el alto bajo
+     810px porque ahí se apaga el pin; acá no hay pin, así que no
+     hay nada que soltar. Verificado en la referencia: no existe
+     una sola regla responsive para este contenedor.
+     `dvh` con respaldo en `vh` por la barra del navegador en
+     móvil, que en `vh` deja un salto. */
+  .met1 {
+    position: relative;
+    height: 100vh;
+    height: 100dvh;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+
+  /* PENDIENTE: la foto no existe. El marco ocupa el hero entero,
+     que es su "proporción correcta": va a sangre. */
+  .met1__foto {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    /* La nota al pie y no al centro: centrada quedaba detrás del
+       titular, que también se centra. Es andamio, no puede pelear
+       con el contenido. */
+    align-content: end;
+    justify-items: center;
+    padding-bottom: var(--space-5);
+    background: color-mix(in srgb, var(--cielo) 45%, var(--tinta));
+  }
+
+  .met1__foto-nota {
+    color: var(--fondo);
+    opacity: 0.75;
+  }
+
+  /* EL OVERLAY AL 70%. Capa aparte de la foto a propósito: cuando
+     entre la imagen real, esto no se toca. El color es el tinte de
+     la referencia, no `--tinta`: son azules distintos y el suyo
+     empuja la foto al azul del sistema. */
+  .met1__velo {
+    position: absolute;
+    inset: 0;
+    background: #030f2e;
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  .met1__contenido {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: var(--space-6);
+    width: 100%;
+    /* El nav es fijo: el hero le reserva su banda, igual que en la
+       home. Sale de `--alto-nav`, que el nav publica midiéndose. */
+    padding-top: calc(var(--alto-nav, 96px) + var(--space-5));
+    padding-bottom: var(--space-6);
+  }
+
+  .met1__titular {
+    font-family: var(--font-display);
+    /* Dos renglones de 17 caracteres. El factor de esta fuente es
+       ~6.95 veces el cuerpo para 16 caracteres, así que 17 pide un
+       poco menos de cuerpo que el titular de la home. */
+    font-size: clamp(38px, 10vw, 132px);
+    line-height: 0.98;
+    text-transform: uppercase;
+    /* Blanco sobre el velo: 15.9:1 contra el tinte al 70% sobre
+       el campo más claro posible. No depende de la foto. */
+    color: var(--fondo);
+    margin: 0;
+  }
+
+  .met1__cta {
+    display: grid;
+    justify-items: center;
+  }
+
+  /* =========================================================
+     MET-2 · SOBRE NOSOTROS
+     ========================================================= */
+
+  .met2__contenido {
+    display: grid;
+    gap: var(--space-6);
+    /* Mucho aire arriba y abajo: es un párrafo suelto entre el
+       hero a sangre y la grilla de color. */
+    padding-block: var(--space-section);
+    align-items: start;
+  }
+
+  @media (min-width: 810px) {
+    .met2__contenido {
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: var(--space-7);
+    }
+  }
+
+  .met2__titular {
+    font-family: var(--font-display);
+    /* `Sobre nosotros` son 14 caracteres, bajo el techo de 20. */
+    font-size: clamp(40px, 6vw, 88px);
+    line-height: 1;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .met2__parrafo {
+    max-width: 34ch;
+    font-size: clamp(20px, 2.2vw, 26px);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  /* =========================================================
+     MET-3 · LOS CUATRO PASOS
+     ========================================================= */
+
+  .met3__contenido {
+    padding-block: 0 var(--space-section);
+  }
+
+  /* 2×2, y una columna abajo de 810 como la referencia.
+
+     `grid-auto-rows: 1fr` NO ES COSMÉTICO: la máscara se estira
+     con `mask-size: 100% 100%`, así que dos tarjetas de distinto
+     alto deforman la onda distinto y la diferencia se ve. Con las
+     filas iguales y las columnas iguales, las cuatro son
+     idénticas y la onda sale igual en todas. */
+  .met3__pasos {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-rows: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 810px) {
+    .met3__pasos {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  /* LOS CUATRO BORDES ONDULADOS.
+     Misma técnica que `SectionEdge`: máscara alfa con las
+     propiedades separadas, nunca el atajo `mask-image: url() 50%/
+     cover no-repeat alpha`, que no es válido.
+
+     Acá la máscara SÍ va sobre la tarjeta entera y no sobre una
+     franja, porque la silueta es un contorno cerrado: no hay
+     "alto fijo" que preservar. Lo que sí importa es que todas las
+     tarjetas midan igual, y eso lo garantiza la grilla. */
+  .met3-paso {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: var(--space-3);
+    color: var(--sobre);
+    /* EL PADDING SALE DEL DIP DE LA ONDA, NO DE OJO.
+       La silueta muerde hacia adentro un 5.5% de cada semieje en
+       su punto más profundo. Sobre una tarjeta de ~576px eso son
+       ~32px laterales, y sobre ~420px de alto unos 23. El padding
+       suma ese mordisco más el aire normal de una tarjeta: sin
+       esto, el texto queda comido por las entradas. */
+    padding: calc(var(--space-6) + 5.5%) calc(var(--space-5) + 5.5%);
+  }
+
+  /* LA MÁSCARA VA ACÁ, NO EN LA TARJETA.
+     `SectionEdge` lo deja escrito y vale igual para esta silueta:
+     la máscara sobre una capa DECORATIVA, nunca sobre texto,
+     controles ni anillos de foco. Enmascarando la tarjeta entera,
+     cualquier texto que rozara una entrada de la onda se
+     recortaría en silencio, y un anillo de foco también.
+
+     Las propiedades van separadas: el atajo
+     `mask-image: url() 50%/cover no-repeat alpha` NO es válido. */
+  .met3-paso__campo {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: var(--acento);
+    mask-image: url("/assets/tarjeta-onda.svg");
+    mask-position: center;
+    mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+    mask-mode: alpha;
+    pointer-events: none;
+  }
+
+  /* El contenido, por encima del campo. */
+  .met3-paso > *:not(.met3-paso__campo) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .met3-paso__n {
+    color: inherit;
+    margin: 0;
+  }
+
+  /* El contorno blanco grueso, igual que en B6: es lo que despega
+     al objeto de cualquier fondo, incluso del suyo propio.
+     Ocho `drop-shadow` encadenados con blur 0 — cada uno se aplica
+     al resultado del anterior, así la silueta se expande pareja en
+     vez de dejar cuatro púas. */
+  .met3-paso__objeto {
+    display: grid;
+    place-items: center;
+    width: 128px;
+    height: 128px;
+    justify-self: start;
+  }
+
+  .met3-paso__objeto img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff)
+      drop-shadow(0 -3px 0 #fff) drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff)
+      drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff);
+    /* Se anima al ENTRAR y al hover, no en loop. El estado de
+       reposo es quieto. */
+    transition: transform var(--motion-reveal) var(--motion-ease);
+  }
+
+  /* La entrada la dispara `Reveal`, que ya marca la tarjeta como
+     revelada: el objeto llega girado y se endereza con ella. */
+  .met3-paso[data-revelado="no"] .met3-paso__objeto img {
+    transform: rotate(-12deg) scale(0.88);
+  }
+
+  .met3-paso:hover .met3-paso__objeto img {
+    transform: rotate(6deg) scale(1.06);
+  }
+
+  .met3-paso__titulo {
+    font-family: var(--font-display);
+    /* De 28 a 35 caracteres: los títulos largos entran en dos
+       renglones sobre una tarjeta de ~576px. */
+    font-size: clamp(26px, 2.8vw, 36px);
+    line-height: 1.02;
+    text-transform: uppercase;
+    margin: var(--space-2) 0 0;
+  }
+
+  .met3-paso__bajada {
+    /* De 95 a 128 caracteres. Con la tarjeta ancha entran en tres
+       renglones sin desalinear la fila. */
+    max-width: 42ch;
+    font-size: 17px;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .met3-paso__objeto img,
+    .met3-paso[data-revelado="no"] .met3-paso__objeto img,
+    .met3-paso:hover .met3-paso__objeto img {
+      transition: none;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 809px) {
+    .met3-paso {
+      padding: calc(var(--space-5) + 5.5%) calc(var(--space-4) + 5.5%);
+    }
+
+    .met3-paso__objeto {
+      width: 96px;
+      height: 96px;
+    }
+  }
+}

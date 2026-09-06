@@ -5,6 +5,106 @@ Referencia estructural: página `about` de LoftyLab.
 
 ---
 
+# ESTADO: CONSTRUIDA `[F3]`
+
+Seis unidades. **Tres se reutilizan de la home sin tocarlas**: el nav (B0), el
+cierre (B8) y el footer (B9). Se construyeron MET-1, MET-2 y MET-3.
+
+Se borró el uso de `PaginaProvisional` en `/metodo`. El componente sigue en el
+andamio porque Casos y Contacto todavía lo usan.
+
+## MET-1 · Hero
+
+- **`100dvh` en los tres breakpoints.** Verificado en la fuente: **ninguna media
+  query toca `.met1`**. Esta página no tiene pin, así que no hay nada que
+  soltar en móvil — a diferencia de la home, que sí suelta el alto bajo 810px
+  porque ahí se apaga el pin.
+- Overlay de tinta al **70%**, en `#030f2e` y no en `--tinta`: son azules
+  distintos y el de la referencia empuja la foto al azul del sistema. Va en
+  **capa aparte de la foto**, para que cuando entre la imagen real no se toque.
+- Titular blanco en dos líneas de 17 caracteres.
+- CTA azul con el mismo marcador de agenda que la home: `aria-disabled` y el
+  aviso como descripción accesible.
+- **No lleva borde de nube**, y es lo que lo define: el hero de la home entra en
+  la nube, éste es foto a sangre. Ese contraste es el argumento de la página.
+- La foto no existe: marco a sangre con el aviso al pie. **Al pie y no al
+  centro** — centrado quedaba detrás del titular, que también se centra.
+
+## MET-2 · Sobre nosotros
+
+Título display a la izquierda, párrafo a la derecha, apilados bajo 810px.
+El párrafo mide **188 caracteres** contra un techo medido de 220.
+
+## MET-3 · Los cuatro pasos
+
+Grilla 2×2, una columna bajo 810px. Un acento por tarjeta en orden 1→4 con su
+`--texto-sobre-N`.
+
+### Las tarjetas tienen los cuatro bordes ondulados
+
+Cambio respecto de lo que decía este documento, que las daba como rectángulos de
+color. Misma técnica de máscara alfa que `SectionEdge`, con una silueta nueva en
+`assets/tarjeta-onda.svg` y ondas bastante más marcadas que el pie festoneado de
+B3.
+
+**Cómo se generó la silueta:** una curva cerrada, rectángulo muy redondeado
+modulado por un seno de **diez períodos enteros sobre todo el perímetro**. Que
+el número sea entero es lo que la hace cerrar sin costura; que la modulación sea
+sobre el perímetro completo —y no lado por lado— es lo que hace que las ondas
+crucen las esquinas en vez de morir en ellas.
+
+**⚠ La máscara va sobre una capa decorativa, no sobre la tarjeta.** Es la regla
+que `SectionEdge` ya deja escrita y vale igual acá: enmascarando la tarjeta
+entera, cualquier texto que rozara una entrada de la onda se recortaría en
+silencio, y un anillo de foco también. El campo de color es un `div` aparte
+detrás del contenido.
+
+**Las dos cosas que había que forzar, y están forzadas:**
+
+1. **El padding sale del dip, no de ojo.** La onda muerde hacia adentro un 5.5%
+   de cada semieje. El padding suma ese mordisco más el aire normal:
+   `calc(var(--space-5) + 5.5%)` de lado. Medido: 63px laterales sobre una
+   tarjeta de 572px.
+2. **Las cuatro miden exactamente lo mismo.** La máscara se estira con
+   `mask-size: 100% 100%`, así que dos tarjetas de distinto alto deforman la
+   onda distinto y se nota. `grid-auto-rows: 1fr` iguala las filas y las
+   columnas ya eran iguales. **Verificado: las cuatro dan 572×508.**
+
+### Los objetos, y por qué acá cierran los cuatro
+
+| Paso | Objeto | Significado en identidad.md |
+|---|---|---|
+| 01 Revisamos el ecosistema | conexión | Coordinar disciplinas |
+| 02 Diagnosticamos | foco | Entender, diagnosticar |
+| 03 Proyectamos | barras | Medir y proyectar |
+| 04 Ejecutamos | rayo | Activar una prioridad |
+
+El 01 mira las cuatro disciplinas juntas —qué vendés, cómo llega la gente, qué
+encuentra—, que es exactamente lo que significa conexión. **Es el objeto que en
+la home quedó fuera de B6, y acá encuentra su lugar.**
+
+Contorno blanco grueso, el mismo de B6. Se animan **al entrar en viewport y al
+hover, no en loop**, como el plan había decidido: cuatro objetos moviéndose
+solos en una página que explica cómo trabajás va en contra del tono.
+
+## MET-4 · Cierre
+
+**Es el componente B8 con otro copy.** Se le agregaron props `titulo`, `eyebrow`
+y `bajada`, con los valores de la home por defecto: el llamado de la home no
+cambió —verificado— y Método pasa el suyo. `eyebrow` y `bajada` se apagan con
+cadena vacía, porque la spec de MET-4 pide sólo titular y CTA. Se encienden
+pasando el texto.
+
+## Copy: se usó el tuyo, no el recortado
+
+Este documento proponía partir los títulos por no entrar. **Se usó el copy
+completo que mandaste**, de 28 a 35 caracteres de título y de 95 a 128 de
+bajada, y entra: con la tarjeta en 572px, los títulos toman dos renglones y las
+bajadas tres. La tabla de "tu copy no entra en este formato" quedó desactualizada
+por el ancho real de la tarjeta.
+
+---
+
 ## HALLAZGO PRINCIPAL: ESTA PÁGINA NO TIENE STICKY
 
 `[VERIFICADO]` — **cero ocurrencias de `position: sticky` en todo el `about`.**

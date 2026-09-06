@@ -1,6 +1,11 @@
 /* ===========================================================
    B8 · CIERRE — DENTRO DE LA NUBE AZUL
 
+   Lo usan la home y Método. El copy entra por props con los
+   valores de la home por defecto, así el llamado de la home no
+   cambia y Método pasa el suyo. `eyebrow` y `bajada` se apagan
+   con cadena vacía: la spec de MET-4 pide sólo titular y CTA.
+
    La nube azul sube por encima de B7 y el cierre completo vive
    adentro del campo: eyebrow, titular dentro de la mancha
    blanca, bajada y CTA. El plan lo decidió así para que el CTA
@@ -41,7 +46,18 @@ import { SeccionConBorde } from "../componentes/SectionEdge";
 import { Reveal } from "../componentes/Reveal";
 import { Flecha } from "../componentes/Flecha";
 
-export function B8Cierre() {
+export function B8Cierre({
+  titulo = "Hagamos crecer tu negocio.",
+  eyebrow = "Empecemos",
+  bajada = "Una llamada de 45 minutos, sin costo. Salís con un diagnóstico y una proyección, actives o no con nosotros.",
+}: {
+  /** El titular dentro de la mancha. */
+  titulo?: string;
+  /** Se puede omitir pasando cadena vacía. */
+  eyebrow?: string;
+  /** Ídem. Método lo omite: su spec sólo pide titular y CTA. */
+  bajada?: string;
+} = {}) {
   return (
     <SeccionConBorde
       color="var(--acento-1)"
@@ -51,9 +67,11 @@ export function B8Cierre() {
       aria-labelledby="b8-titulo"
     >
       <div className="b8__contenido contenido">
-        <Reveal indice={0}>
-          <p className="etiqueta b8__eyebrow">Empecemos</p>
-        </Reveal>
+        {eyebrow ? (
+          <Reveal indice={0}>
+            <p className="etiqueta b8__eyebrow">{eyebrow}</p>
+          </Reveal>
+        ) : null}
 
         {/* La mancha blanca: mismo lenguaje de nube, variante
             "mancha". Lleva su propio par de color, porque adentro
@@ -61,15 +79,12 @@ export function B8Cierre() {
             siendo blanco. */}
         <Reveal indice={1} className="b8__mancha">
           <h2 id="b8-titulo" className="b8__titular">
-            Hagamos crecer tu negocio.
+            {titulo}
           </h2>
         </Reveal>
 
         <Reveal indice={2} className="b8__cierre">
-          <p className="b8__bajada">
-            Una llamada de 45 minutos, sin costo. Salís con un diagnóstico y una proyección, actives
-            o no con nosotros.
-          </p>
+          {bajada ? <p className="b8__bajada">{bajada}</p> : null}
 
           <div className="b8__cta">
             {/* CREMA, NO ROSA NI VIOLETA, Y ESTÁ MEDIDO.
