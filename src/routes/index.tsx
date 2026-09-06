@@ -5,6 +5,8 @@ import { B1Hero } from "../bloques/B1Hero";
 import { B2QuienesSomos } from "../bloques/B2QuienesSomos";
 import { B3Trabajos } from "../bloques/B3Trabajos";
 import { B4Servicios } from "../bloques/B4Servicios";
+import { B7Clientes } from "../bloques/B7Clientes";
+import { B8Cierre } from "../bloques/B8Cierre";
 import { NavProvisional } from "../componentes/AndamioF0";
 
 export const Route = createFileRoute("/")({
@@ -44,6 +46,20 @@ function Inicio() {
           pin del hero, que si no se pisarían. */}
       <B3Trabajos />
       <B4Servicios />
+
+      {/* B5 (píldoras) y B6 (proceso) van acá en el orden de la
+          página, y se construyen después: el plan manda B7+B8
+          antes que ellos.
+
+          B7 y B8 van cosidos, igual que B1 y B2: B7 queda fijado
+          mientras el cierre azul sube encima. El offset sale del
+          token del sistema, con el piso del nav real, así una
+          tarjeta fijada nunca queda por debajo del nav. */}
+      <HeroSticky
+        offset="max(var(--sticky-clientes), calc(var(--alto-nav, 0px) + var(--space-2)))"
+        hero={<B7Clientes />}
+        siguiente={<B8Cierre />}
+      />
     </>
   );
 }

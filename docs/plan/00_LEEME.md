@@ -124,8 +124,24 @@ criterio de cada componente, no una fase final.
 | ~~1~~ | ~~Titular del hero: A, B, C o D~~ — **DECIDIDO Y CONSTRUIDO.** Ver abajo |
 | 2 | "Inicio" u "Home" en el nav |
 | 3 | Panel izquierdo de Contacto: campo oscuro con objeto, o foto |
-| 4 | Qué reemplaza al botón por caso, al no haber subpáginas. Propuesta: chips de intervención |
+| ~~4~~ | ~~Qué reemplaza al botón por caso~~ — **DECIDIDO: chips de intervención.** Ver abajo |
 | ~~5~~ | ~~Si `RouteCurtain` es viable en el stack real~~ — **SÍ.** Construido en `src/componentes/RouteCurtain.tsx` y en uso: B2 enlaza a `/metodo` con `EnlaceConCortina` |
+
+---
+
+## EL BOTÓN POR CASO — DECIDIDO
+
+En Casos **no va botón por caso.** En su lugar van los tópicos de intervención
+como chips debajo del párrafo —Meta Ads, Tracking con CAPI, Contenido para
+pauta— tomados de las 11 capacidades. Es la salida **c** del documento de Casos.
+
+No inventa destinos que no existen, llena la columna derecha y le dice al
+visitante qué se hizo en cada caso.
+
+**Consecuencia para B3 · Trabajos, en la home:** las tarjetas tampoco son
+enlaces individuales. El único destino del bloque es el botón a `/casos`, y las
+tarjetas no llevan estado de hover, porque un hover sobre algo que no responde
+al click promete una interacción que no existe. Queda así.
 
 ---
 

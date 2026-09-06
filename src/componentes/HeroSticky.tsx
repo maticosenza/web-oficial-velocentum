@@ -27,27 +27,48 @@
    Regla práctica: el bloque que sube va de un viewport para
    arriba.
 
+   NO ES SÓLO PARA EL HERO
+   Lo usan B1+B2 y también B7+B8, donde el bloque de clientes
+   queda fijado mientras el cierre azul sube por encima. El plan
+   llama a eso "variante de M2 con top alto", pero M2
+   —ServiceStack— no alcanza solo: un `sticky` se fija dentro de
+   SU padre, así que para que B7 siga fijado mientras B8 sube los
+   dos tienen que compartir contenedor. Eso es exactamente lo que
+   hace este componente, y por eso el offset es un parámetro en
+   vez de un componente nuevo.
+
+   EL OFFSET DESCUENTA DEL ALTO
+   `top` y `height` salen del mismo número. Fijar arriba a 200px
+   sin descontarlos del alto dejaría los últimos 200px del bloque
+   por debajo del pie de la ventana, invisibles para siempre.
+
    SE APAGA BAJO 810px
    No es una preferencia: con la pantalla de un teléfono el hero
    fijado se come todo el viewport. Ahí pasa a flujo normal, con
    alto natural. Con movimiento reducido, lo mismo.
    =========================================================== */
 
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 export function HeroSticky({
   hero,
   siguiente,
+  offset,
   className,
 }: {
-  /** El hero. Se fija a 100vh. */
+  /** El bloque que se fija. Ocupa el viewport menos el offset. */
   hero: ReactNode;
   /** El bloque que sube y lo tapa. Fondo 100% opaco. */
   siguiente: ReactNode;
+  /** Alto al que se fija. Por defecto 0, que es el hero a pantalla completa. */
+  offset?: string;
   className?: string;
 }) {
   return (
-    <div className={["hero-sticky", className].filter(Boolean).join(" ")}>
+    <div
+      className={["hero-sticky", className].filter(Boolean).join(" ")}
+      style={offset ? ({ "--pin-offset": offset } as CSSProperties) : undefined}
+    >
       <div className="hero-sticky__hero">{hero}</div>
       <div className="hero-sticky__siguiente">{siguiente}</div>
     </div>

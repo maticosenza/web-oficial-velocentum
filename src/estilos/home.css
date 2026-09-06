@@ -584,4 +584,187 @@
       justify-self: start;
     }
   }
+
+  /* =========================================================
+     B7 · CONFÍAN EN NOSOTROS
+     ========================================================= */
+
+  .b7 {
+    display: grid;
+    align-content: center;
+    gap: var(--space-6);
+    background: var(--fondo);
+    padding-block: var(--space-6);
+  }
+
+  .b7__titular {
+    font-family: var(--font-display);
+    /* `Confían en nosotros` son 19 caracteres, apenas bajo el
+       techo de 20 del titular display de un renglón. */
+    font-size: clamp(36px, 6vw, 88px);
+    line-height: 1;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .b7__bajada-texto {
+    font-size: 20px;
+    max-width: var(--medida-parrafo);
+    margin: var(--space-3) 0 0;
+  }
+
+  .b7__pendiente {
+    color: var(--texto-2);
+    max-width: var(--medida-parrafo);
+    margin: var(--space-3) 0 0;
+  }
+
+  /* --- El anillo --- */
+
+  .b7-cliente {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-3);
+    /* El ancho lo fija la ranura, no el nombre: si un nombre
+       largo estirara su columna, el loop cambiaría de velocidad
+       aparente de un anillo al otro. */
+    width: 168px;
+    margin-inline: var(--space-4);
+  }
+
+  /* Borde de color, nunca relleno. Con un disco pintado, un logo
+     oscuro adentro se pierde contra medio catálogo de acentos. */
+  .b7-cliente__anillo {
+    display: grid;
+    place-items: center;
+    width: 120px;
+    height: 120px;
+    border-radius: var(--r-pill);
+    border: 2px solid var(--anillo);
+    background: var(--fondo);
+  }
+
+  .b7-cliente__nota {
+    color: var(--texto-2);
+  }
+
+  .b7-cliente__nombre {
+    margin: 0;
+    text-align: center;
+  }
+
+  /* EL CONTROL DE PAUSA VA ARRIBA DE LA PISTA, SÓLO ACÁ.
+     B8 sube y tapa a B7 de abajo hacia arriba. Con el botón en su
+     lugar normal —debajo de la pista— queda tapado ANTES que los
+     anillos, y durante ese tramo el ticker se ve moviéndose sin
+     que haya forma de detenerlo. Es exactamente lo que prohíbe
+     WCAG 2.2.2, y `prefers-reduced-motion` no lo cubre: son cosas
+     distintas.
+
+     Subiéndolo, el orden de tapado se invierte: lo primero que
+     desaparece es el movimiento y lo último el control. Mientras
+     se vea un anillo, el botón está a la vista.
+
+     Es un `order` y no un cambio en el Ticker porque el problema
+     no es del componente: aparece sólo cuando algo lo tapa de
+     abajo hacia arriba. En B5 el botón va donde va.
+
+     El orden del DOM no se toca, así que el foco sigue llegando
+     al botón igual. No hay nada más enfocable en la pista: los
+     anillos son texto, no controles. */
+  .b7__ticker .ticker__pausa {
+    order: -1;
+  }
+
+  @media (max-width: 809px) {
+    .b7-cliente {
+      width: 128px;
+      margin-inline: var(--space-3);
+    }
+
+    .b7-cliente__anillo {
+      width: 88px;
+      height: 88px;
+    }
+  }
+
+  /* =========================================================
+     B8 · CIERRE — DENTRO DE LA NUBE AZUL
+     ========================================================= */
+
+  .b8 {
+    /* Más alto que el viewport: B7 queda fijado sólo mientras este
+       bloque tenga recorrido. Misma razón que en B2. */
+    min-height: 108vh;
+  }
+
+  .b8__contenido {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: var(--space-5);
+    padding-block: var(--space-section) var(--space-7);
+  }
+
+  /* Opacidad plena. `--texto-2` está calculado contra el fondo
+     crema y sobre el azul pierde contraste sin avisar: acá manda
+     `--texto-sobre-1`, que llega heredado del campo. */
+  .b8__eyebrow {
+    color: inherit;
+  }
+
+  /* La mancha: el titular vive adentro, sobre blanco. El par de
+     color cambia con el fondo, no se hereda el del campo azul. */
+  .b8__mancha {
+    background: var(--fondo);
+    color: var(--tinta);
+    /* Bordes muy redondeados, que es lo que pide el plan para la
+       variante "mancha". No lleva el borde de onda: la onda ya
+       corona la sección y repetirla acá dentro compite con ella. */
+    border-radius: clamp(32px, 6vw, 72px);
+    padding: var(--space-6) var(--space-7);
+    max-width: var(--medida-titular);
+  }
+
+  .b8__titular {
+    font-family: var(--font-display);
+    /* `Hagamos crecer tu negocio.` son 26 caracteres, bajo el
+       techo de 28 del titular de cierre. */
+    font-size: clamp(34px, 5.4vw, 72px);
+    line-height: 1;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .b8__cierre {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-5);
+  }
+
+  .b8__bajada {
+    max-width: 52ch;
+    font-size: 20px;
+    margin: 0;
+  }
+
+  .b8__cta {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-2);
+  }
+
+  .b8__pendiente {
+    color: inherit;
+  }
+
+  @media (max-width: 809px) {
+    .b8__mancha {
+      padding: var(--space-5);
+    }
+
+    .b8__bajada {
+      font-size: 17px;
+    }
+  }
 }

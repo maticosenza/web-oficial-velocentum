@@ -149,13 +149,12 @@ sobre el medio. Con el campo plano del marcador queda exacto. **Cuando lleguen
 los videos reales hay que mirarlo de nuevo:** si el video llena el campo hasta
 el borde se va a ver la juntura con la franja plana.
 
-**Las tarjetas no tienen estado de hover, y es a propósito.** El plan pide
-"hover con estado propio", pero eso presupone que la tarjeta lleva a algún lado.
-No hay subpáginas por caso: **es la decisión 4 del `00_LEEME`, todavía
-abierta.** Un hover sobre algo que no responde al click promete una interacción
-que no existe. Cuando se cierre esa decisión la tarjeta pasa a ser enlace y ahí
-el hover significa algo. Por ahora el único control de la sección es el botón a
-`/casos`.
+**Las tarjetas no tienen estado de hover, y queda así** `[DECIDIDO]`. El plan
+pide "hover con estado propio", pero eso presupone que la tarjeta lleva a algún
+lado. La decisión 4 ya se cerró y **no hay botón ni destino por caso**: en Casos
+van chips de intervención. Así que las tarjetas de Trabajos no son enlaces, y un
+hover sobre algo que no responde al click prometería una interacción que no
+existe. El único destino del bloque es el botón a `/casos`.
 
 ---
 
@@ -261,6 +260,38 @@ Doce logos en anillos de color, con el nombre del cliente debajo.
 **Nota:** la línea aprobada *"Detrás de cada una hay un plan escrito"* funciona
 como bajada acá si querés conservarla.
 
+### Estado en obra `[CONSTRUIDO CON MARCADORES]`
+
+Se conservó la bajada *"Detrás de cada una hay un plan escrito."*
+
+**Nada del contenido de este bloque existe:** no hay un solo logo de cliente en
+`public/assets`, de los doce nombres se conocen dos —los de B3— y el uso
+autorizado por cliente sigue sin confirmar. Van doce marcadores y el bloque lo
+dice una vez arriba, no doce veces.
+
+Se construye con los **doce** y no con tres o cuatro para que el loop y la
+máscara del Ticker queden probados con el ancho de pista real. El nombre
+marcador mide 17 caracteres contra un techo de 18.
+
+**El anillo es borde, no relleno**, como pide el plan. Con un disco pintado, un
+logo oscuro adentro se pierde contra media paleta.
+
+**Doce anillos sobre cinco acentos:** el ciclo queda cortado al final —el doce
+cae en acento-2, no en acento-5— y así queda. Forzar que cierre justo pediría
+diez o quince clientes, y la cantidad la manda el cliente real, no la paleta.
+
+### El control de pausa va ARRIBA de la pista, sólo acá
+
+B8 sube y tapa a B7 de abajo hacia arriba. Con el botón en su lugar normal
+—debajo de la pista— quedaba tapado **antes** que los anillos, y en ese tramo el
+ticker se veía moviéndose sin forma de detenerlo. Es exactamente lo que prohíbe
+WCAG 2.2.2, y `prefers-reduced-motion` no lo cubre: son cosas distintas.
+
+Subiéndolo se invierte el orden de tapado: primero desaparece el movimiento y
+último el control. Es un `order` local y no un cambio en el Ticker, porque el
+problema no es del componente — aparece sólo cuando algo lo tapa de abajo hacia
+arriba. En B5 el botón va donde va.
+
 ---
 
 ## B8 · CIERRE `[APROBADO]`
@@ -274,6 +305,35 @@ Sobre el campo azul, dentro de la mancha blanca.
 
 **Destino** `[ABIERTO]`: agendar directo, o `/contacto`. Recomendado: agendar,
 así la home se publica sin backend.
+
+### Estado en obra `[CONSTRUIDO]`
+
+Todo el copy de B8 está aprobado y entró tal cual. `Hagamos crecer tu negocio.`
+son 26 caracteres contra un techo de 28.
+
+**El campo es `--acento-1` con `--texto-sobre-1`,** y la mancha invierte el par:
+fondo `--fondo`, texto `--tinta`. Nada de `etiqueta--apagada` adentro del campo
+azul — `--texto-2` está calculado contra el fondo crema y sobre el azul pierde
+contraste sin avisar. Misma lección que el eyebrow del hero.
+
+**El CTA va con el mismo marcador que el hero:** botón deshabilitado y el
+pendiente escrito al lado, porque el destino de la agenda sigue sin definir.
+**Por eso tampoco tiene el glow en hover que pide el plan:** un glow sobre un
+control que no responde promete lo mismo que un enlace a ninguna parte. Cuando
+se decida el destino se cambian las dos cosas juntas, acá y en `B1Hero.tsx`.
+
+**La mancha no lleva borde de onda.** La onda ya corona la sección; repetirla
+adentro compite con ella. Son bordes muy redondeados, que es lo que pide la
+variante "mancha".
+
+**B7 fijado mientras B8 sube** lo resuelve `HeroSticky`, no `ServiceStack`. El
+plan lo llama "variante de M2 con top alto", pero M2 no alcanza solo: un
+`sticky` se fija dentro de SU padre, así que para que B7 siga fijado mientras B8
+sube los dos tienen que compartir contenedor. `HeroSticky` es exactamente eso, y
+se le agregó un `offset` opcional que sale de `--sticky-clientes` (200px) con el
+piso del nav real. El offset se descuenta del alto: fijar a 200px sin
+descontarlo dejaría los últimos 200px del bloque por debajo del pie de la
+ventana.
 
 ---
 

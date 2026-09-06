@@ -151,9 +151,16 @@ que la derecha tenga dos elementos.
   Tracking, Contenido— como chips debajo del párrafo. La referencia ya tiene un
   bloque llamado `Button & Topics`, así que el patrón existe.
 
-**Recomiendo la c.** No inventa destinos que no existen, llena el espacio, y le
+**DECIDIDO: la c.** No inventa destinos que no existen, llena el espacio, y le
 dice al visitante qué se hizo en cada caso, que es información que hoy no está
 en ninguna parte del sitio.
+
+Los chips salen de las **11 capacidades** ya escritas, las mismas de B5. No se
+inventan tópicos nuevos por caso: si una intervención no está en esa lista, o
+se agrega a la lista o no va.
+
+**Alcanza también a B3 en la home:** sin botón por caso, las tarjetas de
+Trabajos tampoco son enlaces. El único destino de ese bloque es `/casos`.
 
 ## ⚠ 2. El "Ver más" a los 8 casos
 
@@ -230,7 +237,7 @@ El cierre y el footer son los mismos de la home.
 
 ## Decisiones abiertas
 
-1. ¿Qué va en la columna derecha en lugar de `More Detail`? (recomendado: tópicos)
+1. ~~¿Qué va en la columna derecha en lugar de `More Detail`?~~ **RESUELTO: chips de intervención, de las 11 capacidades.**
 2. ¿Cuáles son los 8 casos que abren, y en qué orden?
 3. ¿Cada caso lleva imagen o video? ¿Se mezclan?
 4. Copy: nombre, categoría y párrafo de ~140 caracteres por caso. **No existe.**

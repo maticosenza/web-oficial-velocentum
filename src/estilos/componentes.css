@@ -368,10 +368,16 @@
      definido. */
   .hero-sticky__hero {
     position: sticky;
-    top: 0;
-    /* `dvh` y no `vh`: en móvil la barra del navegador aparece y
+    /* Sin offset esto es `top: 0` y `height: 100dvh`, que es el
+       hero a pantalla completa. Con offset —B7, que se fija más
+       abajo— el mismo número se descuenta del alto: si no, el
+       final del bloque quedaría por debajo del pie de la ventana
+       y no habría forma de verlo.
+
+       `dvh` y no `vh`: en móvil la barra del navegador aparece y
        desaparece, y `vh` deja un salto. */
-    height: 100dvh;
+    top: var(--pin-offset, 0px);
+    height: calc(100dvh - var(--pin-offset, 0px));
     display: grid;
     grid-template-rows: 1fr;
   }
