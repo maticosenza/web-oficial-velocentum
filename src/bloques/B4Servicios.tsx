@@ -44,22 +44,32 @@ import type { CSSProperties } from "react";
 import { ServiceStack } from "../componentes/ServiceStack";
 import { Reveal } from "../componentes/Reveal";
 
-/* PENDIENTE: los 16 entregables (4 por tarjeta) están sin
-   confirmar operativamente. Se construye con un marcador de
-   posición explícito, igual que el CTA del hero: antes que
-   inventar cuatro afirmaciones sobre lo que la agencia entrega,
-   el bloque dice que faltan.
+/* LOS 16 ENTREGABLES, CONFIRMADOS OPERATIVAMENTE POR MATÍAS.
+   Salen de la tabla que ya estaba en `02_paginas/02_HOME_copy.md`,
+   así que el copy no cambió: lo que cambió es que pasaron de
+   propuestos a confirmados. Era de los pendientes que bloqueaban
+   publicar.
 
-   El largo no es casual. El presupuesto da 34 caracteres por
-   entregable y este marcador tiene 36: entra apenas por encima
-   del techo, así el layout queda probado en el peor caso y el
-   copy real después entra sin mover nada. */
-const ENTREGABLE_PENDIENTE = "Pendiente · entregable sin confirmar";
+   LARGOS MEDIDOS CONTRA EL TECHO DE 34 CARACTERES
+   Entran los dieciséis. Los dos más largos son «Diagnóstico de
+   negocio y márgenes» y «ROAS de equilibrio y CPA objetivo», los
+   dos de 33. El marcador que estuvo probando el layout medía 36,
+   o sea dos por encima del peor caso real: por eso el copy
+   definitivo entró sin mover nada.
+
+   ⚠ ADQUISICIÓN CARGA MUCHO MENOS TEXTO QUE EL RESTO: 67
+   caracteres contra los 113 de Estrategia, 1.7 veces menos. «Meta
+   Ads» son 8 y «Google Ads» 10. La tarjeta se ve más aireada, y
+   está bien que así sea — son los nombres de las plataformas y no
+   hay nada que agregarles. Lo que NO puede pasar es que la fila
+   cambie de alto entre tarjetas; eso se resuelve en el CSS con un
+   alto mínimo por fila, no acortando ni estirando copy aprobado. */
 
 type Servicio = {
   n: string;
   nombre: string;
   bajada: string;
+  entregables: [string, string, string, string];
   acento: string;
   sobre: string;
 };
@@ -71,6 +81,12 @@ const SERVICIOS: Servicio[] = [
     n: "01",
     nombre: "Estrategia",
     bajada: "Definimos a dónde vamos y con qué prioridad.",
+    entregables: [
+      "Diagnóstico de negocio y márgenes",
+      "ROAS de equilibrio y CPA objetivo",
+      "Plan de inversión por canal",
+      "Proyección a 90 días",
+    ],
     acento: "var(--acento-1)",
     sobre: "var(--texto-sobre-1)",
   },
@@ -78,6 +94,12 @@ const SERVICIOS: Servicio[] = [
     n: "02",
     nombre: "Creatividad",
     bajada: "Convertimos una idea en muchas piezas que compiten.",
+    entregables: [
+      "Contenido para pauta",
+      "Shootings de producto y marca",
+      "Diseño de marca y piezas",
+      "Influencer marketing",
+    ],
     acento: "var(--acento-2)",
     sobre: "var(--texto-sobre-2)",
   },
@@ -85,6 +107,12 @@ const SERVICIOS: Servicio[] = [
     n: "03",
     nombre: "Adquisición",
     bajada: "Llevamos esas piezas al mercado y compramos atención.",
+    entregables: [
+      "Meta Ads",
+      "Google Ads",
+      "Product Ads y Shopping",
+      "Optimización de ficha en ML",
+    ],
     acento: "var(--acento-3)",
     sobre: "var(--texto-sobre-3)",
   },
@@ -92,6 +120,12 @@ const SERVICIOS: Servicio[] = [
     n: "04",
     nombre: "Web & Conversión",
     bajada: "Ordenamos lo que pasa después del clic.",
+    entregables: [
+      "Tienda y páginas de producto",
+      "Tracking con CAPI",
+      "GA4 y eventos",
+      "Medición y atribución por canal",
+    ],
     acento: "var(--acento-4)",
     sobre: "var(--texto-sobre-4)",
   },
@@ -111,11 +145,10 @@ export function B4Servicios() {
             los atraviesa a todos.
           </p>
           {/* Dicho una vez para todo el bloque, en vez de repetirlo
-              en las dieciséis filas: con lector de pantalla,
-              dieciséis avisos idénticos tapan el contenido real. */}
+              en las cuatro tarjetas. Los entregables ya no están
+              acá: quedaron confirmados. */}
           <p className="etiqueta etiqueta--apagada b4__pendiente">
-            Pendiente · los 16 entregables están sin confirmar. Los de abajo son marcadores de
-            posición.
+            Pendiente · las cuatro imágenes verticales no existen todavía.
           </p>
         </Reveal>
       </div>
@@ -143,12 +176,12 @@ export function B4Servicios() {
                     comunica la posición, y sin esto el lector dice
                     el número dos veces. */}
                 <ol className="b4-tarjeta__entregables" role="list">
-                  {["01", "02", "03", "04"].map((e) => (
-                    <li key={e} className="b4-tarjeta__entregable">
+                  {s.entregables.map((texto, i) => (
+                    <li key={texto} className="b4-tarjeta__entregable">
                       <span className="etiqueta b4-tarjeta__entregable-n" aria-hidden="true">
-                        {e}
+                        {String(i + 1).padStart(2, "0")}
                       </span>
-                      <span className="b4-tarjeta__entregable-texto">{ENTREGABLE_PENDIENTE}</span>
+                      <span className="b4-tarjeta__entregable-texto">{texto}</span>
                     </li>
                   ))}
                 </ol>

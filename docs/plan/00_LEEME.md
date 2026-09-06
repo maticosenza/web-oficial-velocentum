@@ -121,7 +121,12 @@ criterio de cada componente, no una fase final.
    `marketing@velocentum.com`, LinkedIn, Instagram y Facebook.
    **No se enlaza a `velocentum.agency`:** decisión explícita.
    Sigue sin haber teléfono — la home no lo usa, así que no bloquea.
-5. Los 16 entregables de la Home B4, confirmados operativamente.
+5. ~~Los 16 entregables de la Home B4~~ **RESUELTOS**: confirmados
+   operativamente por Matías, sin cambios de copy respecto de la tabla que ya
+   estaba en `02_paginas/02_HOME_copy.md`, y cargados en el bloque. Los
+   dieciséis entran bajo el techo de 34 caracteres — los dos más largos tienen
+   33— y ninguno corta en dos renglones de 480px para arriba.
+   De B4 sigue faltando sólo **las cuatro imágenes verticales**.
 6. **Los ocho casos están definidos**, en este orden: Snake Store · Carácter ·
    Glam Ragazza · Vinotique · Ilsapore · Armbruster · Greenpac · Comercial Pas.
    Con su rubro, que **definió Matías** y no sale del campo «Industria» de las

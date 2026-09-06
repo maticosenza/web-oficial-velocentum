@@ -592,11 +592,13 @@ Nombre grande · dos líneas · cuatro entregables numerados · imagen vertical.
 **03 · Adquisición** `[APROBADO]` — Llevamos esas piezas al mercado y compramos atención.
 **04 · Web & Conversión** `[APROBADO]` — Ordenamos lo que pasa después del clic.
 
-### Los 16 entregables `[ABIERTO]` ← lo único que bloquea
+### Los 16 entregables `[CONFIRMADO]`
 
 Derivados de material tuyo: los 11 tags, `queActivamosContent.ts` y lo que
-calcula la herramienta de diagnóstico. **Son afirmaciones sobre lo que
-entregás: confirmalos, corregilos o reemplazalos uno por uno.**
+calcula la herramienta de diagnóstico. **Matías los confirmó operativamente uno
+por uno**, sin cambios: el copy es el mismo que ya estaba en esta tabla, lo que
+cambió es que pasaron de propuestos a confirmados. Era el último de los
+pendientes de contenido que bloqueaban publicar B4.
 
 | | Estrategia | Creatividad | Adquisición | Web & Conversión |
 |---|---|---|---|---|
@@ -605,18 +607,34 @@ entregás: confirmalos, corregilos o reemplazalos uno por uno.**
 | 03 | Plan de inversión por canal | Diseño de marca y piezas | Product Ads y Shopping | GA4 y eventos |
 | 04 | Proyección a 90 días | Influencer marketing | Optimización de ficha en ML | Medición y atribución por canal |
 
-### Estado en obra `[CONSTRUIDO CON MARCADORES]`
+### Estado en obra `[CONSTRUIDO]`
 
-**La tabla de arriba NO está en el sitio.** El bloque se construyó con las
-dieciséis filas mostrando `Pendiente · entregable sin confirmar`, igual que el
-CTA del hero: antes que publicar dieciséis afirmaciones sin confirmar sobre lo
-que la agencia entrega, el bloque dice que faltan.
+**La tabla de arriba está en el sitio**, tal cual. El marcador que la reemplazaba
+medía 36 caracteres contra un techo de 34, dos por encima del peor caso real,
+así que el copy definitivo entró sin mover una sola medida.
 
-El marcador mide **36 caracteres** contra un techo de 34, a propósito: el layout
-queda probado apenas por encima del peor caso, así el copy real entra después
-sin mover nada.
+**Largos medidos, no asumidos.** Entran los dieciséis. Los dos más largos son
+`Diagnóstico de negocio y márgenes` y `ROAS de equilibrio y CPA objetivo`, los
+dos de **33**. Ninguno corta en dos renglones de 480px de ancho para arriba; a
+390px cortan esos dos y sólo esos, lo que deja la tarjeta de Estrategia 48px más
+alta que las otras tres. No rompe nada: en móvil las tarjetas van apiladas.
 
-Para reemplazarlos: `ENTREGABLE_PENDIENTE` en `src/bloques/B4Servicios.tsx`.
+**La fila de Adquisición no queda vacía**, que era el riesgo. Carga 67
+caracteres contra los 113 de Estrategia —1.7 veces menos, con `Meta Ads` en 8 y
+`Google Ads` en 10— pero cada entregable se apoya en una línea que cruza la
+columna entera, y esa línea es la que sostiene la estructura. El texto corto
+sobre la línea larga se lee deliberado, no faltante. Y las cuatro tarjetas miden
+lo mismo: 490px las cuatro, medido.
+
+El párrafo de aviso que tenía el bloque ya no habla de los entregables. Queda
+sólo por las cuatro imágenes verticales, que siguen sin existir.
+
+<!-- histórico: el marcador medía 36 caracteres contra un techo de 34, a
+propósito, para que el layout quedara probado apenas por encima del peor caso.
+Funcionó: el copy real entró sin mover nada. -->
+
+Los dieciséis viven en `SERVICIOS` en `src/bloques/B4Servicios.tsx`, uno por
+tarjeta.
 
 **Cuatro tarjetas — confirmado.** Nombres de 10 a 16 caracteres, bajo el techo
 de 24.
@@ -1024,7 +1042,7 @@ par futuro:
 
 | # | Decisión | Bloquea |
 |---|---|---|
-| 1 | **Los 16 entregables** | B4 — el bloque principal |
+| ~~1~~ | ~~Los 16 entregables~~ **RESUELTO** — confirmados y cargados en B4 | — |
 | ~~2~~ | ~~Titular del hero y su bajada~~ **RESUELTO** — ver B1 | — |
 | 4 | "Inicio" o "Home" | B0 y B9 |
 | 5 | Destino del CTA de cierre | B8 y la publicación |
