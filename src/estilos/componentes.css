@@ -293,6 +293,104 @@
   }
 
   /* =========================================================
+     ScrollMedia — apertura de encuadre atada al scroll
+     ========================================================= */
+
+  .scroll-medio {
+    display: grid;
+    gap: var(--space-5);
+    align-items: center;
+  }
+
+  @media (min-width: 810px) {
+    .scroll-medio {
+      grid-template-columns: 1.6fr 1fr;
+    }
+  }
+
+  /* El marco crece de 0.7 a 1. */
+  .scroll-medio__marco {
+    overflow: hidden;
+    border-radius: var(--r-media);
+    transform: scale(calc(0.7 + 0.3 * var(--progreso, 1)));
+    will-change: transform;
+  }
+
+  /* La imagen se desamplía de 1.3 a 1, en sentido contrario. */
+  .scroll-medio__interior {
+    transform: scale(calc(1.3 - 0.3 * var(--progreso, 1)));
+    will-change: transform;
+  }
+
+  /* El texto acompaña con desplazamiento. NO escala: escalar
+     texto lo desenfoca y le rompe el tamaño a quien tiene zoom. */
+  .scroll-medio__texto {
+    transform: translateX(calc((1 - var(--progreso, 1)) * -47px));
+    will-change: transform;
+  }
+
+  .scroll-medio__placeholder {
+    aspect-ratio: var(--ratio, 16 / 10);
+    background: var(--acento, var(--texto-2));
+    width: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-medio__marco,
+    .scroll-medio__interior,
+    .scroll-medio__texto {
+      transform: none;
+      will-change: auto;
+    }
+  }
+
+  /* =========================================================
+     HeroSticky — hero fijado, bloque que sube encima
+     ========================================================= */
+
+  /* El contenedor común es lo que hace que funcione: un sticky
+     se fija dentro de su padre, no dentro de la ventana. */
+  .hero-sticky {
+    position: relative;
+  }
+
+  .hero-sticky__hero {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    /* `dvh` donde exista: en móvil la barra del navegador
+       aparece y desaparece, y `vh` deja un salto. */
+    height: 100dvh;
+  }
+
+  /* El bloque que sube tiene que tapar de verdad: opaco y por
+     encima en el orden de apilado. */
+  .hero-sticky__siguiente {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Bajo 810px el pin se suelta: un hero fijado se come el
+     viewport entero de un teléfono. Alto natural y flujo normal. */
+  @media (max-width: 809px) {
+    .hero-sticky__hero {
+      position: relative;
+      top: auto;
+      height: auto;
+      min-height: 60vh;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-sticky__hero {
+      position: relative;
+      top: auto;
+      height: auto;
+      min-height: 60vh;
+    }
+  }
+
+  /* =========================================================
      RouteCurtain
      ========================================================= */
 

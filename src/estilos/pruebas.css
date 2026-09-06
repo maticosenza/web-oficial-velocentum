@@ -200,6 +200,10 @@
   /* --- HeroSticky --- */
 
   .demo-hero {
+    /* Llena el contenedor sticky. Si no, el campo de color queda
+       más corto que el hero y detrás de la onda aparece el fondo
+       de página en vez del hero. */
+    height: 100%;
     background: var(--cielo);
     display: grid;
     place-content: center;
@@ -207,6 +211,13 @@
     text-align: center;
     gap: var(--space-4);
     padding-inline: var(--page-gutter);
+  }
+
+  /* El bloque que sube tiene que ser al menos un viewport, o el
+     contenedor se queda sin recorrido y el hero se despega antes
+     de terminar de taparse. */
+  .demo-hero-siguiente {
+    min-height: 110vh;
   }
 
   .demo-hero__titulo {

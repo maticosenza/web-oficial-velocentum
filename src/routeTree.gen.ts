@@ -13,8 +13,10 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CasosRouteImport } from './routes/casos'
 import { Route as ContactoRouteImport } from './routes/contacto'
 import { Route as MetodoRouteImport } from './routes/metodo'
+import { Route as PruebasHeroStickyRouteImport } from './routes/pruebas/hero-sticky'
 import { Route as PruebasRevealRouteImport } from './routes/pruebas/reveal'
 import { Route as PruebasRouteCurtainRouteImport } from './routes/pruebas/route-curtain'
+import { Route as PruebasScrollMediaRouteImport } from './routes/pruebas/scroll-media'
 import { Route as PruebasSectionEdgeRouteImport } from './routes/pruebas/section-edge'
 import { Route as PruebasServiceStackRouteImport } from './routes/pruebas/service-stack'
 import { Route as PruebasTickerRouteImport } from './routes/pruebas/ticker'
@@ -39,6 +41,11 @@ const MetodoRoute = MetodoRouteImport.update({
   path: '/metodo',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PruebasHeroStickyRoute = PruebasHeroStickyRouteImport.update({
+  id: '/pruebas/hero-sticky',
+  path: '/pruebas/hero-sticky',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PruebasRevealRoute = PruebasRevealRouteImport.update({
   id: '/pruebas/reveal',
   path: '/pruebas/reveal',
@@ -47,6 +54,11 @@ const PruebasRevealRoute = PruebasRevealRouteImport.update({
 const PruebasRouteCurtainRoute = PruebasRouteCurtainRouteImport.update({
   id: '/pruebas/route-curtain',
   path: '/pruebas/route-curtain',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PruebasScrollMediaRoute = PruebasScrollMediaRouteImport.update({
+  id: '/pruebas/scroll-media',
+  path: '/pruebas/scroll-media',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PruebasSectionEdgeRoute = PruebasSectionEdgeRouteImport.update({
@@ -70,8 +82,10 @@ export interface FileRoutesByFullPath {
   '/casos': typeof CasosRoute
   '/contacto': typeof ContactoRoute
   '/metodo': typeof MetodoRoute
+  '/pruebas/hero-sticky': typeof PruebasHeroStickyRoute
   '/pruebas/reveal': typeof PruebasRevealRoute
   '/pruebas/route-curtain': typeof PruebasRouteCurtainRoute
+  '/pruebas/scroll-media': typeof PruebasScrollMediaRoute
   '/pruebas/section-edge': typeof PruebasSectionEdgeRoute
   '/pruebas/service-stack': typeof PruebasServiceStackRoute
   '/pruebas/ticker': typeof PruebasTickerRoute
@@ -81,8 +95,10 @@ export interface FileRoutesByTo {
   '/casos': typeof CasosRoute
   '/contacto': typeof ContactoRoute
   '/metodo': typeof MetodoRoute
+  '/pruebas/hero-sticky': typeof PruebasHeroStickyRoute
   '/pruebas/reveal': typeof PruebasRevealRoute
   '/pruebas/route-curtain': typeof PruebasRouteCurtainRoute
+  '/pruebas/scroll-media': typeof PruebasScrollMediaRoute
   '/pruebas/section-edge': typeof PruebasSectionEdgeRoute
   '/pruebas/service-stack': typeof PruebasServiceStackRoute
   '/pruebas/ticker': typeof PruebasTickerRoute
@@ -93,8 +109,10 @@ export interface FileRoutesById {
   '/casos': typeof CasosRoute
   '/contacto': typeof ContactoRoute
   '/metodo': typeof MetodoRoute
+  '/pruebas/hero-sticky': typeof PruebasHeroStickyRoute
   '/pruebas/reveal': typeof PruebasRevealRoute
   '/pruebas/route-curtain': typeof PruebasRouteCurtainRoute
+  '/pruebas/scroll-media': typeof PruebasScrollMediaRoute
   '/pruebas/section-edge': typeof PruebasSectionEdgeRoute
   '/pruebas/service-stack': typeof PruebasServiceStackRoute
   '/pruebas/ticker': typeof PruebasTickerRoute
@@ -106,8 +124,10 @@ export interface FileRouteTypes {
     | '/casos'
     | '/contacto'
     | '/metodo'
+    | '/pruebas/hero-sticky'
     | '/pruebas/reveal'
     | '/pruebas/route-curtain'
+    | '/pruebas/scroll-media'
     | '/pruebas/section-edge'
     | '/pruebas/service-stack'
     | '/pruebas/ticker'
@@ -117,8 +137,10 @@ export interface FileRouteTypes {
     | '/casos'
     | '/contacto'
     | '/metodo'
+    | '/pruebas/hero-sticky'
     | '/pruebas/reveal'
     | '/pruebas/route-curtain'
+    | '/pruebas/scroll-media'
     | '/pruebas/section-edge'
     | '/pruebas/service-stack'
     | '/pruebas/ticker'
@@ -128,8 +150,10 @@ export interface FileRouteTypes {
     | '/casos'
     | '/contacto'
     | '/metodo'
+    | '/pruebas/hero-sticky'
     | '/pruebas/reveal'
     | '/pruebas/route-curtain'
+    | '/pruebas/scroll-media'
     | '/pruebas/section-edge'
     | '/pruebas/service-stack'
     | '/pruebas/ticker'
@@ -140,8 +164,10 @@ export interface RootRouteChildren {
   CasosRoute: typeof CasosRoute
   ContactoRoute: typeof ContactoRoute
   MetodoRoute: typeof MetodoRoute
+  PruebasHeroStickyRoute: typeof PruebasHeroStickyRoute
   PruebasRevealRoute: typeof PruebasRevealRoute
   PruebasRouteCurtainRoute: typeof PruebasRouteCurtainRoute
+  PruebasScrollMediaRoute: typeof PruebasScrollMediaRoute
   PruebasSectionEdgeRoute: typeof PruebasSectionEdgeRoute
   PruebasServiceStackRoute: typeof PruebasServiceStackRoute
   PruebasTickerRoute: typeof PruebasTickerRoute
@@ -177,6 +203,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MetodoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pruebas/hero-sticky': {
+      id: '/pruebas/hero-sticky'
+      path: '/pruebas/hero-sticky'
+      fullPath: '/pruebas/hero-sticky'
+      preLoaderRoute: typeof PruebasHeroStickyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pruebas/reveal': {
       id: '/pruebas/reveal'
       path: '/pruebas/reveal'
@@ -189,6 +222,13 @@ declare module '@tanstack/react-router' {
       path: '/pruebas/route-curtain'
       fullPath: '/pruebas/route-curtain'
       preLoaderRoute: typeof PruebasRouteCurtainRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pruebas/scroll-media': {
+      id: '/pruebas/scroll-media'
+      path: '/pruebas/scroll-media'
+      fullPath: '/pruebas/scroll-media'
+      preLoaderRoute: typeof PruebasScrollMediaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pruebas/section-edge': {
@@ -220,8 +260,10 @@ const rootRouteChildren: RootRouteChildren = {
   CasosRoute: CasosRoute,
   ContactoRoute: ContactoRoute,
   MetodoRoute: MetodoRoute,
+  PruebasHeroStickyRoute: PruebasHeroStickyRoute,
   PruebasRevealRoute: PruebasRevealRoute,
   PruebasRouteCurtainRoute: PruebasRouteCurtainRoute,
+  PruebasScrollMediaRoute: PruebasScrollMediaRoute,
   PruebasSectionEdgeRoute: PruebasSectionEdgeRoute,
   PruebasServiceStackRoute: PruebasServiceStackRoute,
   PruebasTickerRoute: PruebasTickerRoute,
