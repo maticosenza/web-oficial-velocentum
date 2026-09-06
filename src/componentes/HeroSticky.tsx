@@ -42,13 +42,25 @@
    sin descontarlos del alto dejaría los últimos 200px del bloque
    por debajo del pie de la ventana, invisibles para siempre.
 
+   PUBLICA CUÁNTO TAPÓ EL BLOQUE QUE SUBE
+   Escribe `--cobertura` en el contenedor común, de 0 a 1. Lo lee
+   el hundimiento del titular de B1: el texto baja y se desvanece
+   a medida que la nube lo tapa, en vez de quedarse quieto
+   mientras le pasa por encima.
+
+   Se escribe en el contenedor y no en el bloque que sube porque
+   quien lo consume es su HERMANO, y una custom property se
+   hereda hacia abajo, no de costado.
+
    SE APAGA BAJO 810px
    No es una preferencia: con la pantalla de un teléfono el hero
    fijado se come todo el viewport. Ahí pasa a flujo normal, con
    alto natural. Con movimiento reducido, lo mismo.
    =========================================================== */
 
-import type { CSSProperties, ReactNode } from "react";
+import { useRef, type CSSProperties, type ReactNode } from "react";
+
+import { useProgresoDeScroll } from "../lib/progresoDeScroll";
 
 export function HeroSticky({
   hero,
@@ -64,13 +76,31 @@ export function HeroSticky({
   offset?: string;
   className?: string;
 }) {
+  /* CUÁNTO TAPÓ YA EL BLOQUE QUE SUBE.
+     Se mide el bloque que sube y el valor se escribe en el
+     contenedor común, para que el bloque fijado —su hermano—
+     también lo herede. Con `recorrido: 1` el valor es
+     literalmente la fracción tapada: 0 cuando el que sube todavía
+     está apoyado en el pie de la ventana, 1 cuando llegó arriba.
+     Lo usa el hundimiento del titular en B1. */
+  const contenedorRef = useRef<HTMLDivElement>(null);
+  const siguienteRef = useRef<HTMLDivElement>(null);
+  useProgresoDeScroll(siguienteRef, {
+    recorrido: 1,
+    destino: contenedorRef,
+    variable: "--cobertura",
+  });
+
   return (
     <div
+      ref={contenedorRef}
       className={["hero-sticky", className].filter(Boolean).join(" ")}
       style={offset ? ({ "--pin-offset": offset } as CSSProperties) : undefined}
     >
       <div className="hero-sticky__hero">{hero}</div>
-      <div className="hero-sticky__siguiente">{siguiente}</div>
+      <div ref={siguienteRef} className="hero-sticky__siguiente">
+        {siguiente}
+      </div>
     </div>
   );
 }

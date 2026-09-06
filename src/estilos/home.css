@@ -249,10 +249,10 @@
       linear-gradient(180deg, #8ec5ff 0%, var(--cielo) 55%, #dceeff 100%);
   }
 
-  /* Sin eyebrow: el titular abre el hero. El hueco baja a
-     `--space-4` para que el CTA no quede suelto abajo — con el
-     titular ocupando tres renglones grandes, 32px de hueco lo
-     empujaban demasiado lejos. */
+  /* Sin eyebrow ni bajada: el titular abre el hero y el CTA va
+     debajo. El hueco baja a `--space-4` para que el CTA no quede
+     suelto — con el titular ocupando tres renglones grandes, 32px
+     lo empujaban demasiado lejos. */
   .b1__contenido {
     position: relative;
     display: grid;
@@ -273,19 +273,41 @@
     padding-top: calc(var(--alto-nav, 96px) + var(--space-6));
   }
 
+  /* EL TEXTO SE HUNDE CUANDO LA NUBE SUBE.
+     `--cobertura` la publica HeroSticky en el contenedor común: va
+     de 0 a 1 según cuánto tapó B2. El texto baja y se desvanece a
+     medida que el festón lo cubre, en vez de quedarse quieto
+     mientras la nube le pasa por encima.
+
+     Va sobre el contenido entero y no sólo sobre el titular: si se
+     hundiera únicamente el titular, chocaría con el CTA en el
+     camino. Se sumerge el bloque de texto, que es lo que hace la
+     referencia.
+
+     No es un reveal: es un valor continuo, así que se deshace solo
+     al scrollear para arriba.
+
+     LA REGLA VIVE DENTRO DE `no-preference` A PROPÓSITO.
+     El hook deja `--cobertura` en 1 con movimiento reducido,
+     porque para sus otros consumidores 1 es el estado final
+     neutro. Acá 1 significa "tapado del todo": aplicar la regla
+     dejaría el titular hundido e invisible. Apagándola desde el
+     media query, con movimiento reducido el texto queda quieto,
+     entero y legible. */
+  @media (prefers-reduced-motion: no-preference) {
+    .b1__contenido {
+      transform: translateY(calc(var(--cobertura, 0) * 16vh));
+      opacity: calc(1 - var(--cobertura, 0) * 1.7);
+      will-change: transform, opacity;
+    }
+  }
+
   .b1__titular {
     position: relative;
     /* No `--medida-titular` (850px): ese ancho es para titulares
        de texto corrido. Este es display condensado de ancho
        completo y cada línea va en un solo renglón. */
     width: 100%;
-  }
-
-  .b1__bajada {
-    max-width: 46ch;
-    margin: 0;
-    font-size: 20px;
-    color: var(--tinta);
   }
 
   .b1__cta {
@@ -341,10 +363,6 @@
       right: 0;
       transform: translate(14%, 78%) rotate(5deg);
     }
-
-    .b1__bajada {
-      font-size: 17px;
-    }
   }
 
   /* --- El titular por letras --- */
@@ -353,8 +371,10 @@
     font-family: var(--font-display);
     /* Calculado para que la línea más larga —16 caracteres de
        Anton— entre en un renglón a 1200px de contenido y a 390px
-       de móvil. Si el copy crece, este número baja. */
-    font-size: clamp(34px, 7.4vw, 118px);
+       de móvil. Si el copy crece, este número baja.
+       Subió con el lugar que dejaron el eyebrow y la bajada: el
+       titular es lo único que abre el hero, así que se lo lleva. */
+    font-size: clamp(40px, 8.8vw, 146px);
     line-height: 0.95;
     text-transform: uppercase;
     letter-spacing: 0.01em;
@@ -471,11 +491,7 @@
     }
 
     .titular-letras {
-      font-size: clamp(34px, 6vw, 76px);
-    }
-
-    .b1__bajada {
-      font-size: 18px;
+      font-size: clamp(40px, 7.4vw, 96px);
     }
   }
 
@@ -484,25 +500,49 @@
      ========================================================= */
 
   .b2 {
-    /* Más alto que el viewport: el hero queda pinneado sólo
-       mientras este bloque tenga recorrido. Con menos, el hero se
-       despega antes de terminar de taparse. */
-    min-height: 108vh;
+    /* Un viewport exacto, no 108. El bloque tiene que darle
+       recorrido al pin del hero, y un viewport es justo el
+       recorrido que necesita la cobertura para ir de 0 a 1: con
+       más, sobra alto y queda hueco muerto debajo del párrafo.
+       `dvh` para que coincida con el alto del hero, que también
+       está en `dvh`. */
+    min-height: 100dvh;
+    display: grid;
+    align-content: center;
   }
 
+  /* Todo centrado en la columna: es el único párrafo suelto de la
+     página y se lo trata como tal. */
   .b2__contenido {
     display: grid;
-    gap: var(--space-6);
-    padding-block: var(--space-section) var(--space-7);
+    justify-items: center;
+    text-align: center;
+    gap: var(--space-5);
+    padding-block: var(--space-7);
+  }
+
+  /* Bajo 810px el pin está apagado, así que el viewport de alto no
+     sostiene nada: sólo dejaría el mismo hueco muerto. El alto
+     pasa a ser el del contenido. */
+  @media (max-width: 809px) {
+    .b2 {
+      min-height: 0;
+    }
+
+    .b2__contenido {
+      padding-block: var(--space-section) var(--space-6);
+    }
   }
 
   .b2__texto {
     display: grid;
-    align-content: start;
+    justify-items: center;
+    align-content: center;
     gap: var(--space-4);
   }
 
   .b2__titular {
+    text-align: center;
     font-family: var(--font-display);
     /* 25 caracteres. Se pasa de los 20 del presupuesto general,
        que está medido sobre titulares de UN renglón, y envuelve en
@@ -514,9 +554,16 @@
     margin: 0;
   }
 
+  /* Cuerpo grande y expresivo: es el único párrafo suelto de la
+     página y puede permitirse presencia.
+     La medida va en `ch` y no en px: a 40px, los 650px de
+     `--medida-parrafo` darían renglones de una docena de palabras.
+     34ch mantiene el largo de renglón legible mientras el cuerpo
+     crece — son 134 caracteres, o sea unos cuatro renglones. */
   .b2__parrafo {
-    max-width: var(--medida-parrafo);
-    font-size: 20px;
+    max-width: 34ch;
+    font-size: clamp(24px, 3.4vw, 40px);
+    line-height: 1.25;
     margin: 0;
   }
 
@@ -841,6 +888,15 @@
 
   .b5 {
     padding-block: var(--space-6);
+  }
+
+  /* Más aire vertical que el resto de los tickers, y sólo acá:
+     las píldoras oscilan ±7px y el anillo de foco suma 6 más. Con
+     el padding estándar de 24px quedaban 5px de holgura contra el
+     `overflow` de la ventana. Los anillos de B7 no oscilan, así
+     que no lo necesitan. */
+  .b5__ticker .ticker__ventana {
+    padding-block: var(--space-5);
   }
 
   /* =========================================================

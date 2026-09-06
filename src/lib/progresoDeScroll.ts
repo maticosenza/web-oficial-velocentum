@@ -33,6 +33,10 @@ type Anotado = {
   elemento: HTMLElement;
   /** Porción de la ventana que recorre el elemento hasta llegar a 1. */
   recorrido: number;
+  /** Dónde se escribe el valor. Por defecto, el propio elemento. */
+  destino: HTMLElement;
+  /** Nombre de la custom property. */
+  variable: string;
 };
 
 const anotados = new Set<Anotado>();
@@ -48,7 +52,7 @@ function calcular(a: Anotado) {
   const avance = (alto - caja.top) / (alto * a.recorrido);
   const p = Math.min(1, Math.max(0, avance));
 
-  a.elemento.style.setProperty("--progreso", p.toFixed(4));
+  a.destino.style.setProperty(a.variable, p.toFixed(4));
 }
 
 function actualizar() {
@@ -72,23 +76,46 @@ function asegurarEscucha() {
 
 export function useProgresoDeScroll(
   ref: RefObject<HTMLElement | null>,
-  opciones: { activo?: boolean; recorrido?: number } = {},
+  opciones: {
+    activo?: boolean;
+    recorrido?: number;
+    /**
+     * Dónde escribir el valor, si no es el elemento medido.
+     *
+     * Existe porque a veces el que se mide y el que se mueve no
+     * son el mismo ni están en la misma rama: el hundimiento del
+     * titular en B1 depende de cuánto lo tapó B2, que es su
+     * HERMANO. Una custom property se hereda hacia abajo, no de
+     * costado, así que el valor se escribe en el contenedor común
+     * y los dos lo leen.
+     */
+    destino?: RefObject<HTMLElement | null>;
+    /** Nombre de la custom property. Por defecto `--progreso`. */
+    variable?: string;
+  } = {},
 ) {
-  const { activo = true, recorrido = 0.6 } = opciones;
+  const { activo = true, recorrido = 0.6, destino, variable = "--progreso" } = opciones;
 
   useEffect(() => {
     const elemento = ref.current;
     if (!elemento) return;
+    const donde = destino?.current ?? elemento;
 
     /* Con movimiento reducido el elemento arranca y se queda en
-       su estado final. No se anota, no se escucha nada. */
+       su estado final. No se anota, no se escucha nada.
+
+       Ojo: el "estado final" es 1 porque quien lo usa interpola
+       DESDE el valor y termina en 1 —el giro de ServiceStack, la
+       entrada de B3—. Un consumidor donde 1 signifique lo
+       contrario, como la cobertura de B1, no puede apoyarse en
+       esto: tiene que apagar su regla con la media query. */
     if (!activo || prefiereMenosMovimiento()) {
-      elemento.style.setProperty("--progreso", "1");
+      donde.style.setProperty(variable, "1");
       return;
     }
 
     asegurarEscucha();
-    const anotado: Anotado = { elemento, recorrido };
+    const anotado: Anotado = { elemento, recorrido, destino: donde, variable };
 
     /* Sólo se recalcula mientras está a la vista. El margen
        generoso evita que entre en cuadro ya enderezado. */
@@ -112,5 +139,5 @@ export function useProgresoDeScroll(
       observador.disconnect();
       anotados.delete(anotado);
     };
-  }, [ref, activo, recorrido]);
+  }, [ref, activo, recorrido, destino, variable]);
 }

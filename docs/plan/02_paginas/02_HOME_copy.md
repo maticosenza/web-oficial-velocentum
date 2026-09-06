@@ -125,9 +125,48 @@ tres rutas provisionales ahora usan B0, el nav de verdad.
 
 Titular en tres líneas, la tercera en color de marca.
 
-**Eyebrow** — ~~`EQUIPO DE CRECIMIENTO`~~ **SE SACÓ.** El titular abre el hero
-solo y gana aire. Con él afuera, el hueco entre elementos baja a `--space-4`
-para que el CTA no quede suelto abajo.
+**Eyebrow** — ~~`EQUIPO DE CRECIMIENTO`~~ **SE SACÓ.**
+**Bajada** — ~~`Estrategia, contenido, pauta y conversión…`~~ **SE SACÓ.**
+
+En el hero quedan el titular y el CTA, nada más. Con el lugar que dejaron los
+dos, **el titular creció**: de `clamp(34px, 7.4vw, 118px)` a
+`clamp(40px, 8.8vw, 146px)`, y en ventanas bajas de 76 a 96px de tope.
+
+**El marcador del CTA no desapareció, cambió de forma.** Competía visualmente
+con el titular, así que dejó de estar a la vista y pasó a ser la descripción
+accesible del botón.
+
+*Por eso el botón lleva `aria-disabled` y no `disabled`.* Un `disabled` de
+verdad sale del orden de tabulación y la mayoría de los lectores lo saltea: su
+descripción no se anunciaría nunca, y el aviso quedaría escrito sin que nadie lo
+escuche. Con `aria-disabled` el botón se anuncia como deshabilitado y explica
+por qué. No hace falta frenar nada: no tiene handler ni destino.
+
+El aviso **sigue a la vista en el CTA de B8**, que está sobre el campo azul y no
+compite con ningún titular.
+
+### El texto se hunde cuando la nube sube
+
+Antes el titular quedaba quieto y la nube le pasaba por encima. Ahora baja y se
+desvanece a medida que el festón lo tapa, como si se sumergiera.
+
+**Atado al progreso de scroll, no a un reveal:** `HeroSticky` publica
+`--cobertura` en el contenedor común, de 0 a 1 según cuánto tapó B2. Es un valor
+continuo, así que se deshace solo al scrollear para arriba. Verificado: vuelve a
+cobertura 0, sin transformación y con opacidad 1.
+
+Se hunde el bloque de texto entero y no sólo el titular: si se hundiera sólo el
+titular, chocaría con el CTA en el camino.
+
+*Una custom property se hereda hacia abajo, no de costado,* y quien mide —B2— es
+hermano de quien se mueve —B1—. Por eso el valor se escribe en el contenedor
+común, y por eso `useProgresoDeScroll` ganó un parámetro `destino`.
+
+**⚠ La regla vive dentro de `@media (prefers-reduced-motion: no-preference)`.**
+El hook deja `--cobertura` en 1 con movimiento reducido, porque para sus otros
+consumidores 1 es el estado final neutro. Acá 1 significa "tapado del todo":
+aplicar la regla dejaría el titular hundido e invisible. Apagándola desde el
+media query, con movimiento reducido el texto queda quieto, entero y legible.
 
 **Titular** `[DECIDIDO]`
 > ESTAMOS EN EL / NEGOCIO DE HACER / **CRECER NEGOCIOS**
@@ -178,6 +217,24 @@ Condensa las tres secciones de argumento que hoy ocupan tres pantallas.
 
 **Se acortó.** Era `UN EQUIPO DE CRECIMIENTO PARA TU NEGOCIO`, de 40 caracteres.
 Ahora son **25**, en dos renglones.
+
+### Recompuesto: todo centrado, y un viewport de alto
+
+Eyebrow, titular, párrafo y CTA **centrados en la columna**. El párrafo va en
+cuerpo grande —`clamp(24px, 3.4vw, 40px)`— porque es el único párrafo suelto de
+la página y puede permitirse presencia. Su medida va en `ch` y no en px: a 40px,
+los 650px de `--medida-parrafo` darían renglones de una docena de palabras.
+
+**El alto bajó de 108vh a 100dvh**, y el contenido va centrado en vez de
+apoyado arriba. Antes sobraba alto y todo el hueco caía debajo del párrafo;
+ahora el sobrante se reparte. Medido a 711px de ventana: bloque 711, contenido
+542, sobrante 169 repartido en dos.
+
+Un viewport es además exactamente el recorrido que necesita `--cobertura` para
+ir de 0 a 1, así que el hundimiento del hero termina justo cuando B2 lo tapa.
+
+**Bajo 810px el `min-height` se va a 0:** ahí el pin está apagado y el viewport
+de alto no sostiene nada, sólo dejaría el mismo hueco muerto.
 
 ### El slot sigue siendo de dos renglones, con techo 25
 
@@ -387,7 +444,12 @@ estaban escritas y entraron tal cual.
 ### Las píldoras flotan
 
 No van alineadas ni quietas: mientras la banda se desplaza al costado, cada una
-sube y baja en loop, ±3px sobre 3,2s. Es un flotar, no un rebote.
+sube y baja en loop, **±7px sobre 1,8s**. Subió desde ±3px y 3,2s, donde el
+flotar era casi imperceptible. Sigue sin ser un rebote: el recorrido es menor
+que el alto de la píldora.
+
+**El desplazamiento lateral también subió,** de 28 a 46 px/s. A 28 la banda se
+leía detenida más que tranquila. Sigue por debajo de la de B7.
 
 **El desfase de cada una sale de su índice, no de un azar,** y no es una
 preferencia: el Ticker duplica la lista para que el loop no tenga saltos, y las
@@ -399,10 +461,11 @@ las once alineadas.
 **Se apaga entera con `prefers-reduced-motion`,** junto con el desplazamiento
 lateral: para quien mira, son el mismo movimiento.
 
-**El anillo de foco no se recorta.** La ventana del ticker tiene `overflow:
-hidden` y 24px de padding vertical. En el peor punto de la oscilación, con el
-anillo completo de 6px —3 de trazo más 3 de offset— quedan 14px de holgura
-arriba y 16 abajo. Hoy las píldoras no son enfocables; la medición vale para
+**El anillo de foco no se recorta.** Con la oscilación más grande la holgura
+había bajado a 5px, así que **la ventana de B5 —y sólo la de B5— pasó a 32px de
+padding vertical**. Los anillos de B7 no oscilan y siguen con 24. Medido en el
+peor punto de la oscilación, con el anillo completo de 6px: **12px de holgura
+arriba y 26 abajo**. Hoy las píldoras no son enfocables; la medición vale para
 cuando lo sean. La más larga, `Optimización de ficha`, mide
 21 contra un techo de 20 — se pasa por uno y entra igual, así que la banda queda
 probada al filo del presupuesto.

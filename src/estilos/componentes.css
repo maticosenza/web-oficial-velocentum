@@ -295,7 +295,9 @@
      El retardo es NEGATIVO: la animación arranca ya avanzada, así
      no hay un primer instante con las once alineadas.
 
-     6px de recorrido total. Es un flotar, no un rebote. */
+     14px de recorrido total sobre 1,8s. Subió desde 6px y 3,2s:
+     el flotar anterior era casi imperceptible. Sigue sin ser un
+     rebote — el recorrido es menor que el alto de la píldora. */
   .pildora {
     display: inline-flex;
     align-items: center;
@@ -305,18 +307,18 @@
     background: var(--acento);
     color: var(--sobre);
     font-weight: 700;
-    animation: pildora-flotar 3.2s var(--motion-ease) infinite;
-    animation-delay: calc(var(--i, 0) * -270ms);
+    animation: pildora-flotar 1.8s var(--motion-ease) infinite;
+    animation-delay: calc(var(--i, 0) * -150ms);
   }
 
   @keyframes pildora-flotar {
     0%,
     100% {
-      transform: translateY(-3px);
+      transform: translateY(-7px);
     }
 
     50% {
-      transform: translateY(3px);
+      transform: translateY(7px);
     }
   }
 

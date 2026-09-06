@@ -177,7 +177,7 @@ quiénes somos y antes de trabajos. Es el respiro entre esos dos.
 | 1 | Una sola fila que **flota hacia un costado** en loop continuo | **M3** — ticker, velocidad baja |
 | 2 | Bordes desvanecidos, no cortados | Máscara `linear-gradient` que difumina el 10% de cada lado |
 | 3 | Cada píldora con su color de fondo | Colores en ciclo sobre la paleta. **Texto blanco, no oscuro:** ver copy |
-| 4 | Cada píldora **oscila verticalmente en loop** mientras la banda se desplaza | `@keyframes` de ±3px, con el desfase derivado del índice |
+| 4 | Cada píldora **oscila verticalmente en loop** mientras la banda se desplaza | `@keyframes` de ±7px sobre 1,8s, con el desfase derivado del índice |
 
 **Altura:** banda baja. No ocupa un viewport.
 **Dirección:** una sola. No hay segunda fila en contra.

@@ -41,10 +41,11 @@
 
    NO VAN ALINEADAS NI QUIETAS
    Mientras la banda se desplaza al costado, cada píldora sube y
-   baja en loop, como flotando. El desfase de cada una sale de su
-   índice: ver la nota de `Pildora` en `Ticker.tsx`, donde está el
-   motivo por el que no puede ser aleatorio. Se apaga entera con
-   movimiento reducido, junto con el desplazamiento lateral.
+   baja en loop, como flotando: 14px de recorrido sobre 1,8s. El
+   desfase de cada una sale de su índice: ver la nota de `Pildora`
+   en `Ticker.tsx`, donde está el motivo por el que no puede ser
+   aleatorio. Se apaga entera con movimiento reducido, junto con
+   el desplazamiento lateral.
    =========================================================== */
 
 import { Ticker, Pildora } from "../componentes/Ticker";
@@ -77,10 +78,10 @@ const PARES = [
 export function B5Pildoras() {
   return (
     <section className="b5">
-      {/* Velocidad más baja que la de B7: son píldoras cortas y
-          juntas, y a la misma velocidad la banda se lee nerviosa
-          en vez de como un respiro. */}
-      <Ticker etiqueta="Qué hacemos, en once capacidades" velocidad={28} className="b5__ticker">
+      {/* Sigue por debajo de la de B7 —son píldoras cortas y
+          juntas— pero subió de 28 a 46: a 28 la banda se leía
+          detenida más que tranquila. */}
+      <Ticker etiqueta="Qué hacemos, en once capacidades" velocidad={46} className="b5__ticker">
         {CAPACIDADES.map((c, i) => {
           const par = PARES[i % PARES.length];
           return (

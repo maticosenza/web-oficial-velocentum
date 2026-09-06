@@ -17,10 +17,14 @@
    Máximo dos en el hero, y no más de 6° de rotación.
    =========================================================== */
 
+import { useId } from "react";
+
 import { TitularPorLetras } from "../componentes/TitularPorLetras";
 import { Flecha } from "../componentes/Flecha";
 
 export function B1Hero() {
+  const idPendiente = useId();
+
   return (
     <div className="b1">
       {/* Capa decorativa: la atmósfera nunca toca el texto. */}
@@ -59,21 +63,38 @@ export function B1Hero() {
           />
         </div>
 
-        <p className="b1__bajada">
-          Estrategia, contenido, pauta y conversión. Un mismo equipo, un plan claro y decisiones con
-          tus números.
-        </p>
-
         {/* PENDIENTE: el destino de la agenda no está decidido, así
-            que el CTA no navega. Va como botón deshabilitado y con
-            el pendiente escrito al lado: un enlace a ninguna parte
-            sería peor que un botón que dice que todavía no está. */}
+            que el CTA no navega.
+
+            El aviso dejó de estar a la vista —competía con el
+            titular— pero NO desapareció: va como descripción del
+            botón, para lectores de pantalla.
+
+            Por eso el botón lleva `aria-disabled` y no `disabled`.
+            Un `disabled` de verdad sale del orden de tabulación y
+            la mayoría de los lectores lo saltea, así que su
+            descripción no se anunciaría nunca: el aviso quedaría
+            escrito y nadie lo escucharía. Con `aria-disabled` el
+            botón se anuncia como deshabilitado y explica por qué.
+            No hace falta frenar nada: no tiene handler ni destino,
+            así que activarlo no hace nada.
+
+            El aviso sigue a la vista en el CTA de B8, que está
+            sobre el campo azul y no compite con ningún titular. */}
         <div className="b1__cta">
-          <button type="button" className="boton boton--marca" disabled>
+          <button
+            type="button"
+            className="boton boton--marca"
+            aria-disabled="true"
+            aria-describedby={idPendiente}
+          >
             Reservá tu análisis
             <Flecha />
           </button>
-          <p className="etiqueta etiqueta--apagada">Pendiente · destino de la agenda sin definir</p>
+          <p id={idPendiente} className="solo-lectores">
+            Pendiente: el destino de la agenda todavía no está definido, así que este botón no
+            navega.
+          </p>
         </div>
       </div>
     </div>
