@@ -1,0 +1,287 @@
+/* ===========================================================
+   BLOQUES DE LA HOME
+   B0–B9. Se construyen por tanda; acá viven B1 y B2.
+   =========================================================== */
+
+@layer components {
+  /* =========================================================
+     B1 · HERO
+     ========================================================= */
+
+  .b1 {
+    position: relative;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    background: var(--cielo);
+    overflow: hidden;
+  }
+
+  /* La atmósfera es una capa decorativa con degradados estáticos.
+     NO hay `filter: blur`: verificado que la referencia no usa
+     ninguno, y un blur en vivo es caro en teléfono. Cuando exista
+     el asset renderizado, se reemplaza el fondo de esta capa y
+     nada más cambia. */
+  .b1__atmosfera {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(60% 45% at 78% 78%, #ffd9a8 0%, #ffd9a800 100%),
+      radial-gradient(55% 40% at 22% 88%, #ffc0cb 0%, #ffc0cb00 100%),
+      radial-gradient(70% 55% at 50% 108%, #fff3c4 0%, #fff3c400 100%),
+      linear-gradient(180deg, #8ec5ff 0%, var(--cielo) 55%, #dceeff 100%);
+  }
+
+  .b1__contenido {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: var(--space-5);
+    width: 100%;
+    padding-block: var(--space-7);
+  }
+
+  /* Sin `opacity`. Derivar un color de texto de una opacidad da
+     un contraste que depende del fondo y falla en silencio: sobre
+     el azul del tope del degradado, tinta al 65% daba 4.50:1,
+     justo en el límite de WCAG y sin margen. A opacidad plena da
+     10.25:1. Si más adelante se quiere un eyebrow apagado, se
+     define como token con su contraste verificado, no con alfa. */
+  .b1__eyebrow {
+    color: var(--tinta);
+  }
+
+  .b1__titular {
+    position: relative;
+    /* No `--medida-titular` (850px): ese ancho es para titulares
+       de texto corrido. Este es display condensado de ancho
+       completo y cada línea va en un solo renglón. */
+    width: 100%;
+  }
+
+  .b1__bajada {
+    max-width: 46ch;
+    margin: 0;
+    font-size: 20px;
+    color: var(--tinta);
+  }
+
+  .b1__cta {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-2);
+  }
+
+  /* --- Los objetos --- */
+
+  .b1__objeto {
+    position: absolute;
+    /* Alineados al renglón 2, que es el del medio. */
+    top: 50%;
+    width: clamp(64px, 9vw, 120px);
+    height: auto;
+    pointer-events: none;
+    /* Nunca más de 6°. */
+    filter: drop-shadow(0 10px 24px rgb(20 16 36 / 0.18));
+  }
+
+  .b1__objeto--izq {
+    left: 0;
+    transform: translate(-42%, -50%) rotate(-5deg);
+  }
+
+  .b1__objeto--der {
+    right: 0;
+    transform: translate(42%, -50%) rotate(5deg);
+  }
+
+  /* En móvil NO pueden seguir flanqueando el renglón 2: a 390px el
+     titular ocupa casi todo el ancho y los objetos terminan
+     montados sobre las letras. El plan es explícito en que no
+     reemplazan ni tapan letras.
+     Se van a las esquinas, FUERA del alto del titular: uno arriba
+     a la izquierda y otro abajo a la derecha. Bajan ~35%, que es
+     lo que pide la guía de tamaños ópticos. */
+  @media (max-width: 809px) {
+    .b1__objeto {
+      width: clamp(44px, 13vw, 68px);
+      top: auto;
+    }
+
+    .b1__objeto--izq {
+      top: 0;
+      left: 0;
+      transform: translate(-14%, -78%) rotate(-5deg);
+    }
+
+    .b1__objeto--der {
+      bottom: 0;
+      right: 0;
+      transform: translate(14%, 78%) rotate(5deg);
+    }
+
+    .b1__bajada {
+      font-size: 17px;
+    }
+  }
+
+  /* --- El titular por letras --- */
+
+  .titular-letras {
+    font-family: var(--font-display);
+    /* Calculado para que la línea más larga —16 caracteres de
+       Anton— entre en un renglón a 1200px de contenido y a 390px
+       de móvil. Si el copy crece, este número baja. */
+    font-size: clamp(34px, 7.4vw, 118px);
+    line-height: 0.95;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    margin: 0;
+    color: var(--tinta);
+  }
+
+  /* CADA LÍNEA EN UN RENGLÓN, SIN EXCEPCIÓN.
+     Partir el titular en un span por letra le da al navegador
+     permiso para cortar entre dos letras cualesquiera: sin esto
+     se leía "NEGOCIO DE HAC / ER". El tamaño de fuente se calcula
+     para que la línea más larga —16 caracteres— entre a 1200px de
+     contenido y a 390px de móvil. */
+  .titular-letras__linea {
+    display: block;
+    white-space: nowrap;
+  }
+
+  .titular-letras__linea[data-marca="sí"] {
+    color: var(--marca);
+  }
+
+  .titular-letras__letra {
+    display: inline-block;
+    /* De 0 a 1 con `backwards`: si las animaciones no corren, la
+       letra se queda en su estado normal, que es visible. Nunca
+       al revés. */
+    animation: aparecer-letra var(--motion-reveal) var(--motion-ease) backwards;
+    animation-delay: calc(var(--i, 0) * 26ms);
+  }
+
+  @keyframes aparecer-letra {
+    from {
+      opacity: 0;
+      transform: translateY(0.16em);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .titular-letras__letra {
+      animation: none;
+    }
+  }
+
+  /* --- El cursor propio --- */
+
+  .cursor-propio {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: 100px;
+    z-index: var(--layer-cursor);
+    pointer-events: none;
+    display: grid;
+    place-items: center;
+    /* Centrado en el puntero restando la mitad de la caja. */
+    transform: translate(calc(var(--x, -200px) - 50px), calc(var(--y, -200px) - 50px));
+    filter: drop-shadow(0 4px 10px rgb(20 16 36 / 0.28));
+  }
+
+  .cursor-propio[data-visible="no"] {
+    opacity: 0;
+  }
+
+  /* La clase la pone el JS recién con el primer movimiento real.
+     Si el JS no corre, el cursor del sistema se queda. */
+  .con-cursor-propio,
+  .con-cursor-propio * {
+    cursor: none;
+  }
+
+  /* Salvo donde el cursor nativo dice algo que el nuestro no. */
+  .con-cursor-propio :is(input, textarea, select, [contenteditable]) {
+    cursor: auto;
+  }
+
+  /* =========================================================
+     B2 · QUIÉNES SOMOS
+     ========================================================= */
+
+  .b2 {
+    /* Más alto que el viewport: el hero queda pinneado sólo
+       mientras este bloque tenga recorrido. Con menos, el hero se
+       despega antes de terminar de taparse. */
+    min-height: 108vh;
+  }
+
+  .b2__contenido {
+    display: grid;
+    gap: var(--space-5);
+    padding-block: var(--space-section) var(--space-7);
+  }
+
+  .b2__titular {
+    font-family: var(--font-display);
+    /* 40 caracteres contra un techo de 20 en el presupuesto del
+       plan: por eso se deja envolver en dos o tres renglones en
+       vez de achicar el cuerpo. */
+    font-size: clamp(34px, 5.4vw, 68px);
+    line-height: 1;
+    text-transform: uppercase;
+    max-width: var(--medida-titular);
+    margin: 0;
+  }
+
+  .b2__cuerpo {
+    display: grid;
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  @media (min-width: 810px) {
+    .b2__cuerpo {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-7);
+    }
+  }
+
+  .b2__parrafo {
+    max-width: var(--medida-parrafo);
+    font-size: 20px;
+    margin: 0;
+  }
+
+  .b2__accion {
+    margin: var(--space-5) 0 0;
+  }
+
+  .b2__placeholder {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--r-media);
+    background: color-mix(in srgb, var(--cielo) 55%, var(--fondo));
+    border: 1.5px dashed var(--texto-2);
+  }
+
+  .b2__objeto {
+    width: clamp(96px, 22%, 168px);
+    height: auto;
+  }
+
+  .b2__placeholder-nota {
+    position: absolute;
+    bottom: var(--space-3);
+    color: var(--texto-2);
+  }
+}

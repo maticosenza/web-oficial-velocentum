@@ -200,10 +200,8 @@
   /* --- HeroSticky --- */
 
   .demo-hero {
-    /* Llena el contenedor sticky. Si no, el campo de color queda
-       más corto que el hero y detrás de la onda aparece el fondo
-       de página en vez del hero. */
-    height: 100%;
+    /* Ya no hace falta `height: 100%`: HeroSticky estira a sus
+       hijos con grid, que es lo que funciona también en móvil. */
     background: var(--cielo);
     display: grid;
     place-content: center;

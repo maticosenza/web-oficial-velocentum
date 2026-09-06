@@ -354,13 +354,30 @@
     position: relative;
   }
 
+  /* `display: grid` y no `height: 100%` en el hijo.
+     El contenido del hero tiene que llenar el hero SIEMPRE. Con
+     `height: 100%` funciona en desktop —el padre mide 100dvh—
+     pero se rompe en móvil, donde el padre pasa a `height: auto`
+     y el 100% colapsa a la altura del contenido. El campo de
+     color queda más corto que el hero, la onda cae sobre el
+     fondo de página en vez de sobre el hero, y como los dos son
+     crema PARECE QUE LA ONDA DESAPARECIÓ.
+     Con grid, el hijo estira a la altura de la fila, que
+     respeta tanto `height` como `min-height`. Funciona igual en
+     los dos lados y no depende de que el padre tenga alto
+     definido. */
   .hero-sticky__hero {
     position: sticky;
     top: 0;
-    height: 100vh;
-    /* `dvh` donde exista: en móvil la barra del navegador
-       aparece y desaparece, y `vh` deja un salto. */
+    /* `dvh` y no `vh`: en móvil la barra del navegador aparece y
+       desaparece, y `vh` deja un salto. */
     height: 100dvh;
+    display: grid;
+    grid-template-rows: 1fr;
+  }
+
+  .hero-sticky__hero > * {
+    min-height: 0;
   }
 
   /* El bloque que sube tiene que tapar de verdad: opaco y por
@@ -370,14 +387,35 @@
     z-index: 1;
   }
 
+  /* La onda del bloque siguiente se dibuja ENCIMA del hero: es
+     el efecto buscado. Pero el contenido del hero está centrado y
+     la onda le pasaría por arriba, así que hay que reservar su
+     alto. (La regla general de más arriba no alcanza acá porque
+     la onda es nieta, no hija, del hermano.)
+
+     ⚠ LA RESERVA VA EN EL HIJO, NO EN EL HERO.
+     Ponerla en el hero parece lo natural y está mal: con
+     `display: grid` el hijo estira a la CAJA DE CONTENIDO, que
+     excluye el padding. El campo de color queda más corto que el
+     hero y la onda cae justo en ese hueco, sobre el fondo de
+     página. Como los dos son crema, PARECE QUE LA ONDA
+     DESAPARECIÓ — que es exactamente el defecto reportado en
+     móvil. Medido: hero 573px, campo 525px, onda en 677–725.
+     En el hijo, el campo sigue llenando y lo que se corre es el
+     contenido centrado, que es lo que queríamos. */
+  .hero-sticky__hero:has(+ .hero-sticky__siguiente .borde-onda[data-borde="arriba"]) > * {
+    padding-bottom: var(--borde-onda-alto);
+  }
+
   /* Bajo 810px el pin se suelta: un hero fijado se come el
-     viewport entero de un teléfono. Alto natural y flujo normal. */
+     viewport entero de un teléfono. Alto natural, pero el campo
+     de color sigue llenando gracias al grid. */
   @media (max-width: 809px) {
     .hero-sticky__hero {
       position: relative;
       top: auto;
       height: auto;
-      min-height: 60vh;
+      min-height: 76vh;
     }
   }
 
@@ -386,7 +424,7 @@
       position: relative;
       top: auto;
       height: auto;
-      min-height: 60vh;
+      min-height: 76vh;
     }
   }
 
@@ -468,6 +506,29 @@
     font-weight: 700;
     text-decoration: none;
     cursor: pointer;
+  }
+
+  /* El texto del botón no se parte: "Reservá tu análisis" en tres
+     renglones deja de leerse como una acción. */
+  .boton {
+    white-space: nowrap;
+  }
+
+  .boton:disabled,
+  .boton[aria-disabled="true"] {
+    /* Un control deshabilitado tiene que PARECER deshabilitado.
+       Se usa sobre el CTA cuyo destino todavía no existe. */
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  /* Un SVG sin dimensiones toma el tamaño por defecto del
+     navegador —300×150— y revienta el botón. Va atado al tamaño
+     de letra para que escale con el zoom. */
+  .flecha {
+    width: 0.9em;
+    height: 0.9em;
+    flex: none;
   }
 
   /* El par texto-sobre-X, también acá. No es opcional. */

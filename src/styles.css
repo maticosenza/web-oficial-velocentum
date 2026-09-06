@@ -14,6 +14,7 @@
 
 @import "./estilos/base.css";
 @import "./estilos/componentes.css";
+@import "./estilos/home.css";
 @import "./estilos/pruebas.css";
 @import "./estilos/compat-shadcn.css";
 
