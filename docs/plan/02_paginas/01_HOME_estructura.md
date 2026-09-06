@@ -200,9 +200,10 @@ escritas y le dicen al visitante qué compra.
 - **Tres** tarjetas **de color pleno con esquinas redondeadas**, más grandes que
   las cuatro anteriores: número arriba, objeto grande al centro dentro de un
   contenedor claro, título y bajada abajo.
-- Un acento por tarjeta en orden 1→3, con su `--texto-sobre-N`. **El objeto va
-  sobre el contenedor claro, no sobre el color:** es lo que evita que el foco
-  azul desaparezca sobre la tarjeta azul. Ver copy.
+- Un acento por tarjeta en orden 1→3, con su `--texto-sobre-N`. **El objeto
+  lleva un contorno blanco grueso pegado a su silueta:** es lo que lo despega de
+  cualquier fondo, incluso del suyo propio —el foco azul sobre la tarjeta azul—.
+  Ver copy.
 
 **Grilla:** 4 columnas iguales en desktop · 2×2 en tablet · 1 columna en mobile.
 Con 4 en vez de 3, cada tarjeta baja de ~393px a ~292px sobre 1200px de

@@ -95,7 +95,9 @@
     transition:
       background-color var(--motion-hover) var(--motion-ease),
       border-color var(--motion-hover) var(--motion-ease),
-      color var(--motion-hover) var(--motion-ease);
+      color var(--motion-hover) var(--motion-ease),
+      transform var(--motion-hover) var(--motion-ease),
+      box-shadow var(--motion-hover) var(--motion-ease);
   }
 
   /* En hover el fondo se tiñe y el borde se funde con el relleno.
@@ -105,6 +107,9 @@
     background: var(--acento);
     border-color: var(--acento);
     color: var(--sobre);
+    /* El mismo relieve que el resto de los botones del sitio. */
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgb(20 16 36 / 0.24);
   }
 
   /* El activo se lee de `aria-current`, no de una clase: color y
@@ -119,6 +124,10 @@
   @media (prefers-reduced-motion: reduce) {
     .b0__link {
       transition: none;
+    }
+
+    .b0__link:hover {
+      transform: none;
     }
 
     /* El hook ya se abstiene de esconderlo; esto es la red por si
@@ -392,19 +401,21 @@
        el cuerpo, con esta fuente y este `letter-spacing`. De ahí
        salen los tres números:
 
-       · Tope 160px: la caja de contenido son 1168px (1200 menos
-         los gutters), así que el máximo absoluto sería 168. Se
-         deja en 160 para que el texto quede al 95% de la caja y
-         no al 99: si la fuente carga tarde y entra el respaldo,
-         un 99% se corta y `nowrap` lo empuja fuera.
-       · 12.2vw: el peor caso es la ventana más angosta. A 390px
-         da 92% de ocupación, a 320px el mínimo de 40px toma el
-         relevo y da 97%. Nunca desborda.
-       · Mínimo 40px.
+       · Tope 138px. El máximo que entra sería 168 —la caja de
+         contenido son 1168px— y llegó a estar en 160, al 95% de
+         la caja. Se bajó: a ese tamaño el titular pesaba
+         demasiado en desktop. A 138 ocupa el 82%, que deja aire
+         a los costados y sigue siendo el elemento dominante.
+       · 11vw en vez de 12.2, para que los anchos intermedios
+         bajen en la misma proporción y no haya un salto entre el
+         tramo escalado y el topeado.
+       · Mínimo 40px. A 320px el mínimo toma el relevo y el texto
+         ocupa el 97% de la caja: es el punto más justo del rango
+         y no desborda.
 
        Si el copy crece, estos números bajan: el factor 6.949 es
        de ESTE titular. */
-    font-size: clamp(40px, 12.2vw, 160px);
+    font-size: clamp(40px, 11vw, 138px);
     line-height: 0.95;
     text-transform: uppercase;
     letter-spacing: 0.01em;
@@ -1017,32 +1028,40 @@
     margin: 0;
   }
 
-  /* EL CONTENEDOR CLARO ES LO QUE RESUELVE EL CONTRASTE.
-     Los cuatro objetos tienen color propio y sobre un campo de
-     color se pelean con él: con los acentos en orden, el foco
-     azul cae sobre azul y desaparece. Acá el objeto se apoya en
-     el mismo crema del fondo de página, que es donde ya se veía
-     bien antes de que las tarjetas tuvieran color. Por eso los
-     acentos pueden ir 1→4 sin reordenar nada.
-
-     El contenedor es de 150×150 y el objeto entra adentro, no al
-     revés: los cuatro PNG no tienen el mismo margen interno, y
-     atarlos a una caja fija es lo que hace que los cuatro se vean
-     del mismo tamaño en la fila. */
+  /* La caja sigue siendo de 150×150 y el objeto entra adentro, no
+     al revés: los PNG no tienen el mismo margen interno, y atarlos
+     a una caja fija es lo que hace que los tres se vean del mismo
+     tamaño en la fila. Sin fondo ni círculo: lo que despega al
+     objeto es su contorno. */
   .b6-paso__objeto {
     display: grid;
     place-items: center;
     width: 150px;
     height: 150px;
-    background: var(--fondo);
-    border-radius: var(--r-pill);
-    padding: var(--space-4);
   }
 
+  /* EL CONTORNO BLANCO GRUESO.
+     `border` no sirve: recorta un rectángulo, no la silueta de un
+     PNG. `drop-shadow` sí sigue el canal alfa, así que el anillo
+     se pega al borde real del objeto.
+
+     Van encadenados y con blur 0: cada uno se aplica al RESULTADO
+     del anterior, así que cuatro direcciones repetidas dos veces
+     expanden la silueta unos 6px de forma pareja, en vez de
+     dejar cuatro púas. Con blur daría un halo difuso; sin blur da
+     un anillo sólido que se lee como parte del objeto.
+
+     Es lo que despega el interior del fondo cuando los dos
+     comparten color — el rayo amarillo sobre la tarjeta verde es
+     el caso testigo. Por eso los acentos pueden seguir en orden
+     1→3 sin reordenar nada. */
   .b6-paso__objeto img {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    filter: drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff)
+      drop-shadow(0 -3px 0 #fff) drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff)
+      drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff);
   }
 
   .b6-paso__titulo {

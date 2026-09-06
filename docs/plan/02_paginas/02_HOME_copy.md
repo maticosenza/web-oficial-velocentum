@@ -136,17 +136,21 @@ Titular en tres líneas, la tercera en color de marca.
 En el hero quedan el titular y el CTA, nada más. Con el lugar que dejaron los
 dos, **el titular creció hasta el límite medido**: `clamp(40px, 12.2vw, 160px)`.
 
-Los tres números salen de una medición, no de probar a ojo. La línea más larga
+En el hero quedan el titular y el CTA, nada más. Con el lugar que dejaron los
+dos, el titular creció: `clamp(40px, 11vw, 138px)`.
+
+Los números salen de una medición, no de probar a ojo. La línea más larga
 —`NEGOCIO DE HACER`— **ocupa 6.949 veces el cuerpo** con esta fuente y este
 `letter-spacing`:
 
-- **Tope 160px.** La caja de contenido son 1168px, así que el máximo absoluto
-  sería 168. Se deja en 160 para que el texto quede al **95%** de la caja y no
-  al 99: si la fuente carga tarde y entra el respaldo, un 99% se corta y
-  `nowrap` lo empuja fuera.
-- **12.2vw.** El peor caso es la ventana más angosta: a 390px da 92% de
-  ocupación, a 320px el mínimo de 40px toma el relevo y da 97%. Nunca desborda.
-- **Mínimo 40px.**
+- **Tope 138px.** El máximo que entra sería 168 —la caja son 1168px— y llegó a
+  estar en **160, al 95% de la caja**. Se bajó: a ese tamaño pesaba demasiado en
+  desktop. A 138 ocupa el **82%**, deja aire a los costados y sigue siendo el
+  elemento dominante.
+- **11vw**, para que los anchos intermedios bajen en la misma proporción y no
+  haya un salto entre el tramo escalado y el topeado.
+- **Mínimo 40px.** A 320px el mínimo toma el relevo y el texto ocupa el 97% de
+  la caja: es el punto más justo del rango, y no desborda.
 
 *Si el copy del titular cambia, estos números hay que recalcularlos: el 6.949 es
 de este titular.*
@@ -169,6 +173,26 @@ por qué. No hace falta frenar nada: no tiene handler ni destino.
 
 El aviso **sigue a la vista en el CTA de B8**, que está sobre el campo azul y no
 compite con ningún titular.
+
+### ⚠ El hundimiento NO va en móvil, y no es por falta de una forma de medirlo
+
+Se evaluó buscarle otra medida y la respuesta es que **no hay nada distinto que
+medir: el fenómeno no existe abajo de 810px.**
+
+Sin el pin, B1 y B2 están los dos en el flujo normal, uno debajo del otro. B2 no
+pasa por encima del hero: lo sigue, a distancia fija. La nube nunca llega a
+cubrir el titular — lo único que lo solapa es la franja de la onda, 48px sobre el
+borde inferior del hero, muy lejos del texto centrado.
+
+O sea que "cuánto lo tapó la nube" no es un valor mal normalizado en móvil:
+**es cero por construcción.**
+
+La única manera de tenerlo sería **fijar el hero también en móvil**, y eso
+revierte una decisión tomada y medida en F0 —"un hero fijado se come el viewport
+entero de un teléfono"— y además cambiaría el par B7+B8, que usa el mismo
+componente. No vale un efecto decorativo.
+
+**Queda apagado abajo de 810px.** El texto ahí está quieto, entero y legible.
 
 ### El texto se hunde cuando la nube sube
 
@@ -584,7 +608,27 @@ contenedor es fijo y el objeto entra adentro con `object-fit: contain`, porque
 los cuatro PNG no traen el mismo margen interno y sin él se verían de tamaños
 distintos en la misma fila.
 
-### El contenedor claro es lo que hace posible el orden 1→4
+### El contorno blanco es lo que hace posible el orden 1→3
+
+**Cambió la técnica.** Era un círculo crema detrás del objeto; ahora es un
+contorno blanco grueso pegado a su silueta, como la referencia.
+
+`border` no servía: recorta un rectángulo, no la silueta de un PNG.
+`drop-shadow` sí sigue el canal alfa. Van **ocho encadenados con blur 0** —cuatro
+direcciones repetidas dos veces— porque cada uno se aplica al *resultado* del
+anterior: así la silueta se expande unos 6px de forma pareja, en vez de dejar
+cuatro púas. Con blur daría un halo difuso; sin blur da un anillo sólido que se
+lee como parte del objeto.
+
+**Verificado mirándolo, no sólo calculándolo.** El caso que preocupaba era el
+foco azul sobre la tarjeta azul, que en interior mide 1.00 —el mismo color—.
+Con el contorno se lee perfecto: el anillo traza cada esquina y el punto
+central, y el propio sombreado 3D del objeto le da estructura interna. No hace
+falta cambiar el acento de la 01, y **el orden 1→3 se conserva.**
+
+La tabla de abajo queda como registro de por qué el fondo plano no alcanzaba.
+
+### Por qué el color solo no alcanzaba
 
 Los cuatro objetos tienen color propio —foco azul, barras verde, conexión
 violeta, rayo amarillo— y sobre un campo de color se pelean con él. Medido:
@@ -600,13 +644,13 @@ Con los acentos en orden, el foco azul cae sobre azul y **desaparece (1.00)**. Y
 reordenar los acentos tampoco alcanzaba: el mejor reparto posible deja un peor
 par de **2.27**, porque estos acentos cambian de tono pero no de claridad.
 
-**El contenedor saca el problema del medio.** El objeto deja de apoyarse en el
-color de la tarjeta y vuelve al crema, que es donde ya se veía bien antes de que
-las tarjetas tuvieran fondo. Por eso los acentos pueden ir 1→4 y el significado
-de cada objeto queda intacto, sin reordenar nada.
+**El contorno saca el problema del medio.** El objeto deja de depender del
+contraste con la tarjeta: lo despega su propio anillo. Por eso los acentos
+pueden ir 1→3 y el significado de cada objeto queda intacto, sin reordenar nada.
 
-No agrega nada al plan: la spec de B6 ya pedía un contenedor de 150×150, y sólo
-faltaba que tuviera color.
+La caja de 150×150 sigue ahí —es lo que hace que los tres objetos se vean del
+mismo tamaño, porque los PNG no traen el mismo margen interno— pero ya no tiene
+fondo ni forma propia.
 
 **Ojo con la bajada de `Recomendamos`:** `Un plan con presupuesto y prioridad.
 Escrito.` mide **exactamente 45**, que es el techo con cuatro columnas. Está en

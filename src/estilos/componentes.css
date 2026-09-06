@@ -605,6 +605,42 @@
     cursor: not-allowed;
   }
 
+  /* RELIEVE AL PASAR EL MOUSE.
+     El botón se despega del fondo: sube un par de píxeles y
+     aparece una sombra debajo. Vale para todos los botones del
+     sitio, no sólo para el CTA.
+
+     `:not()` sobre los dos estados de deshabilitado, porque un
+     control que no responde no puede parecer que responde. El CTA
+     del hero es exactamente ese caso.
+
+     La sombra usa tinta con alfa y no un token de color: es una
+     sombra, no un color de marca, y tiene que funcionar igual
+     sobre crema, sobre el campo azul de B8 y sobre el footer
+     oscuro. */
+  .boton {
+    transition:
+      transform var(--motion-hover) var(--motion-ease),
+      box-shadow var(--motion-hover) var(--motion-ease);
+  }
+
+  .boton:not(:disabled):not([aria-disabled="true"]):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgb(20 16 36 / 0.24);
+  }
+
+  /* Con movimiento reducido se va el desplazamiento, no la
+     sombra: la sombra es un cambio de estado, no un movimiento. */
+  @media (prefers-reduced-motion: reduce) {
+    .boton {
+      transition: none;
+    }
+
+    .boton:not(:disabled):not([aria-disabled="true"]):hover {
+      transform: none;
+    }
+  }
+
   /* Un SVG sin dimensiones toma el tamaño por defecto del
      navegador —300×150— y revienta el botón. Va atado al tamaño
      de letra para que escale con el zoom. */

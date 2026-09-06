@@ -55,3 +55,22 @@ caracteres** en dos renglones.
 correspondían a `UN EQUIPO DE CRECIMIENTO PARA TU NEGOCIO`, que ya no existe. Lo
 que se conserva de aquella anotación es la distinción entre un slot de un
 renglón y uno de dos, no el número.
+
+---
+
+## Relieve de los botones
+
+Todos los botones del sitio suben 2px y toman una sombra al pasar el mouse. No
+es sólo del CTA: es el estado de hover del sistema.
+
+**No lo reciben los botones deshabilitados,** ni con `disabled` ni con
+`aria-disabled`: un control que no responde no puede parecer que responde. Es el
+caso del CTA de la agenda, en el hero y en B8.
+
+La sombra usa tinta con alfa y no un token de color, porque es una sombra y no
+un color de marca: tiene que funcionar igual sobre el crema, sobre el campo azul
+de B8 y sobre el footer oscuro.
+
+Con movimiento reducido se va el desplazamiento pero **queda la sombra**: el
+cambio de estado sigue siendo visible, que es lo que importa; lo que se saca es
+el movimiento.
