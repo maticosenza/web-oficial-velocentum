@@ -1,0 +1,60 @@
+/* ===========================================================
+   BASE
+   =========================================================== */
+
+/* ⚠ CANDIDATOS A TOKEN DEL PLAN.
+   `docs/plan/01_sistema/tokens.css` no define estos valores. Se
+   declaran acá para no editar la spec por la espalda. Si se
+   aprueban, se promueven a tokens.css y esto se borra. */
+:root {
+  --borde-onda-alto: 88px;
+
+  /* El padding vertical estándar de sección. Existe como token
+     propio —y no como uso suelto de --space-section— porque el
+     borde de onda lo modifica por cálculo. Ver componentes.css. */
+  --pad-seccion: var(--space-section);
+}
+
+@media (max-width: 809px) {
+  :root {
+    --borde-onda-alto: 48px;
+  }
+}
+
+@layer base {
+  html {
+    /* El scroll suave nativo pelea con las mecánicas atadas a
+       scroll y con la restauración de posición del router. */
+    scroll-behavior: auto;
+  }
+
+  body {
+    background-color: var(--fondo);
+    color: var(--tinta);
+    font-family: var(--font-texto);
+    font-size: 18px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @media (max-width: 809px) {
+    body {
+      font-size: 16px;
+    }
+  }
+
+  /* Foco visible desde el primer componente, no al final.
+     `currentColor` garantiza contraste sobre cualquier acento. */
+  :focus-visible {
+    outline: 3px solid currentColor;
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Los objetos 3D nunca deben desbordar su caja. */
+  img,
+  svg,
+  video {
+    max-width: 100%;
+  }
+}

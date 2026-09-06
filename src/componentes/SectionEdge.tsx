@@ -25,16 +25,16 @@
    "nube azul sobre blanco" son el mismo componente con distinto
    `color`.
 
-   ⚠ CONTRATO DE USO
-   Un borde `arriba` se dibuja POR FUERA de su sección, encima
-   del bloque anterior. Es lo que queremos, pero tapa píxeles
-   reales: el bloque de arriba tiene que reservar el espacio con
-   la clase `.deja-lugar-al-borde`, o la onda le come el texto.
-   El alto por defecto (88px) es mayor que `--space-7` (64px),
-   así que el padding de sección NO alcanza por sí solo.
+   LA RESERVA DE ESPACIO ES AUTOMÁTICA
+   Un borde `arriba` se dibuja por fuera de su sección, encima
+   del bloque anterior, y tapa píxeles reales. Antes eso era una
+   clase que había que acordarse de poner. Ahora lo resuelve el
+   CSS con `:has()`: el bloque anterior incorpora el alto del
+   borde a su padding por cálculo. Ningún bloque tiene que saber
+   nada. Ver `estilos/componentes.css`.
    =========================================================== */
 
-import type { CSSProperties } from "react";
+import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
 
 type Borde = "arriba" | "abajo";
 
@@ -52,7 +52,9 @@ export function SectionEdge({
   alto?: string;
   className?: string;
 }) {
-  const estilo = {
+  /* Sólo custom properties: son datos que alimentan la regla de
+     `componentes.css`, no declaraciones que la pisen. */
+  const tokens = {
     "--edge-color": color,
     ...(alto ? { "--edge-alto": alto } : {}),
   } as CSSProperties;
@@ -62,39 +64,44 @@ export function SectionEdge({
       aria-hidden="true"
       className={["borde-onda", className].filter(Boolean).join(" ")}
       data-borde={borde}
-      style={estilo}
+      style={tokens}
     />
   );
 }
 
 /* ===========================================================
    Envoltorio de conveniencia: una sección con su borde ya
-   posicionado. El borde se dibuja FUERA de la caja (hacia
-   arriba o hacia abajo), así que la sección necesita
-   `position: relative` y el contenido tiene que quedar por
-   encima. Esto evita repetir esas tres reglas en cada bloque.
+   posicionado y su contenido en la capa de arriba.
    =========================================================== */
 export function SeccionConBorde({
   color,
+  sobre,
   borde = "arriba",
   alto,
   children,
-  style,
+  className,
   ...resto
 }: {
   color: string;
+  /* Obligatorio a propósito. El plan dice que el par
+     texto-sobre-acento no es opcional: acá se hace cumplir en el
+     tipo, así olvidarlo no compila en vez de dar bajo contraste. */
+  sobre: string;
   borde?: Borde;
   alto?: string;
-  children: React.ReactNode;
-} & React.HTMLAttributes<HTMLElement>) {
+  children: ReactNode;
+} & HTMLAttributes<HTMLElement>) {
   return (
-    <section {...resto} style={{ position: "relative", background: color, ...style }}>
+    <section
+      {...resto}
+      className={["seccion-con-borde", className].filter(Boolean).join(" ")}
+      style={{ "--seccion-color": color, "--seccion-sobre": sobre } as CSSProperties}
+    >
       {/* `alto` se pasa sólo si existe: con
           `exactOptionalPropertyTypes`, mandar `undefined` a una
           prop opcional no es lo mismo que omitirla. */}
       <SectionEdge color={color} borde={borde} {...(alto ? { alto } : {})} />
-      {/* El contenido va en su propia capa: la máscara nunca lo toca. */}
-      <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
+      <div className="seccion-con-borde__contenido">{children}</div>
     </section>
   );
 }

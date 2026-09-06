@@ -14,62 +14,21 @@ import { RouteCurtain } from "../componentes/RouteCurtain";
 
 function NotFoundComponent() {
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "grid",
-        placeContent: "center",
-        textAlign: "center",
-        padding: "var(--space-4)",
-        gap: "var(--space-4)",
-      }}
-    >
-      <p
-        style={{
-          fontFamily: "var(--font-mono)",
-          fontSize: 12,
-          letterSpacing: "0.06em",
-          color: "var(--texto-2)",
-        }}
-      >
-        ERROR 404
-      </p>
-      <h1
-        style={{
-          fontFamily: "var(--font-display)",
-          fontSize: "clamp(48px, 8vw, 96px)",
-          lineHeight: 0.95,
-          textTransform: "uppercase",
-          margin: 0,
-        }}
-      >
+    <div className="pagina-estado">
+      <p className="etiqueta etiqueta--apagada">ERROR 404</p>
+      <h1 className="pagina-estado__titulo">
         Esta página
         <br />
         no existe.
       </h1>
-      <p style={{ color: "var(--texto-2)", maxWidth: "var(--medida-parrafo)" }}>
+      <p className="pagina-estado__texto">
         Puede que el enlace esté mal escrito, o que la página haya cambiado de dirección.
       </p>
-      <div>
-        {/* Enlace duro, no `EnlaceConCortina`: el 404 tiene que
-            funcionar aunque se renderice fuera del proveedor. */}
-        <a
-          href="/"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            minHeight: "var(--control-min-height)",
-            padding: "0 var(--space-4)",
-            borderRadius: "var(--r-pill)",
-            background: "var(--marca)",
-            color: "var(--texto-sobre-marca)",
-            fontWeight: 700,
-            textDecoration: "none",
-          }}
-        >
-          Volver al inicio
-        </a>
-      </div>
+      {/* Enlace duro, no `EnlaceConCortina`: el 404 tiene que
+          funcionar aunque se renderice fuera del proveedor. */}
+      <a href="/" className="boton boton--marca">
+        Volver al inicio
+      </a>
     </div>
   );
 }
@@ -82,76 +41,28 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   }, [error]);
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "grid",
-        placeContent: "center",
-        textAlign: "center",
-        padding: "var(--space-4)",
-        gap: "var(--space-4)",
-      }}
-    >
-      <h1
-        style={{
-          fontFamily: "var(--font-display)",
-          fontSize: "clamp(40px, 6vw, 72px)",
-          lineHeight: 0.95,
-          textTransform: "uppercase",
-          margin: 0,
-        }}
-      >
+    <div className="pagina-estado">
+      <h1 className="pagina-estado__titulo">
         Esta página
         <br />
         no cargó.
       </h1>
-      <p style={{ color: "var(--texto-2)", maxWidth: "var(--medida-parrafo)" }}>
+      <p className="pagina-estado__texto">
         Hubo un problema de nuestro lado. Podés reintentar o volver al inicio.
       </p>
-      <div
-        style={{
-          display: "flex",
-          gap: "var(--space-2)",
-          justifyContent: "center",
-          flexWrap: "wrap",
-        }}
-      >
+      <div className="pagina-estado__acciones">
         <button
+          className="boton boton--marca"
           onClick={() => {
             router.invalidate();
             reset();
-          }}
-          style={{
-            minHeight: "var(--control-min-height)",
-            padding: "0 var(--space-4)",
-            borderRadius: "var(--r-pill)",
-            background: "var(--marca)",
-            color: "var(--texto-sobre-marca)",
-            border: "none",
-            fontWeight: 700,
-            fontFamily: "var(--font-texto)",
-            fontSize: "inherit",
-            cursor: "pointer",
           }}
         >
           Reintentar
         </button>
         {/* Enlace duro a propósito: si el router está roto, una
             navegación de cliente no es de fiar. */}
-        <a
-          href="/"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            minHeight: "var(--control-min-height)",
-            padding: "0 var(--space-4)",
-            borderRadius: "var(--r-pill)",
-            border: "1.5px solid var(--tinta)",
-            color: "var(--tinta)",
-            textDecoration: "none",
-            fontWeight: 700,
-          }}
-        >
+        <a href="/" className="boton boton--contorno">
           Volver al inicio
         </a>
       </div>

@@ -3,14 +3,14 @@
 
    Esto NO es el nav (B0) ni el hero (B1). Es lo mínimo para
    poder ver la cortina tapando y destapando algo, y para
-   navegar entre las cuatro rutas durante el spike.
+   navegar entre las cuatro rutas durante las pruebas.
 
-   No tiene la forma, ni el color de estado, ni la card
-   flotante que especifica 01_HOME_estructura.md. Cuando se
+   No tiene la forma, ni la card flotante, ni el comportamiento
+   móvil que especifica 01_HOME_estructura.md. Cuando se
    construya B0 de verdad, este archivo se borra.
    =========================================================== */
 
-import { useRef } from "react";
+import { useRef, type CSSProperties } from "react";
 import { useRouterState } from "@tanstack/react-router";
 
 import { EnlaceConCortina } from "./RouteCurtain";
@@ -28,6 +28,11 @@ const PAGINAS = [
   },
 ] as const;
 
+/** El par acento + texto-sobre-acento, como datos para el CSS. */
+export function parDeColor(acento: string, sobre: string): CSSProperties {
+  return { "--acento": acento, "--sobre": sobre } as CSSProperties;
+}
+
 export function NavProvisional() {
   const rutaActual = useRouterState({ select: (s) => s.location.pathname });
 
@@ -37,43 +42,21 @@ export function NavProvisional() {
   useMedirNav(navRef);
 
   return (
-    <nav
-      ref={navRef}
-      aria-label="Principal"
-      style={{
-        display: "flex",
-        gap: "var(--space-2)",
-        flexWrap: "wrap",
-        padding: "var(--space-4) var(--page-gutter)",
-      }}
-    >
-      {PAGINAS.map((p) => {
-        const activo = p.ruta === rutaActual;
-        return (
-          <EnlaceConCortina
-            key={p.ruta}
-            to={p.ruta}
-            /* El estado activo no puede ser sólo color. */
-            aria-current={activo ? "page" : undefined}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              minHeight: "var(--control-min-height)",
-              padding: "0 var(--space-4)",
-              borderRadius: "var(--r-pill)",
-              /* El par texto-sobre-X, también en el estado activo. */
-              background: activo ? p.acento : "transparent",
-              color: activo ? p.sobre : "var(--tinta)",
-              border: `1.5px solid ${p.acento}`,
-              fontWeight: 700,
-              textDecoration: "none",
-              fontFamily: "var(--font-texto)",
-            }}
-          >
-            {p.nombre}
-          </EnlaceConCortina>
-        );
-      })}
+    <nav ref={navRef} aria-label="Principal" className="nav-provisional">
+      {PAGINAS.map((p) => (
+        <EnlaceConCortina
+          key={p.ruta}
+          to={p.ruta}
+          className="nav-provisional__link"
+          /* El estado activo no puede ser sólo color. El CSS se
+             engancha del propio `aria-current`, así que color y
+             semántica no se pueden desincronizar. */
+          {...(p.ruta === rutaActual ? { "aria-current": "page" as const } : {})}
+          style={parDeColor(p.acento, p.sobre)}
+        >
+          {p.nombre}
+        </EnlaceConCortina>
+      ))}
     </nav>
   );
 }
@@ -90,67 +73,21 @@ export function PaginaProvisional({
   return (
     <>
       <NavProvisional />
-      <section
-        style={{
-          minHeight: "70vh",
-          background: acento,
-          color: sobre,
-          display: "grid",
-          placeContent: "center",
-          textAlign: "center",
-          padding: "var(--space-7) var(--page-gutter)",
-          gap: "var(--space-3)",
-        }}
-      >
-        <p
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: 12,
-            letterSpacing: "0.06em",
-            textTransform: "uppercase",
-            margin: 0,
-            opacity: 0.75,
-          }}
-        >
-          Andamio F0 · provisional
-        </p>
-        <h1
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(56px, 12vw, 144px)",
-            lineHeight: 0.95,
-            textTransform: "uppercase",
-            margin: 0,
-          }}
-        >
-          {nombre}
-        </h1>
+      <section className="pagina-provisional__banda" style={parDeColor(acento, sobre)}>
+        <p className="etiqueta">Andamio F0 · provisional</p>
+        <h1 className="pagina-provisional__titulo">{nombre}</h1>
       </section>
+
       {/* Alto extra para poder verificar la restauración de scroll:
           si se scrollea acá y se navega, la página nueva tiene que
           arrancar arriba, y el atrás tiene que volver a esta altura. */}
-      <section
-        style={{
-          minHeight: "120vh",
-          padding: "var(--space-7) var(--page-gutter)",
-          display: "grid",
-          alignContent: "space-between",
-        }}
-      >
-        <p style={{ color: "var(--texto-2)", maxWidth: "var(--medida-parrafo)" }}>
-          Bloque alto, sólo para tener scroll durante el spike. Scrolleá hasta el fondo, navegá a
+      <section className="pagina-provisional__relleno contenido">
+        <p className="prueba__nota">
+          Bloque alto, sólo para tener scroll durante las pruebas. Scrolleá hasta el fondo, navegá a
           otra página y volvé con el botón atrás del navegador: la página nueva tiene que abrir
           arriba de todo, y el atrás tiene que devolverte a esta altura.
         </p>
-        <p
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: 12,
-            color: "var(--texto-2)",
-          }}
-        >
-          FIN DE {nombre.toUpperCase()}
-        </p>
+        <p className="etiqueta etiqueta--apagada">FIN DE {nombre.toUpperCase()}</p>
       </section>
     </>
   );

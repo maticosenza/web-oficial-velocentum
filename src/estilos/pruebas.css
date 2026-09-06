@@ -1,0 +1,219 @@
+/* ===========================================================
+   PÁGINAS DE PRUEBA DE COMPONENTES
+   No forman parte del sitio. Viven en /pruebas/ y están fuera
+   de robots.txt. Se borran cuando F0 cierre, junto con el
+   andamio.
+   =========================================================== */
+
+@layer components {
+  .prueba {
+    display: grid;
+    gap: var(--space-6);
+    padding-bottom: var(--space-7);
+  }
+
+  .prueba__encabezado {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .prueba__titulo {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 7vw, 88px);
+    line-height: 0.95;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .prueba__seccion {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .prueba__nota {
+    color: var(--texto-2);
+    max-width: var(--medida-parrafo);
+    margin: 0;
+  }
+
+  .prueba__panel {
+    border: 1px solid var(--texto-2);
+    border-radius: var(--r-card);
+    padding: var(--space-4);
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .prueba__lectura {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 20px;
+  }
+
+  .prueba__fila {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  .prueba__lista {
+    margin: 0;
+    padding-left: var(--space-4);
+    display: grid;
+    gap: var(--space-2);
+    color: var(--texto-2);
+  }
+
+  .prueba__lista strong {
+    color: var(--tinta);
+  }
+
+  /* Botón de muestra pintado con el acento que se le pase. */
+  .prueba__pastilla {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--control-min-height);
+    padding-inline: var(--space-4);
+    border-radius: var(--r-pill);
+    background: var(--acento);
+    color: var(--sobre);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  /* --- SectionEdge --- */
+
+  .demo-borde__banda {
+    background: var(--acento);
+    color: var(--sobre, var(--tinta));
+    padding-block: var(--space-7);
+  }
+
+  .demo-borde__tarjeta {
+    position: relative;
+    background: var(--acento);
+    border-radius: var(--r-media) var(--r-media) 0 0;
+    min-height: 220px;
+  }
+
+  .demo-borde__grilla {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--grid-gap-trabajos);
+  }
+
+  .demo-borde__nombre {
+    margin: var(--space-1) 0 0;
+    font-size: 28px;
+    font-weight: 800;
+  }
+
+  .demo-borde__alto {
+    min-height: 60vh;
+  }
+
+  /* --- ServiceStack --- */
+
+  .demo-servicio {
+    background: var(--acento);
+    color: var(--sobre);
+    border-radius: var(--r-card);
+    padding: var(--space-6);
+    min-height: 420px;
+    display: grid;
+    align-content: space-between;
+    gap: var(--space-5);
+  }
+
+  .demo-servicio__titulo {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 1;
+    text-transform: uppercase;
+    margin: var(--space-3) 0 0;
+  }
+
+  .demo-servicio__bajada {
+    margin: var(--space-3) 0 0;
+    max-width: 520px;
+  }
+
+  .demo-servicio__entregables {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 520px;
+  }
+
+  .demo-servicio__entregable {
+    display: flex;
+    gap: var(--space-3);
+    padding-block: var(--space-3);
+    border-top: 1px solid currentColor;
+  }
+
+  .demo-servicio__cta {
+    justify-self: start;
+  }
+
+  /* --- Ticker --- */
+
+  .demo-ticker__grupo {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  /* --- Reveal --- */
+
+  .demo-reveal__grilla {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-3);
+  }
+
+  .demo-reveal__tarjeta {
+    background: var(--acento);
+    color: var(--sobre);
+    border-radius: var(--r-card);
+    padding: var(--space-5);
+    min-height: 180px;
+    display: grid;
+    align-content: space-between;
+  }
+
+  .demo-reveal__espacio {
+    min-height: 90vh;
+    display: grid;
+    align-content: center;
+  }
+
+  /* --- ScrollMedia --- */
+
+  .demo-medio__texto {
+    max-width: var(--medida-parrafo);
+  }
+
+  .demo-medio__espacio {
+    min-height: 70vh;
+  }
+
+  /* --- HeroSticky --- */
+
+  .demo-hero {
+    background: var(--cielo);
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    text-align: center;
+    gap: var(--space-4);
+    padding-inline: var(--page-gutter);
+  }
+
+  .demo-hero__titulo {
+    font-family: var(--font-display);
+    font-size: clamp(56px, 10vw, 128px);
+    line-height: 0.95;
+    text-transform: uppercase;
+    margin: 0;
+  }
+}
