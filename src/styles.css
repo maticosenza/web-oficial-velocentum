@@ -57,6 +57,21 @@
 /* ===========================================================
    BASE
    =========================================================== */
+/* ⚠ CANDIDATO A TOKEN DEL PLAN.
+   `docs/plan/01_sistema/tokens.css` no define un alto para el
+   borde de onda. Se declara acá para no editar la spec por la
+   espalda. Si se aprueba, se promueve a tokens.css y esta
+   declaración se borra. */
+:root {
+  --borde-onda-alto: 88px;
+}
+
+@media (max-width: 809px) {
+  :root {
+    --borde-onda-alto: 48px;
+  }
+}
+
 @layer base {
   html {
     /* El scroll suave nativo pelea con las mecánicas atadas a
@@ -119,6 +134,59 @@
     transform-origin: bottom;
     pointer-events: none;
     will-change: transform;
+  }
+
+  /* --- SectionEdge ---
+     La franja se dibuja FUERA de la sección: para `arriba` sube
+     por encima del bloque anterior; para `abajo` baja por debajo.
+     En los dos casos el color es el de la sección que entra, y el
+     recorte lo hace la máscara alfa del SVG.
+
+     `mask-size: 100% 100%` estira la onda a lo ancho a propósito:
+     es una silueta de ancho completo, dibujada para 1440. Lo que
+     NO se estira es el alto, porque la franja lo tiene fijo. */
+  .borde-onda {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: var(--edge-alto, var(--borde-onda-alto));
+    background: var(--edge-color, var(--fondo));
+    mask-image: url("/assets/borde-onda.svg");
+    mask-position: center;
+    mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+    mask-mode: alpha;
+    pointer-events: none;
+  }
+
+  .borde-onda[data-borde="arriba"] {
+    top: 0;
+    transform: translateY(-100%);
+  }
+
+  /* CONTRATO DE USO. El borde `arriba` se dibuja POR FUERA de su
+     sección, encima del bloque anterior. Eso es lo que queremos
+     —la nube sube y tapa— pero tapa píxeles reales: si el bloque
+     anterior tiene contenido pegado a su base, la onda se le come
+     el texto.
+     El bloque que precede a un borde `arriba` lleva esta clase.
+     Verificado en la página de prueba: sin ella, el borde de 88px
+     se comía dos renglones. */
+  .deja-lugar-al-borde {
+    padding-bottom: var(--borde-onda-alto);
+  }
+
+  /* ⚠ La clase NO gana contra un `style` inline con `padding` en
+     shorthand: un estilo inline le gana a cualquier regla de hoja.
+     Si el bloque se estiliza inline, el espacio se reserva inline:
+     `paddingBottom: "var(--borde-onda-alto)"`.
+     Es un argumento más para que en F1 los bloques se estilen con
+     clases y no con `style`. */
+
+  /* Pie de tarjeta: la misma silueta, espejada en vertical. */
+  .borde-onda[data-borde="abajo"] {
+    bottom: 0;
+    transform: translateY(100%) scaleY(-1);
   }
 
   /* Sólo para lectores de pantalla. */
