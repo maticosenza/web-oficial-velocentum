@@ -9,6 +9,7 @@ import { B5Pildoras } from "../bloques/B5Pildoras";
 import { B6Proceso } from "../bloques/B6Proceso";
 import { B7Clientes } from "../bloques/B7Clientes";
 import { B8Cierre } from "../bloques/B8Cierre";
+import { B9Footer } from "../bloques/B9Footer";
 import { NavProvisional } from "../componentes/AndamioF0";
 
 export const Route = createFileRoute("/")({
@@ -61,6 +62,8 @@ function Inicio() {
         hero={<B7Clientes />}
         siguiente={<B8Cierre />}
       />
+
+      <B9Footer />
     </>
   );
 }

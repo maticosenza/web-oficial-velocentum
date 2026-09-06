@@ -9,18 +9,35 @@
    Las once capacidades ya están escritas y aprobadas. Es el
    primer bloque de la home que no lleva un solo marcador.
 
-   TEXTO OSCURO NO, PAR DE COLOR SÍ
-   El plan dice "cada píldora con su color de fondo, texto
-   oscuro". Se cumple lo primero y no lo segundo, a propósito:
-   con tinta sobre `--acento-1` o sobre `--acento-4` el contraste
-   se cae, y el sistema define para cada acento su
-   `--texto-sobre-N` justamente para que ese par no se decida a
-   ojo. Dos de los cinco acentos piden texto blanco. Se usa el
-   par que corresponde a cada uno.
+   TEXTO BLANCO EN TODAS, Y POR ESO EL CICLO SON DOS COLORES
+   La banda va con texto blanco en todas las píldoras. Eso NO se
+   consigue escribiendo blanco: se consigue usando solamente los
+   acentos cuyo `--texto-sobre-N` ya es blanco. Así el par se
+   sigue respetando y el resultado es blanco parejo.
 
-   ONCE SOBRE CINCO
-   El ciclo de color queda cortado, igual que en B7. No se fuerza
-   a que cierre: la lista de capacidades manda sobre la paleta.
+   Medido sobre los cinco acentos, blanco contra el mínimo 4.5:1:
+
+   | Acento              | Blanco | ¿Pasa? |
+   |---------------------|--------|--------|
+   | acento-1 azul       | 4.56   | sí     |
+   | acento-4 violeta    | 5.00   | sí     |
+   | acento-2 bermellón  | 3.65   | NO     |
+   | acento-3 verde      | 2.20   | NO     |
+   | acento-5 amarillo   | 1.61   | NO     |
+
+   ⚠ BERMELLÓN TAMBIÉN QUEDÓ AFUERA, NO SÓLO AMARILLO Y VERDE.
+   Se pidió dejar azul, bermellón y violeta. Bermellón con blanco
+   da 3.65:1 y no llega al mínimo: es exactamente el mismo motivo
+   por el que salieron los otros dos. Queda el ciclo en azul y
+   violeta.
+
+   Con texto oscuro bermellón da 5.09:1 y entra sin problema — es
+   sólo el blanco lo que no soporta. Si se lo quiere de vuelta, la
+   salida es texto oscuro en esa píldora, no bajar el techo.
+
+   ONCE SOBRE DOS
+   El ciclo queda cortado, igual que en B7. No se fuerza a que
+   cierre: la lista de capacidades manda sobre la paleta.
    =========================================================== */
 
 import { Ticker, Pildora } from "../componentes/Ticker";
@@ -43,12 +60,11 @@ const CAPACIDADES = [
   "Web y conversión",
 ];
 
+/* Sólo los dos acentos cuyo texto-sobre ya es blanco. Ver la
+   tabla de contrastes de arriba antes de agregar uno. */
 const PARES = [
   ["var(--acento-1)", "var(--texto-sobre-1)"],
-  ["var(--acento-2)", "var(--texto-sobre-2)"],
-  ["var(--acento-3)", "var(--texto-sobre-3)"],
   ["var(--acento-4)", "var(--texto-sobre-4)"],
-  ["var(--acento-5)", "var(--texto-sobre-5)"],
 ] as const;
 
 export function B5Pildoras() {

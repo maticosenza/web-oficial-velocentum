@@ -882,4 +882,148 @@
       font-size: 17px;
     }
   }
+
+  /* =========================================================
+     B9 · FOOTER
+     Único bloque oscuro de la página.
+     ========================================================= */
+
+  .b9__contenido {
+    display: grid;
+    gap: var(--space-7);
+    padding-block: var(--space-section) var(--space-6);
+  }
+
+  .b9__cabecera {
+    display: grid;
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  @media (min-width: 810px) {
+    .b9__cabecera {
+      grid-template-columns: 1fr auto;
+      align-items: center;
+    }
+  }
+
+  .b9__marca {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  /* La forma de nube: campo claro con la V adentro. Es un
+     contenedor, no parte del símbolo, así que puede cambiar de
+     forma sin tocar el logo. */
+  .b9__nube {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 88px;
+    height: 88px;
+    background: var(--fondo);
+    border-radius: 46% 54% 52% 48% / 52% 46% 54% 48%;
+    /* Zona libre: un cuarto del alto del símbolo alrededor. */
+    padding: var(--space-4);
+  }
+
+  .b9__nube img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .b9__identidad {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .b9__logotipo {
+    /* Ancho óptico del wordmark según identidad.md: 160–190px en
+       desktop, 135–155px en móvil. */
+    width: 175px;
+    height: auto;
+  }
+
+  @media (max-width: 809px) {
+    .b9__logotipo {
+      width: 145px;
+    }
+  }
+
+  .b9__mail {
+    color: inherit;
+    font-size: 18px;
+  }
+
+  .b9__redes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  /* --- Los cuatro rectángulos de página --- */
+
+  .b9__paginas {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 600px) {
+    .b9__paginas {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (min-width: 960px) {
+    .b9__paginas {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* Cada rectángulo lleva el acento de su página con su par de
+     texto, el mismo que su link en el nav. */
+  .b9-pagina {
+    display: flex;
+    align-items: flex-end;
+    min-height: 180px;
+    padding: var(--space-4);
+    border-radius: var(--r-card);
+    background: var(--acento);
+    color: var(--sobre);
+    text-decoration: none;
+    transition:
+      transform var(--motion-hover) var(--motion-ease),
+      filter var(--motion-hover) var(--motion-ease);
+  }
+
+  /* El hover sube la tarjeta y la aclara apenas. No es sólo
+     color: el desplazamiento se percibe aunque el color no se
+     distinga. El anillo de foco lo pone la regla global. */
+  .b9-pagina:hover {
+    transform: translateY(-4px);
+    filter: brightness(1.08);
+  }
+
+  .b9-pagina__nombre {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3vw, 40px);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .b9-pagina {
+      transition: none;
+    }
+
+    .b9-pagina:hover {
+      transform: none;
+    }
+  }
 }

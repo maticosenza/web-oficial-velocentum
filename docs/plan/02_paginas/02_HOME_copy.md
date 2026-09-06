@@ -236,15 +236,34 @@ estaban escritas y entraron tal cual. La más larga, `Optimización de ficha`, m
 21 contra un techo de 20 — se pasa por uno y entra igual, así que la banda queda
 probada al filo del presupuesto.
 
-### El plan pedía "texto oscuro" y no se hizo
+### Texto blanco en todas, y por eso el ciclo son dos colores
 
-Cada píldora lleva su color de fondo, eso sí. Pero el texto no es oscuro en las
-cinco: va el `--texto-sobre-N` de cada acento, y dos de los cinco piden blanco.
-Con tinta sobre `--acento-1` o `--acento-4` el contraste se cae, y el sistema
-define ese par justamente para que no se decida a ojo.
+La banda va con texto blanco en todas las píldoras. Eso no se consigue
+escribiendo blanco: se consigue usando **sólo los acentos cuyo
+`--texto-sobre-N` ya es blanco**. Así el par se sigue respetando y el resultado
+es blanco parejo.
 
-El ciclo de color queda cortado —once sobre cinco— y no se fuerza a que cierre:
-manda la lista de capacidades, no la paleta.
+Medido, blanco contra el mínimo de 4.5:1:
+
+| Acento | Blanco | ¿Pasa? |
+|---|---|---|
+| acento-1 azul | 4.56 | sí |
+| acento-4 violeta | 5.00 | sí |
+| acento-2 bermellón | 3.65 | **NO** |
+| acento-3 verde | 2.20 | **NO** |
+| acento-5 amarillo | 1.61 | **NO** |
+
+⚠ **Bermellón también quedó afuera, no sólo amarillo y verde.** Se pidió dejar
+azul, bermellón y violeta. Bermellón con blanco da **3.65:1** y no llega: es
+exactamente el mismo motivo por el que salieron los otros dos. El ciclo queda en
+azul y violeta.
+
+Con texto oscuro bermellón da 5.09:1 y entra sin problema — es sólo el blanco lo
+que no soporta. Si se lo quiere de vuelta, la salida es texto oscuro en esa
+píldora, no bajar el techo.
+
+El ciclo queda cortado —once sobre dos— y no se fuerza a que cierre: manda la
+lista de capacidades, no la paleta.
 
 ---
 
@@ -293,8 +312,9 @@ el mismo objeto. Repetirlo en una fila de cuatro se leería como un error, así
 que al 03 le toca conexión, que es el que sobra y el que peor encaja —
 "coordinar disciplinas" no es proyectar.
 
-Es la asignación menos mala, no una buena. Si aparece un quinto objeto, o si
-preferís repetir barras en 02 y 03, se cambia en `B6Proceso.tsx`.
+Es la asignación menos mala, no una buena. **Revisado y aparcado a propósito:
+queda conexión.** No es un pendiente. Si aparece un quinto objeto, o si se
+prefiere repetir barras en 02 y 03, se cambia en `B6Proceso.tsx`.
 
 ## B7 · MARCAS `[DECIDIDO]`
 
@@ -337,27 +357,24 @@ logo oscuro adentro se pierde contra media paleta.
 cae en acento-2, no en acento-5— y así queda. Forzar que cierre justo pediría
 diez o quince clientes, y la cantidad la manda el cliente real, no la paleta.
 
-### La pausa del Ticker ya no es un botón dibujado
+### La pausa del Ticker es por teclado, y nada más
 
 **Cambio en el componente, así que vale para B5 y B7.** Se sacó el botón visible
-de `Pausar`. El mecanismo de WCAG 2.2.2 ahora son dos, y ninguno ocupa lugar en
-la composición:
+de `Pausar`. El mecanismo de WCAG 2.2.2 es uno: la banda es una parada de
+tabulación con nombre accesible y se detiene al recibir el foco.
 
-- **Puntero:** la banda se detiene al pasar el mouse por encima.
-- **Teclado:** la banda es una parada de tabulación con nombre accesible y se
-  detiene al recibir el foco.
+**También se sacó la pausa por hover**, que llegó a estar. Se probó y molestaba:
+la banda ocupa media pantalla, así que frenaba cada vez que el puntero la
+cruzaba de paso, sin que nadie se lo pidiera.
 
-Las dos condiciones son independientes: salir con el mouse mientras el foco
-sigue adentro no reanuda nada. `prefers-reduced-motion` es una tercera vía y no
-reemplaza a las otras dos — con ella la banda ni arranca.
+Con el botón fuera desapareció de paso el arreglo de subirlo arriba de la pista
+para que B8 no lo tapara antes que a los anillos.
 
-Con el botón fuera, desaparece de paso el arreglo anterior de subirlo arriba de
-la pista para que B8 no lo tapara antes que a los anillos.
-
-**⚠ Lo que este mecanismo no cubre.** En una pantalla táctil no hay hover, y sin
-teclado ni lector no hay foco. Ahí el único freno que queda es
-`prefers-reduced-motion`. El botón visible cubría también ese caso. Queda dicho
-por si más adelante aparece.
+**⚠ Lo que este mecanismo no cubre.** En una pantalla táctil no hay foco de
+teclado, así que ahí no queda ningún freno accionable: el único que sigue en pie
+es `prefers-reduced-motion`, que es una preferencia del sistema y no algo que el
+usuario accione en el momento. El botón visible cubría el caso táctil. Queda
+dicho por si vuelve.
 
 ---
 
@@ -404,13 +421,52 @@ ventana.
 
 ---
 
-## B9 · FOOTER `[ABIERTO]`
+## B9 · FOOTER `[CONSTRUIDO]` — con datos reales
 
 Logo en forma de nube, nombre, mail. Tres botones de redes en píldora con
 contorno. Cuatro rectángulos de color, uno por página.
 
-**Faltan datos reales:** mail, qué redes van, y si se enlaza a
-velocentum.agency. No se inventan.
+**Los datos ya no faltan.** Este bloque no lleva un solo marcador:
+
+- Mail: `marketing@velocentum.com`
+- LinkedIn: `https://www.linkedin.com/company/velocentum/`
+- Instagram: `https://www.instagram.com/velocentum/`
+- Facebook: `https://www.facebook.com/velocentum/`
+- **Enlace a `velocentum.agency`: NO va.** Decisión explícita, no un olvido.
+
+**Es una `section` con `role="contentinfo"`, no un `<footer>`.** La reserva de
+espacio del borde de onda pide que la onda sea hija directa del hermano
+siguiente; envolviendo la sección en un `<footer>` la onda pasa a ser nieta, la
+regla no engancha y la onda se come el cierre de B8. El `role` da a la
+tecnología asistiva el mismo landmark, así que no se pierde nada.
+
+**Las redes abren en pestaña nueva y lo avisan** con texto para lectores de
+pantalla. Para el resto lo dice la flecha, que en este sistema ya significa que
+sale del sitio. **No hay íconos de marca en `public/assets`**, así que la
+píldora es texto más flecha; cuando existan, entran acá.
+
+**Los rectángulos llevan el acento de su página** con su `--texto-sobre-N`, el
+mismo par que su link en el nav. El hover sube la tarjeta y la aclara: no es
+sólo color, así que se percibe aunque el color no se distinga.
+
+⚠ **Los nombres tienen que coincidir con los del nav, y la decisión 2 —"Inicio"
+u "Home"— sigue abierta.** Si cambia, cambia en los dos lados a la vez.
+
+### Dos defectos del borde de onda, encontrados acá y corregidos en el sistema
+
+Aparecieron al poner una sección con onda después de un par cosido, que es algo
+que antes no pasaba. Los dos estaban en `componentes.css` y valen para cualquier
+par futuro:
+
+1. **La reserva caía en el envoltorio.** El envoltorio del par no tiene color
+   propio, así que entre el azul de B8 y la onda del footer quedaba una franja
+   del color de la página. Ahora la reserva va en el bloque que sube, que es el
+   que lleva el color.
+2. **La onda existía y no se veía.** `hero-sticky__siguiente` lleva `z-index: 1`
+   para poder tapar al bloque fijado, y con eso tapaba también la onda de la
+   sección de abajo, que es hermana posterior pero con `z-index` automático. La
+   transición quedaba como una línea recta. Ahora la sección que entra se pinta
+   por encima del par.
 
 ---
 
@@ -422,7 +478,7 @@ velocentum.agency. No se inventan.
 | ~~2~~ | ~~Titular del hero y su bajada~~ **RESUELTO** — ver B1 | — |
 | 4 | "Inicio" o "Home" | B0 y B9 |
 | 5 | Destino del CTA de cierre | B8 y la publicación |
-| 6 | Mail y redes reales | B9 |
+| ~~6~~ | ~~Mail y redes reales~~ **RESUELTO** — ver B9 | — |
 | 7 | Confirmar que cifras y testimonios quedan afuera a propósito | registro |
 
 ---

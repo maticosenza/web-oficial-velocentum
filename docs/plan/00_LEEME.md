@@ -107,7 +107,10 @@ criterio de cada componente, no una fase final.
 **Bloquean publicar:**
 3. Destino de la agenda o del formulario. Recomendación: agenda como acción
    principal, formulario como alternativa.
-4. Mail, teléfono y redes reales. No se inventan.
+4. ~~Mail y redes reales~~ **RESUELTOS** y construidos en B9:
+   `marketing@velocentum.com`, LinkedIn, Instagram y Facebook.
+   **No se enlaza a `velocentum.agency`:** decisión explícita.
+   Sigue sin haber teléfono — la home no lo usa, así que no bloquea.
 5. Los 16 entregables de la Home B4, confirmados operativamente.
 6. Copy de los casos, e inventario por cliente: uso autorizado, medio, poster,
    categoría. No rellenar hasta ocho por estética.

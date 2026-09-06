@@ -10,29 +10,24 @@
    lado es el número medido en la referencia, y es lo que hace
    que se vea prolijo en lugar de recortado.
 
-   LA PAUSA NO ES OPCIONAL, PERO NO ES UN BOTÓN DIBUJADO
+   LA PAUSA ES POR TECLADO, Y NADA MÁS
    WCAG 2.2.2: cualquier contenido que se mueva solo más de
    cinco segundos junto a otro contenido necesita un mecanismo
-   para detenerlo. Acá el mecanismo son dos, y ninguno ocupa
-   lugar en la composición:
+   para detenerlo. Acá el mecanismo es uno: la banda es una
+   parada de tabulación con nombre accesible y se detiene al
+   recibir el foco.
 
-   - **Puntero:** la banda se detiene al pasar el mouse.
-   - **Teclado:** la banda es una parada de tabulación con
-     nombre accesible, y se detiene al recibir el foco.
-
-   Las dos condiciones son independientes: salir con el mouse
-   mientras el foco sigue adentro no reanuda nada.
-
-   `prefers-reduced-motion` es una tercera vía y NO reemplaza a
-   las otras dos: es una preferencia del sistema, no algo que el
-   usuario accione en el momento. Con ella la banda ni arranca.
+   NO se detiene al pasar el mouse. Se probó y se sacó: la banda
+   ocupa media pantalla, así que frenaba cada vez que el puntero
+   la cruzaba de paso, sin que nadie se lo pidiera.
 
    ⚠ LO QUE ESTE MECANISMO NO CUBRE
-   En una pantalla táctil no hay hover, y sin teclado ni lector
-   no hay foco. Ahí el único freno que queda es
-   `prefers-reduced-motion`. Un botón visible cubría también ese
-   caso; se sacó a pedido, para que la banda quede como la
-   referencia. Queda dicho por si más adelante aparece.
+   En una pantalla táctil no hay foco de teclado, así que ahí no
+   queda ningún freno accionable: el único que sigue en pie es
+   `prefers-reduced-motion`, que es una preferencia del sistema y
+   no algo que el usuario accione en el momento — con ella la
+   banda ni arranca. Antes hubo un botón visible, que cubría el
+   caso táctil; se sacó a pedido. Queda dicho por si vuelve.
 
    LA PISTA DUPLICADA Y EL LECTOR DE PANTALLA
    Para que el loop no tenga saltos, la lista va dos veces y se
@@ -65,9 +60,6 @@ export function Ticker({
   className?: string;
 }) {
   const pistaRef = useRef<HTMLDivElement>(null);
-  /* Dos frenos independientes. Con un solo booleano, sacar el
-     mouse reanudaría la banda aunque el foco siguiera adentro. */
-  const [puntero, setPuntero] = useState(false);
   const [foco, setFoco] = useState(false);
   const [reducido, setReducido] = useState(false);
 
@@ -100,7 +92,7 @@ export function Ticker({
     return () => mq.removeEventListener("change", leer);
   }, []);
 
-  const enMovimiento = !reducido && !puntero && !foco;
+  const enMovimiento = !reducido && !foco;
 
   return (
     <section
@@ -113,8 +105,6 @@ export function Ticker({
          `onFocus`/`onBlur` en React burbujean, así que también
          atrapan el foco de cualquier cosa enfocable de adentro. */
       tabIndex={reducido ? undefined : 0}
-      onMouseEnter={() => setPuntero(true)}
-      onMouseLeave={() => setPuntero(false)}
       onFocus={() => setFoco(true)}
       onBlur={() => setFoco(false)}
     >

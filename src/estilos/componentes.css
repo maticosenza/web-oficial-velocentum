@@ -91,6 +91,38 @@
     padding-bottom: calc(var(--pad-abajo, var(--pad-seccion)) + var(--borde-onda-alto));
   }
 
+  /* CUANDO EL BLOQUE ANTERIOR ES UN PAR COSIDO
+     La regla de arriba le pone la reserva al hermano anterior. Si
+     ese hermano es un `hero-sticky`, la reserva cae en el
+     ENVOLTORIO, que no tiene color propio: entre el bloque que
+     sube y la onda siguiente aparece una franja del color de la
+     página. Se ve entre el azul de B8 y la onda del footer.
+
+     La reserva tiene que ir en el bloque que sube, que es el que
+     lleva el color. Así el campo llega hasta la onda y la onda lo
+     pisa, que es el efecto buscado.
+
+     Gana por especificidad: la regla general es (0,2,0) y esta
+     (0,3,0), porque suma la clase del envoltorio. */
+  .hero-sticky:has(+ * > .borde-onda[data-borde="arriba"]) {
+    padding-bottom: 0;
+  }
+
+  .hero-sticky:has(+ * > .borde-onda[data-borde="arriba"]) > .hero-sticky__siguiente > * {
+    padding-bottom: calc(var(--aire-onda, 0px) + var(--borde-onda-alto));
+  }
+
+  /* Y la sección que entra tiene que pintarse ARRIBA del par.
+     `hero-sticky__siguiente` lleva `z-index: 1` para poder tapar
+     al bloque fijado, y eso alcanza para tapar también la onda de
+     la sección de abajo, que es hermana posterior pero con
+     `z-index` automático. Sin esto la onda existe y no se ve: la
+     transición queda como una línea recta. */
+  .hero-sticky:has(+ * > .borde-onda[data-borde="arriba"]) + * {
+    position: relative;
+    z-index: 2;
+  }
+
   /* Lo mismo para el pie de tarjeta, hacia abajo: quien contiene
      un borde `abajo` reserva su alto por debajo. */
   *:has(> .borde-onda[data-borde="abajo"]) {
