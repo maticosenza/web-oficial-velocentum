@@ -194,6 +194,34 @@ componente. No vale un efecto decorativo.
 
 **Queda apagado abajo de 810px.** El texto ahí está quieto, entero y legible.
 
+### El fondo del hero tiene parallax
+
+`03_referencia` corrigió que el fondo de la referencia **sí se mueve**: el
+degradado entero y las nubes se desplazan, respondiendo al cursor y al scroll.
+Lo que era cierto —y sigue siéndolo— es que no hay loop: con el puntero quieto
+no pasa nada.
+
+Construido con **dos capas**, y son dos justamente para que haya profundidad: si
+se movieran igual sería una imagen corriéndose. Medido con el puntero en una
+esquina: el degradado se desplaza 5px y las nubes 12.
+
+Con el scroll, las dos van **más lento que el contenido**. Medido a 300px de
+scroll: el contenido se mueve 300, el degradado 258 y las nubes 206.
+
+**El seguimiento del puntero va suavizado,** no directo: el valor aplicado se
+acerca al del puntero un 8% por cuadro. Directo se lee como un elemento
+persiguiendo al mouse; con retardo se lee como profundidad. Y el bucle **se
+detiene solo** cuando llega: con el puntero quieto no hay `requestAnimationFrame`
+corriendo, que es lo que la referencia también hace.
+
+**Sólo se mueve el fondo.** Verificado: con el parallax activo, el titular queda
+en `transform: none`, el contenido en la matriz identidad y los objetos del
+renglón conservan su propia rotación sin alterarse.
+
+Se apaga entero con `prefers-reduced-motion`, y en táctil no se escucha
+`pointermove` en absoluto — sin cursor no tiene sentido y consume batería—, así
+que ahí queda sólo el scroll.
+
 ### El texto se hunde cuando la nube sube
 
 Antes el titular quedaba quieto y la nube le pasaba por encima. Ahora baja y se
@@ -817,6 +845,11 @@ píldora es texto más flecha; cuando existan, entran acá.
 **Los rectángulos llevan el acento de su página** con su `--texto-sobre-N`, el
 mismo par que su link en el nav. El hover sube la tarjeta y la aclara: no es
 sólo color, así que se percibe aunque el color no se distinga.
+
+**En móvil son franjas horizontales angostas, no bloques.** Apilados a 180px se
+comían media pantalla: medido, los cuatro sumaban 792px. A 96px suman **456**.
+El nombre sigue abajo a la izquierda, en display y con el par de color de su
+acento.
 
 ### Barra de cierre
 

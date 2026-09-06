@@ -244,20 +244,69 @@
     align-content: safe center;
   }
 
-  /* La atmósfera es una capa decorativa con degradados estáticos.
+  /* LAS DOS CAPAS DEL FONDO.
      NO hay `filter: blur`: verificado que la referencia no usa
      ninguno, y un blur en vivo es caro en teléfono. Cuando exista
-     el asset renderizado, se reemplaza el fondo de esta capa y
-     nada más cambia. */
-  .b1__atmosfera {
+     el asset renderizado, se reemplaza el fondo de estas capas y
+     nada más cambia.
+
+     Se desbordan de su caja a propósito —`inset` negativo— porque
+     se mueven: sin material de sobra, al desplazarse dejarían ver
+     el borde. `.b1` recorta con `overflow: hidden`.
+
+     El multiplicador de cada capa es lo único que las distingue
+     en velocidad, y de ahí sale la profundidad. Los respaldos son
+     0, así que sin JS —o con movimiento reducido— quedan quietas
+     en su lugar. */
+  .b1__atmosfera,
+  .b1__nubes {
     position: absolute;
-    inset: 0;
     pointer-events: none;
+    will-change: transform;
+  }
+
+  .b1__atmosfera {
+    inset: -6%;
     background:
       radial-gradient(60% 45% at 78% 78%, #ffd9a8 0%, #ffd9a800 100%),
       radial-gradient(55% 40% at 22% 88%, #ffc0cb 0%, #ffc0cb00 100%),
       radial-gradient(70% 55% at 50% 108%, #fff3c4 0%, #fff3c400 100%),
       linear-gradient(180deg, #8ec5ff 0%, var(--cielo) 55%, #dceeff 100%);
+    /* El degradado se mueve POCO: es el plano de fondo. */
+    transform: translate3d(
+      calc(var(--px, 0) * 10px),
+      calc(var(--py, 0) * 10px + var(--scroll, 0) * 0.12px),
+      0
+    );
+  }
+
+  /* Las nubes: manchas blancas blandas en la mitad de arriba del
+     cielo. Van en su propia capa para poder moverse más rápido
+     que el degradado. */
+  .b1__nubes {
+    inset: -12%;
+    background:
+      radial-gradient(30% 16% at 16% 26%, rgb(255 255 255 / 0.62) 0%, rgb(255 255 255 / 0) 70%),
+      radial-gradient(24% 13% at 74% 18%, rgb(255 255 255 / 0.5) 0%, rgb(255 255 255 / 0) 70%),
+      radial-gradient(38% 15% at 48% 6%, rgb(255 255 255 / 0.4) 0%, rgb(255 255 255 / 0) 72%),
+      radial-gradient(22% 12% at 90% 40%, rgb(255 255 255 / 0.34) 0%, rgb(255 255 255 / 0) 70%);
+    /* Bastante más que el degradado: el doble largo. */
+    transform: translate3d(
+      calc(var(--px, 0) * 26px),
+      calc(var(--py, 0) * 26px + var(--scroll, 0) * 0.26px),
+      0
+    );
+  }
+
+  /* Red de CSS: el hook ya se abstiene de anotar nada con
+     movimiento reducido, pero si alguna variable quedara puesta
+     de antes, esto las deja quietas igual. */
+  @media (prefers-reduced-motion: reduce) {
+    .b1__atmosfera,
+    .b1__nubes {
+      transform: none;
+      will-change: auto;
+    }
   }
 
   /* Sin eyebrow ni bajada: el titular abre el hero y el CTA va
@@ -1493,6 +1542,21 @@
   .b9__legal {
     margin: 0;
     font-size: 14px;
+  }
+
+  /* En móvil los cuatro pasan a franjas horizontales angostas:
+     apilados a 180px cada uno se comían media pantalla. El nombre
+     sigue abajo a la izquierda, en display y con el par de color
+     de su acento. */
+  @media (max-width: 809px) {
+    .b9-pagina {
+      min-height: 96px;
+      padding: var(--space-3) var(--space-4);
+    }
+
+    .b9-pagina__nombre {
+      font-size: 30px;
+    }
   }
 
   /* Apilada y centrada. */

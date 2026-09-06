@@ -429,20 +429,52 @@ En la carga, las letras del titular aparecen **escalonadas, una por una**, no el
 bloque entero. `[VERIFICADO]` visualmente en la primera carga.
 No está en el CSS: es JS. Es la única animación de entrada del hero.
 
-## ❌ CORRECCIÓN: LAS NUBES NO FLOTAN
+## ❌ CORRECCIÓN: LAS NUBES NO FLOTAN **EN LOOP**
 
-Yo había anotado "nubes flotando en loop lento" como inferido. **Es falso.**
-Con el puntero quieto, se muestrearon todos los `transform`, `left` y `top` de
-la página durante 1,6 segundos: **cero cambios.** En reposo la página está
-completamente estática.
+Yo había anotado "nubes flotando en loop lento" como inferido. **Es falso como
+loop.** Con el puntero quieto, se muestrearon todos los `transform`, `left` y
+`top` de la página durante 1,6 segundos: **cero cambios.** En reposo, y sólo en
+reposo, la página está estática.
 
 Todo el movimiento de esa pantalla viene de tres fuentes y ninguna es un loop:
 1. La entrada letra por letra del titular, una sola vez.
 2. El cursor custom siguiendo al puntero.
 3. El scroll.
 
-**Consecuencia para nosotros:** no hace falta programar flotación de nubes.
-La sensación de vida la da el cursor, y sale mucho más barato.
+## ⚠ CORRECCIÓN DE LA CORRECCIÓN: EL FONDO DEL HERO **SÍ SE MUEVE**
+
+`[VERIFICADO]` por Matías con dos capturas comparadas.
+
+La conclusión anterior —"no hace falta programar flotación de nubes, la
+sensación de vida la da el cursor"— **era demasiado amplia y hay que
+descartarla.** Confundió "no hay loop en reposo" con "el fondo no se mueve".
+
+Lo que se ve comparando las dos capturas:
+
+- **El degradado entero se desplaza.** El azul, el rosa y el naranja cambian de
+  posición, no sólo de intensidad.
+- **Las nubes blancas también se desplazan,** y no a la misma velocidad que el
+  degradado.
+
+O sea que el muestreo de 1,6 segundos no estaba mal: estaba hecho con el puntero
+quieto, que es exactamente la condición en la que este movimiento no ocurre. **El
+fondo responde al cursor y al scroll**, no a un temporizador.
+
+**Consecuencia para nosotros, y ya construida en B1:**
+
+- Dos capas de fondo con parallax por capas. El degradado se mueve poco y las
+  nubes bastante más — si las dos fueran a la misma velocidad no habría
+  profundidad, habría una imagen corriéndose.
+- El seguimiento del puntero va **suavizado**, no directo: el valor aplicado se
+  acerca al del puntero un 8% por cuadro. Directo se lee como un elemento
+  persiguiendo al mouse; con retardo se lee como profundidad.
+- Las mismas capas suben y bajan con el scroll, **más lento que el contenido**.
+- **El titular, el CTA y los objetos no se mueven.** Sólo el fondo.
+- Se apaga entero con `prefers-reduced-motion`. En táctil no hay cursor, así que
+  ahí queda sólo el scroll.
+
+Y sigue en pie lo otro: **no hay loop.** Con el puntero quieto y sin scrollear,
+el hero no se mueve, y el bucle de animación ni siquiera está corriendo.
 
 ## ⚠ SIGUE SIN VERIFICAR
 

@@ -9,26 +9,52 @@
    Verificado en la referencia: no hay una sola declaración de
    `filter` ni `backdrop-filter` en todo el CSS. El degradado del
    fondo es una imagen ya renderizada. Ese asset no existe
-   todavía, así que acá va con degradados estáticos —que el plan
-   admite explícitamente como equivalente— y no con un blur.
+   todavía, así que acá va con degradados —que el plan admite
+   explícitamente como equivalente— y no con un blur.
+
+   EL FONDO SÍ SE MUEVE
+   El plan tenía anotado que en reposo la página está estática, y
+   eso sigue siendo cierto: con el puntero quieto no pasa nada.
+   Pero la corrección de `03_referencia` es que el fondo responde
+   al cursor y al scroll — el degradado entero se desplaza y las
+   nubes también, a otra velocidad.
+
+   Son dos capas justamente por eso: si las dos se movieran igual
+   no habría profundidad, habría una imagen corriéndose. El
+   degradado se mueve poco y las nubes bastante más.
+
+   Se mueve el FONDO y nada más. El titular, el CTA y los objetos
+   del renglón quedan quietos: viven en `.b1__contenido`, que
+   ninguna de estas reglas toca.
 
    LOS OBJETOS NO REEMPLAZAN LETRAS
    Van a los costados del renglón 2, no dentro de la palabra.
    Máximo dos en el hero, y no más de 6° de rotación.
    =========================================================== */
 
-import { useId } from "react";
+import { useId, useRef } from "react";
 
 import { TitularPorLetras } from "../componentes/TitularPorLetras";
 import { Flecha } from "../componentes/Flecha";
+import { useParallaxDelHero } from "../lib/parallaxDelHero";
 
 export function B1Hero() {
   const idPendiente = useId();
 
+  /* El parallax escribe `--px`, `--py` y `--scroll` acá, y el CSS
+     los reparte entre las dos capas de fondo. Ver la nota del
+     hook: suavizado, sin bucle en reposo, y en táctil sólo
+     scroll. */
+  const heroRef = useRef<HTMLDivElement>(null);
+  useParallaxDelHero(heroRef);
+
   return (
-    <div className="b1">
-      {/* Capa decorativa: la atmósfera nunca toca el texto. */}
+    <div className="b1" ref={heroRef}>
+      {/* Dos capas decorativas, y ninguna toca el texto.
+          Se mueven a distinta velocidad: eso es lo que se lee como
+          profundidad. El degradado poco, las nubes bastante más. */}
       <div className="b1__atmosfera" aria-hidden="true" />
+      <div className="b1__nubes" aria-hidden="true" />
 
       <div className="b1__contenido contenido">
         {/* Sin eyebrow. Estaba `EQUIPO DE CRECIMIENTO` y se sacó:
