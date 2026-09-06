@@ -42,14 +42,30 @@
    lo que se publica es la banda entera que tapa arriba, no sólo
    el alto de la card.
 
+   LA CARD SE AJUSTA AL CONTENIDO
+   No se estira al ancho de contenido: mide logo + links +
+   padding y nada más, centrada. En la referencia queda bastante
+   más angosta que la columna de texto, y estirarla la convierte
+   en una barra.
+
+   SE ESCONDE AL BAJAR Y VUELVE AL SUBIR
+   Así deja de chocar con el titular del hero. La lógica está en
+   `lib/navAlScrollear.ts`, con su nota: cerca del tope no se
+   esconde, el foco lo trae de vuelta y lo retiene, y con
+   movimiento reducido no se esconde nunca.
+
    ⚠ EL COMPORTAMIENTO MÓVIL ES NUESTRO, NO DE LA REFERENCIA
    `03_referencia` lo deja explícito: las variantes mobile del
    nav están en Framer y no se pudieron medir. Así que acá no se
-   copia nada. Bajo 810px la card se parte en dos filas —logotipo
-   arriba, los cuatro links abajo— y los links se compactan para
-   entrar en una sola fila. Lo que NO se toca es el alto mínimo
-   de 48px de cada link: es el área táctil, y achicarla para
-   ganar unos píxeles sería cambiar accesibilidad por estética.
+   copia nada. Bajo 810px sigue siendo una card flotante, más
+   chica y con aire a los costados para que se vea el fondo
+   alrededor: no se convierte en una barra de borde a borde. Se
+   parte en dos filas —logotipo arriba, los cuatro links abajo—
+   porque en una sola no entra a ningún ancho de teléfono.
+
+   Lo que NO se toca es el alto mínimo de 48px de cada link: es
+   el área táctil, y achicarla para ganar unos píxeles sería
+   cambiar accesibilidad por estética.
    =========================================================== */
 
 import { useRef, type CSSProperties } from "react";
@@ -57,6 +73,7 @@ import { useRouterState } from "@tanstack/react-router";
 
 import { EnlaceConCortina } from "../componentes/RouteCurtain";
 import { useMedirNav } from "../lib/altoDeNav";
+import { useNavAlScrollear } from "../lib/navAlScrollear";
 import { PAGINAS } from "../lib/paginas";
 
 export function B0Nav() {
@@ -64,6 +81,7 @@ export function B0Nav() {
 
   const navRef = useRef<HTMLElement>(null);
   useMedirNav(navRef);
+  useNavAlScrollear(navRef);
 
   return (
     <nav ref={navRef} aria-label="Principal" className="b0">

@@ -38,6 +38,13 @@
    ONCE SOBRE DOS
    El ciclo queda cortado, igual que en B7. No se fuerza a que
    cierre: la lista de capacidades manda sobre la paleta.
+
+   NO VAN ALINEADAS NI QUIETAS
+   Mientras la banda se desplaza al costado, cada píldora sube y
+   baja en loop, como flotando. El desfase de cada una sale de su
+   índice: ver la nota de `Pildora` en `Ticker.tsx`, donde está el
+   motivo por el que no puede ser aleatorio. Se apaga entera con
+   movimiento reducido, junto con el desplazamiento lateral.
    =========================================================== */
 
 import { Ticker, Pildora } from "../componentes/Ticker";
@@ -77,7 +84,7 @@ export function B5Pildoras() {
         {CAPACIDADES.map((c, i) => {
           const par = PARES[i % PARES.length];
           return (
-            <Pildora key={c} acento={par![0]} sobre={par![1]}>
+            <Pildora key={c} acento={par![0]} sobre={par![1]} indice={i}>
               {c}
             </Pildora>
           );

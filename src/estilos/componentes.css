@@ -269,12 +269,33 @@
       display: none;
     }
 
+    /* La oscilación se apaga entera junto con el desplazamiento
+       lateral: son el mismo movimiento para el usuario. */
+    .pildora {
+      animation: none;
+      transform: none;
+    }
+
     .ticker__grupo {
       flex-wrap: wrap;
       row-gap: var(--space-2);
     }
   }
 
+  /* La píldora flota: mientras la banda se desplaza al costado,
+     cada una sube y baja en loop.
+
+     EL DESFASE SALE DEL ÍNDICE, NO DE UN AZAR
+     El Ticker duplica la lista para que el loop no tenga saltos,
+     y las dos copias tienen que oscilar idéntico: si el desfase
+     fuera aleatorio, la copia visual haría otra cosa que la real
+     y el corte del loop se vería. Con el índice, la píldora 3 de
+     las dos copias está siempre en la misma fase.
+
+     El retardo es NEGATIVO: la animación arranca ya avanzada, así
+     no hay un primer instante con las once alineadas.
+
+     6px de recorrido total. Es un flotar, no un rebote. */
   .pildora {
     display: inline-flex;
     align-items: center;
@@ -284,6 +305,19 @@
     background: var(--acento);
     color: var(--sobre);
     font-weight: 700;
+    animation: pildora-flotar 3.2s var(--motion-ease) infinite;
+    animation-delay: calc(var(--i, 0) * -270ms);
+  }
+
+  @keyframes pildora-flotar {
+    0%,
+    100% {
+      transform: translateY(-3px);
+    }
+
+    50% {
+      transform: translateY(3px);
+    }
   }
 
   /* =========================================================
@@ -660,12 +694,9 @@
   /* Va en su propia regla y después del `padding` de arriba: el
      shorthand reescribe los cuatro lados, así que declarado antes
      lo pisaba y la banda quedaba con 64px en vez de dejarle su
-     lugar al nav. Y sólo desde 810px, que es donde el nav es
-     fijo. */
-  @media (min-width: 810px) {
-    .pagina-provisional__banda {
-      padding-top: calc(var(--alto-nav, 96px) + var(--space-5));
-    }
+     lugar al nav. */
+  .pagina-provisional__banda {
+    padding-top: calc(var(--alto-nav, 96px) + var(--space-5));
   }
 
   .pagina-provisional__titulo {

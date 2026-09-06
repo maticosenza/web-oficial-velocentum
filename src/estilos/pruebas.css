@@ -12,13 +12,11 @@
     padding-bottom: var(--space-7);
   }
 
-  /* El nav es fijo sólo desde 810px, así que la reserva va sólo
-     ahí: abajo el nav está en el flujo y ya ocupa su lugar. El
-     alto lo publica el propio nav, no hay número que mantener. */
-  @media (min-width: 810px) {
-    .prueba {
-      padding-top: calc(var(--alto-nav, 96px) + var(--space-5));
-    }
+  /* El nav es fijo en todos los anchos, así que estas páginas
+     —que no tienen un hero a sangre— le dejan su banda libre. El
+     alto lo publica el propio nav: no hay número que mantener. */
+  .prueba {
+    padding-top: calc(var(--alto-nav, 96px) + var(--space-5));
   }
 
   .prueba__encabezado {

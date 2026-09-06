@@ -20,17 +20,27 @@
        sale correcto sin que nadie tenga que sumarle nada. */
     padding: var(--space-3) var(--page-gutter);
     pointer-events: none;
+    transition: transform var(--motion-reveal) var(--motion-ease);
+  }
+
+  /* Se esconde al bajar y vuelve al subir. El estado lo escribe
+     `useNavAlScrollear`; acá sólo se dice cómo se ve. */
+  .b0[data-oculto="sí"] {
+    transform: translateY(-100%);
   }
 
   /* La card recupera los eventos: el resto de la banda es aire y
      tiene que dejar pasar el click a lo que haya debajo. */
   .b0__card {
     pointer-events: auto;
-    max-width: var(--max-contenido);
+    /* Se ajusta al contenido: logo + links + padding, y nada más.
+       Estirarla al ancho de contenido la convertía en una barra.
+       El `max-width` es sólo un tope para que nunca desborde. */
+    width: fit-content;
+    max-width: 100%;
     margin-inline: auto;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: var(--space-4);
     padding: var(--space-2) var(--space-3);
     /* Fondo sólido. Sin `backdrop-filter`: la referencia no tiene
@@ -105,34 +115,31 @@
     .b0__link {
       transition: none;
     }
+
+    /* El hook ya se abstiene de esconderlo; esto es la red por si
+       el atributo quedara puesto de antes. */
+    .b0 {
+      transition: none;
+      transform: none;
+    }
   }
 
   /* --- Bajo 810px ---
 
-     La card se parte en dos filas: logotipo arriba, los cuatro
-     links abajo. En una sola fila no entran a ningún ancho de
-     teléfono: con el wordmark de 130px y los cuatro links, hacen
-     falta ~440px contra los 358 de una pantalla de 390.
-     Y el wordmark no se reemplaza por la V, porque identidad.md
-     es explícito: "palabra completa en el nav".
+     SIGUE SIENDO UNA CARD, NO UNA BARRA. Se ajusta al contenido
+     igual que en desktop, así queda aire a los costados y se ve
+     el fondo alrededor. Y sigue siendo fija: ahora se esconde al
+     bajar, así que ya no ocupa una banda de forma permanente —que
+     era el motivo por el que antes se la dejaba en el flujo.
 
-     ⚠ ACÁ EL NAV DEJA DE SER FIJO, Y ES UNA DECISIÓN.
-     Medido: en dos filas la card queda en ~150px, o sea el 18%
-     de una pantalla de 844, ocupado de forma permanente en una
-     página que ya mide unas diez pantallas. Es demasiado.
-
-     El argumento no es sólo el número. Bajo 810px se apagan
-     TODAS las mecánicas sticky del sitio —el hero fijado, el
-     apilado de B4, el par de B7— por la misma razón. Y el motivo
-     por el que el nav tenía que ser fijo era verse por encima de
-     esas pilas. Sin pilas, no hay nada por encima de lo que
-     estar. El nav scrollea con la página, como el resto.
-
-     Se vuelve atrás borrando esta declaración. */
+     Se parte en dos filas porque en una sola no entra a ningún
+     ancho de teléfono: con el wordmark y los cuatro links hacen
+     falta ~440px contra los 358 de una pantalla de 390. Y el
+     wordmark no se reemplaza por la V, porque identidad.md es
+     explícito: "palabra completa en el nav". */
   @media (max-width: 809px) {
     .b0 {
-      position: static;
-      padding: var(--space-3) var(--page-gutter) 0;
+      padding: var(--space-2) var(--page-gutter);
     }
 
     .b0__card {
@@ -147,16 +154,14 @@
     }
 
     .b0__marca img {
-      width: 145px;
+      width: 132px;
     }
 
     /* `wrap` es una red, no el plan: con el padding de abajo los
-       cuatro entran en una fila a 390px —~279px contra 326
-       disponibles—, pero si el copy de un link creciera, se
-       envuelve en vez de desbordarse. */
+       cuatro entran en una fila a 390px, pero si el copy de un
+       link creciera, se envuelve en vez de desbordarse. */
     .b0__links {
       gap: var(--space-1);
-      width: 100%;
       flex-wrap: wrap;
       justify-content: center;
     }

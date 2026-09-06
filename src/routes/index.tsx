@@ -55,10 +55,12 @@ function Inicio() {
       {/* B3 y B4 van fuera del HeroSticky: cada uno tiene su
           mecánica de scroll y ninguna comparte contenedor con el
           pin del hero, que si no se pisarían. */}
+      {/* B5 va entre B2 y B3: es un respiro entre el bloque de
+          quiénes somos y los trabajos. */}
+      <B5Pildoras />
+
       <B3Trabajos />
       <B4Servicios />
-
-      <B5Pildoras />
       <B6Proceso />
 
       {/* B7 y B8 van cosidos, igual que B1 y B2: B7 queda fijado

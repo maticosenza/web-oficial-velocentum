@@ -164,7 +164,11 @@ apilado se rompe y se ve el desastre de abajo.
 
 # B5 · PÍLDORAS
 
-Mini sección. Sin titular, sin CTA, sin peso. Es un respiro entre B4 y B6.
+Mini sección. Sin titular, sin CTA, sin peso.
+
+**⚠ CAMBIÓ DE LUGAR: va entre B2 y B3**, no entre B4 y B6. El número B5 se
+conserva para no renumerar todo, pero en la página aparece cuarta: después de
+quiénes somos y antes de trabajos. Es el respiro entre esos dos.
 
 **Animaciones**
 
@@ -172,7 +176,8 @@ Mini sección. Sin titular, sin CTA, sin peso. Es un respiro entre B4 y B6.
 |---|---|---|
 | 1 | Una sola fila que **flota hacia un costado** en loop continuo | **M3** — ticker, velocidad baja |
 | 2 | Bordes desvanecidos, no cortados | Máscara `linear-gradient` que difumina el 10% de cada lado |
-| 3 | Cada píldora con su color de fondo, texto oscuro | Colores en ciclo sobre la paleta |
+| 3 | Cada píldora con su color de fondo | Colores en ciclo sobre la paleta. **Texto blanco, no oscuro:** ver copy |
+| 4 | Cada píldora **oscila verticalmente en loop** mientras la banda se desplaza | `@keyframes` de ±3px, con el desfase derivado del índice |
 
 **Altura:** banda baja. No ocupa un viewport.
 **Dirección:** una sola. No hay segunda fila en contra.

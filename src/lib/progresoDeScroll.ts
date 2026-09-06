@@ -7,8 +7,12 @@
    usuario scrollea para atrás el valor vuelve.
 
    Lo usan la rotación de entrada de ServiceStack (B4) y de
-   Trabajos (B3), y después ScrollMedia. Es el único lugar del
-   proyecto que escucha `scroll`.
+   Trabajos (B3), y después ScrollMedia.
+
+   No es el único que escucha `scroll`: `lib/navAlScrollear.ts`
+   tiene el suyo. Resuelve otra cosa —una dirección y un umbral,
+   sin elemento que medir— y meterla acá sería agrandar este
+   primitivo para un caso que no comparte nada.
 
    POR QUÉ UN SOLO BUCLE
    Cada elemento con su propio listener de scroll multiplica el

@@ -42,25 +42,41 @@ el apilado de B4 se fija a 116px, que es ese alto más 8. Nadie adivina un 56.
 una en el andamio y otra en B9. El plan dice que el nav es "la leyenda del
 sistema de color del sitio": con dos listas, esa leyenda podía mentir.
 
-### ⚠ Bajo 810px el nav deja de ser fijo
+### La card se ajusta al contenido
 
-Es una decisión, y se revierte borrando una declaración.
+No se estira al ancho de contenido. Medido: **735px contra los 1200 de la
+columna de texto.** Estirada se leía como una barra, no como una card.
 
-En una sola fila no entra a ningún ancho de teléfono: con el wordmark y los
-cuatro links hacen falta ~440px contra los 358 de una pantalla de 390. Y el
-wordmark no se reemplaza por la V, porque `identidad.md` dice "palabra completa
-en el nav". Así que se parte en dos filas, y medido queda en **155px: el 18% de
-una pantalla de 844, ocupado de forma permanente** en una página de unas diez
-pantallas.
+### Se esconde al bajar y vuelve al subir
 
-El argumento no es sólo ese número. **Bajo 810px se apagan todas las mecánicas
-sticky del sitio** —el hero fijado, el apilado de B4, el par de B7— por la misma
-razón. Y el motivo por el que el nav tenía que ser fijo era verse por encima de
-esas pilas. Sin pilas, no hay nada por encima de lo que estar.
+En desktop y en móvil. Con eso deja de chocar con el titular del hero. Tres
+reglas que no son obvias, en `lib/navAlScrollear.ts`:
 
-Los links se compactan para entrar los cuatro en una fila —279px medidos contra
-326 disponibles— pero **conservan sus 48px de alto mínimo**: es el área táctil, y
-achicarla para ganar píxeles sería cambiar accesibilidad por estética.
+1. **Cerca del tope nunca se esconde.** Bajando desde arriba de todo, esconderlo
+   antes de que llegue a taparse es un parpadeo sin motivo.
+2. **El foco lo trae de vuelta, y lo retiene.** Si alguien tabula a un link con
+   el nav escondido, el navegador enfoca un control invisible. Verificado:
+   escondido a mano, `focusin` en un link lo muestra; y con el foco adentro,
+   scrollear hacia abajo no lo esconde.
+3. **Con movimiento reducido no se esconde nunca.** Un nav que aparece y
+   desaparece es movimiento, y sin transición el salto es peor. El costo es que
+   vuelve a pisar el titular del hero: una superposición estática, no un defecto.
+
+### Bajo 810px sigue siendo una card, y sigue fija
+
+**Se revirtió la decisión anterior de dejarla en el flujo.** El motivo de
+aquella era que ocupaba una banda del 18% de forma permanente; ahora se esconde
+al bajar, así que ese motivo ya no existe.
+
+Sigue siendo una card flotante y no una barra: medido, **311px de ancho en una
+pantalla de 390, con 39px de aire a cada lado**. Se parte en dos filas porque en
+una sola no entra a ningún ancho de teléfono —con el wordmark y los cuatro links
+hacen falta ~440px contra 358—, y el wordmark no se reemplaza por la V porque
+`identidad.md` dice "palabra completa en el nav".
+
+Los links entran los cuatro en una fila y **conservan sus 48px de alto mínimo**:
+es el área táctil, y achicarla para ganar píxeles sería cambiar accesibilidad
+por estética.
 
 *El comportamiento móvil del nav de la referencia nunca se pudo medir: está en
 Framer. Ver `03_referencia`. Así que nada de esto se copió.*
@@ -333,8 +349,33 @@ Banda baja, una fila flotando hacia un costado. Sin titular.
 > Optimización de ficha · Contenido para pauta · GA4 · Influencer marketing ·
 > Diseño de marca · Web y conversión
 
+**⚠ Va entre B2 y B3.** Cambió de lugar: estaba entre B4 y B6. El número se
+conserva para no renumerar, pero en la página aparece cuarta, como respiro entre
+quiénes somos y trabajos.
+
 **Es el primer bloque de la home sin un solo marcador:** las once capacidades ya
-estaban escritas y entraron tal cual. La más larga, `Optimización de ficha`, mide
+estaban escritas y entraron tal cual.
+
+### Las píldoras flotan
+
+No van alineadas ni quietas: mientras la banda se desplaza al costado, cada una
+sube y baja en loop, ±3px sobre 3,2s. Es un flotar, no un rebote.
+
+**El desfase de cada una sale de su índice, no de un azar,** y no es una
+preferencia: el Ticker duplica la lista para que el loop no tenga saltos, y las
+dos copias tienen que oscilar idéntico. Con un desfase aleatorio, la copia
+visual haría otra cosa que la real y el corte del loop se vería. El retardo es
+negativo, así la animación arranca ya avanzada y no hay un primer instante con
+las once alineadas.
+
+**Se apaga entera con `prefers-reduced-motion`,** junto con el desplazamiento
+lateral: para quien mira, son el mismo movimiento.
+
+**El anillo de foco no se recorta.** La ventana del ticker tiene `overflow:
+hidden` y 24px de padding vertical. En el peor punto de la oscilación, con el
+anillo completo de 6px —3 de trazo más 3 de offset— quedan 14px de holgura
+arriba y 16 abajo. Hoy las píldoras no son enfocables; la medición vale para
+cuando lo sean. La más larga, `Optimización de ficha`, mide
 21 contra un techo de 20 — se pasa por uno y entra igual, así que la banda queda
 probada al filo del presupuesto.
 

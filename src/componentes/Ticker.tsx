@@ -122,18 +122,32 @@ export function Ticker({
   );
 }
 
-/** Una píldora de la banda de capacidades (B5). */
+/**
+ * Una píldora de la banda de capacidades (B5).
+ *
+ * `indice` no es decorativo: de él sale el desfase de la
+ * oscilación vertical, para que las píldoras no suban y bajen
+ * todas juntas. Derivado y no aleatorio, así el mismo índice da
+ * siempre el mismo desfase entre la copia real de la pista y la
+ * copia visual que el Ticker duplica — si fuera al azar, las dos
+ * copias oscilarían distinto y el corte del loop se vería.
+ */
 export function Pildora({
   children,
   acento,
   sobre,
+  indice = 0,
 }: {
   children: ReactNode;
   acento: string;
   sobre: string;
+  indice?: number;
 }) {
   return (
-    <span className="pildora" style={{ "--acento": acento, "--sobre": sobre } as CSSProperties}>
+    <span
+      className="pildora"
+      style={{ "--acento": acento, "--sobre": sobre, "--i": indice } as CSSProperties}
+    >
       {children}
     </span>
   );
