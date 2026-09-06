@@ -194,70 +194,107 @@ componente. No vale un efecto decorativo.
 
 **Queda apagado abajo de 810px.** El texto ahí está quieto, entero y legible.
 
-### El fondo del hero tiene parallax
+### El fondo del hero: una textura que se mueve de tres maneras
 
-`03_referencia` corrigió que el fondo de la referencia **sí se mueve**: el
-degradado entero y las nubes se desplazan, respondiendo al cursor y al scroll.
-Lo que era cierto —y sigue siéndolo— es que no hay loop: con el puntero quieto
-no pasa nada.
+`03_referencia` corrigió dos veces esta ficha, y ésta es la versión con el
+controlador de la referencia a la vista. **No hay rotación de 360° en loop** —
+eso fue una lectura equivocada de un valor fijo del DOM, y estuvo escrito acá.
 
-Construido con **dos capas**, y son dos justamente para que haya profundidad: si
-se movieran igual sería una imagen corriéndose.
+El fondo es **una única mancha extensa y difuminada**, un PNG con alfa real
+apoyado sobre el campo azul. Los degradados de colores que la simulaban se
+fueron: superponerlos a la textura real lavaba los dos.
 
-**Las amplitudes se subieron después de la primera versión, y hay una lección
-en eso.** La primera pasada quedó medible pero invisible: el recorrido de punta
-a punta eran 17px y 0.58° de rotación, repartidos en una pantalla entera. Al
-revisarlo con `getComputedStyle` todo daba "funciona" —el listener disparaba,
-la animación existía, el transform cambiaba— y a ojo el hero estaba quieto.
-**Que un efecto se mida no quiere decir que se vea.**
+**No es un objeto: es una franja que atraviesa el hero.** Sólo se ve su borde
+superior, irregular y difuminado; los costados y el borde de abajo quedan fuera
+del encuadre. Ver la mancha entera —contorno inferior incluido, con cielo azul
+reapareciendo debajo— la delata como una imagen pegada, y era lo que pasaba con
+el encuadre anterior.
 
-Medido después de subirlo, moviendo el mouse de una esquina a la otra: **51px
-en x y 44px en y**, con **1.76°** de rotación del contenedor.
+Los números salen de medir la referencia en vivo, con `offsetWidth` y
+`getComputedStyle` sobre su DOM, o sea sin el `transform` encima. A 1440×743 su
+capa de textura mide **2832 × 1197.48**, con `left: -696px` y `top: 594.398px`.
+De ahí:
 
-Con el scroll, las dos van **más lento que el contenido**. Medido a 300px de
-scroll: el contenido se mueve 300, el degradado 258 y las nubes 206.
+- el ancho es **aditivo**, `ancho del hero + 1392px`, y no un porcentaje: asoma
+  696px de cada lado sea cual sea la ventana;
+- la proporción del PNG se respeta (2832 / 1197.48 = 2.3659, la del archivo), así
+  que **no hay ningún estiramiento** que imitar;
+- el centro va al **80%** del alto del hero, con `translateY(-50%)`.
 
-**El seguimiento del puntero va suavizado,** no directo: el valor aplicado se
-acerca al del puntero un 11% por cuadro. Directo se lee como un elemento
-persiguiendo al mouse; con retardo se lee como profundidad. Y ese bucle **se
-detiene solo** cuando llega: con el puntero quieto no queda un
-`requestAnimationFrame` girando por el seguimiento.
+**El borde de abajo no es el del rectángulo.** El PNG se desvanece solo: medido
+fila por fila sobre el archivo, el alfa medio cae a 57/255 al 80% de su alto, a
+15 al 85% y a 0 al 95%. Lo que hay que mantener fuera de cuadro es esa zona de
+apagado, no la base de la imagen. Por eso el margen se cuenta desde el 85%.
 
-*Corrección a lo que decía antes esta ficha:* llegó a estar escrito que "la
-referencia tampoco tiene ningún loop". **Es falso.** Con el código a la vista,
-la nube de la referencia gira en loop continuo sobre su propio eje. Lo que no
-tiene loop es el seguimiento del cursor, que es otra cosa.
+`--mancha-ancho` lleva un segundo término en un `max()` que no es decorativo: en
+una ventana angosta y alta —820×1180— el ancho aditivo deja la textura en 935px
+de alto y el apagado entra en el hero. Ese término la **agranda**, nunca la
+achica.
 
-### Las nubes: dos capas anidadas, como el código de la referencia
+**Abajo de 810px el término aditivo se cae.** Los 1392px son constantes: contra
+un hero de 386px son un desborde del 360%, la textura queda 4.6 veces más ancha
+que la pantalla y sólo se ve su centro, que es la zona más pálida — el amarillo y
+el rosa quedan afuera y el hero se ve azul liso. Verificado renderizando la home
+en un iframe de 390×844. Ahí manda el otro término, y la franja de color vuelve a
+cruzar a media altura.
 
-- **El contenedor** sigue al puntero: desplazamiento, más una rotación mínima
-  —del orden de 0.9°— y una escala apenas por encima de 1. Esa rotación y esa
-  escala son lo que separa un desplazamiento plano de algo con volumen.
-- **La nube de adentro gira sobre sí misma** en loop continuo, **60s por
-  vuelta**. Llegó a estar en 200s, que son 1.8° cada diez segundos: eso es
-  imperceptible. A 60s son 6° por segundo, que se nota en un par de segundos de
-  mirar sin llegar a leerse como un carrusel. Verificado: avanzó 136° en 23
-  segundos de observación.
+Tres movimientos que se suman, **cada uno en su propio envoltorio del DOM**. No
+es prolijidad: si compartieran elemento, el `transform` del CSS y el del JS se
+pisarían y el último en escribir borraría al otro.
 
-  Las manchas además se hicieron más densas —de 0.62 de opacidad máxima a
-  0.85—: una nube casi transparente moviéndose despacio es dos veces
-  invisible.
+**A · Flota sola.** Cuatro osciladores de períodos distintos —1.3, 0.9, 0.7 y
+0.5 sobre la misma fase— para que nunca vuelvan a coincidir y el recorrido no se
+lea como un loop corto. Verificado: con el puntero quieto los cuatro valores
+avanzan solos.
 
-Va sobredimensionada y cuadrada —170vmax— para que al girar no asome ninguna
-esquina, y centrada por `top`/`left` más margen negativo en vez de por
-`transform`: si el centrado estuviera en la transformación, la animación tendría
-que arrastrarlo en cada fotograma y cualquier cambio de uno rompería al otro.
+*La fase avanza por tiempo, no por cuadro.* El original sumaba 0.015 por tick a
+60Hz; copiarlo tal cual haría que en una pantalla de 120Hz flotara al doble de
+velocidad. Acá avanza 0.9 por segundo.
 
-El loop se detiene con `prefers-reduced-motion`, que es exactamente lo que esa
-preferencia pide sacar.
+**B · Sigue al cursor con inercia,** medido contra el rectángulo de `.b1` y no
+contra la ventana. Fuera del hero o del radio de influencia el objetivo decae a
+cero: vuelve sola, sin cortes. Verificado moviendo el mouse entre extremos:
+**228px de recorrido en x y 82 en y**, con el titular y el CTA en
+`transform: none`.
 
-**Sólo se mueve el fondo.** Verificado: con el parallax activo, el titular queda
-en `transform: none`, el contenido en la matriz identidad y los objetos del
-renglón conservan su propia rotación sin alterarse.
+**C · Asciende con el scroll,** de 0 a −400px atado a `--cobertura`. Eso vive en
+CSS y no en el hook: la señal ya existe y agregarle un listener del scroll
+absoluto sería una segunda fuente para lo mismo. Verificado: a cobertura 0.5007
+la mancha sube exactamente −200px, y vuelve a 0 al subir.
 
-Se apaga entero con `prefers-reduced-motion`, y en táctil no se escucha
-`pointermove` en absoluto — sin cursor no tiene sentido y consume batería—, así
-que ahí queda sólo el scroll.
+**El texto conserva su propio hundimiento.** Va en sentido contrario al de la
+mancha —el texto baja, el fondo sube— y eso es a propósito. "Mover sólo el
+fondo" significa que el cursor y la flotación no tocan el texto, no que el texto
+pierda su animación de scroll.
+
+### Los parámetros para ajustar
+
+| Dónde | Qué |
+|---|---|
+| `.b1__mancha` en `home.css` | `--mancha-centro`: dónde cae el centro de la textura (80%, el de la referencia) |
+| `.b1__mancha` en `home.css` | `--mancha-margen`: cuánto sobra por debajo del hero, contado desde el 85% del alto de la textura |
+| `parallaxDelHero.ts` | `FASE_POR_SEGUNDO`, `FLOTAR_X/Y/ROT/ESCALA` |
+| `parallaxDelHero.ts` | `FUERZA`, `RADIO`, `ACERCARSE_POR_TICK`, `DECAER_POR_TICK` |
+| `.b1__mancha-scroll` en `home.css` | los `-400px` del ascenso |
+
+### Las protecciones, y por qué cada una
+
+- **Bajo 810px no hay ascenso por scroll.** Ahí el pin está apagado y
+  `--cobertura` arranca distinta de cero con la página arriba de todo: la mancha
+  nacería desplazada.
+- **Con movimiento reducido tampoco.** El primitivo de scroll publica 1 como
+  estado final neutro, que acá significaría −400px de entrada. Y el hook no se
+  activa: la textura queda quieta en su encuadre. Reacciona si la preferencia
+  cambia en caliente.
+- **Sin `(hover: hover) and (pointer: fine)` no se escucha el puntero.** En
+  táctil no hay cursor que seguir; la flotación sigue corriendo igual.
+- **Se pausa con la pestaña oculta y con el hero fuera de cuadro.** Y además
+  cuando B2 lo tapa: el hero es sticky, así que sigue intersectando aunque no se
+  vea nada, y el `IntersectionObserver` solo no alcanza. Con el hero tapado la
+  fase deja de avanzar, así que al destaparse retoma sin salto.
+- **Se cancela el cuadro pendiente al desmontar.** El bucle anterior no lo
+  hacía. Verificado con un ida y vuelta a Método: **una sola escritura por
+  cuadro antes y después**, o sea sin bucle duplicado.
 
 ### El texto se hunde cuando la nube sube
 

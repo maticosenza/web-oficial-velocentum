@@ -83,12 +83,12 @@ Salieron de medir. **No las "corrijas":**
    su `z-index` deja de competir contra la página y queda tapado — con el
    cursor del sistema escondido, o sea sin puntero. Ver `CursorPropio.tsx`.
 4. ~~**En reposo la página está estática.** Las nubes no flotan.~~
-   ⚠ **DEROGADO, con el código de la referencia a la vista.** El fondo del hero
-   se mueve de dos maneras a la vez: el degradado y el contenedor de la nube
-   **siguen al cursor y al scroll**, y adentro **la nube gira en loop continuo**
-   sobre su propio eje. El loop existe; lo que no existe es la flotación de
-   vaivén que se había inferido al principio. Ver
-   `03_referencia/mapa_lofty_decodificado.md`.
+   ⚠ **DEROGADO.** El fondo del hero es una única textura PNG con alfa que se
+   mueve de tres maneras que se suman: **flota sola** con cuatro osciladores de
+   períodos distintos, **sigue al cursor con inercia** y **asciende con el
+   scroll**. No hay rotación de 360° en loop — eso fue una lectura equivocada
+   del `rotate(-360deg)` que aparece fijo en el DOM. Ver
+   `03_referencia/mapa_lofty_decodificado.md` y `parallaxDelHero.ts`.
 5. **Los "blur" de Casos no son blur:** degradados blancos planos de `10vh`.
 6. **`mask-image: url(...) 50%/cover no-repeat alpha` NO ES VÁLIDO.**
    Van las propiedades separadas. Ver `01_sistema/tokens.css`.

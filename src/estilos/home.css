@@ -244,126 +244,172 @@
     align-content: safe center;
   }
 
-  /* LAS DOS CAPAS DEL FONDO.
-     NO hay `filter: blur`: verificado que la referencia no usa
-     ninguno, y un blur en vivo es caro en teléfono. Cuando exista
-     el asset renderizado, se reemplaza el fondo de estas capas y
-     nada más cambia.
-
-     Se desbordan de su caja a propósito —`inset` negativo— porque
-     se mueven: sin material de sobra, al desplazarse dejarían ver
-     el borde. `.b1` recorta con `overflow: hidden`.
-
-     El multiplicador de cada capa es lo único que las distingue
-     en velocidad, y de ahí sale la profundidad. Los respaldos son
-     0, así que sin JS —o con movimiento reducido— quedan quietas
-     en su lugar. */
-  .b1__atmosfera,
-  .b1__nubes {
-    position: absolute;
-    pointer-events: none;
-    will-change: transform;
-  }
-
+  /* EL CAMPO AZUL BASE.
+     Sólo el cielo. Los degradados radiales de rosa, naranja y
+     amarillo que antes simulaban la mancha se fueron: apoyar la
+     textura real encima de ellos superponía dos atmósferas y
+     lavaba los colores de las dos. */
   .b1__atmosfera {
-    inset: -6%;
-    background:
-      radial-gradient(60% 45% at 78% 78%, #ffd9a8 0%, #ffd9a800 100%),
-      radial-gradient(55% 40% at 22% 88%, #ffc0cb 0%, #ffc0cb00 100%),
-      radial-gradient(70% 55% at 50% 108%, #fff3c4 0%, #fff3c400 100%),
-      linear-gradient(180deg, #8ec5ff 0%, var(--cielo) 55%, #dceeff 100%);
-    /* El degradado se mueve POCO: es el plano de fondo. Subió de
-       10 a 24px de recorrido — con 10 el desplazamiento total de
-       punta a punta eran 20px sobre una pantalla entera, o sea
-       nada. */
-    transform: translate3d(
-      calc(var(--px, 0) * 24px),
-      calc(var(--py, 0) * 24px + var(--scroll, 0) * 0.12px),
-      0
-    );
-  }
-
-  /* LAS NUBES SON DOS CAPAS ANIDADAS, como la referencia.
-
-     El CONTENEDOR sigue al puntero: se desplaza bastante más que
-     el degradado —el doble largo— y además rota un poco y escala
-     apenas por encima de 1. Esa rotación mínima y esa escala son
-     lo que separa un desplazamiento plano de algo que parece
-     tener volumen. Los valores del original eran del orden de
-     -0.8° y 1.018. */
-  .b1__nubes {
-    inset: -14%;
-    overflow: hidden;
-    /* Amplitudes subidas para que se VEA, no sólo para que se
-       mida. Antes eran 26px y 0.9°, que de punta a punta daban 52
-       píxeles y 1.8 grados repartidos en una pantalla entera:
-       medible con `getComputedStyle` e invisible a ojo. */
-    transform: translate3d(
-        calc(var(--px, 0) * 70px),
-        calc(var(--py, 0) * 70px + var(--scroll, 0) * 0.26px),
-        0
-      )
-      rotate(calc(var(--px, 0) * -2.4deg)) scale(calc(1.03 + var(--py, 0) * 0.02));
-  }
-
-  /* Y la NUBE de adentro gira sobre sí misma, en loop lento y
-     continuo. Es independiente del puntero: corre sola.
-
-     Va sobredimensionada y centrada por `top`/`left` más margen
-     negativo, no por `transform`: si el centrado estuviera en la
-     transformación, la animación tendría que arrastrarlo en cada
-     fotograma y cualquier cambio de uno rompería al otro. Así la
-     animación es rotación pura.
-
-     Cuadrada y más grande que el viewport para que al girar no
-     asome ninguna esquina.
-
-     200s por vuelta. Es deliberadamente lentísimo: son ~1.8° cada
-     diez segundos, que se lee como deriva y no como un carrusel.
-     La referencia usa un PNG de nube; acá va la misma mancha de
-     degradados que teníamos, porque ese asset no existe. */
-  .b1__nubes-giro {
     position: absolute;
-    top: 50%;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, #8ec5ff 0%, var(--cielo) 55%, #dceeff 100%);
+  }
+
+  /* LA MANCHA · 1 de 3 — EL ENCUADRE. No se mueve nunca.
+
+     NO ES UN OBJETO: ES UNA FRANJA QUE ATRAVIESA EL HERO.
+     Ésa es toda la diferencia con el encuadre que tenía. Antes se
+     reconocía la mancha entera —se le veía el contorno de abajo y
+     volvía a aparecer cielo debajo— y eso la delata como una
+     imagen pegada. En la referencia sólo se ve su BORDE SUPERIOR,
+     irregular y difuminado; los costados y el borde inferior
+     quedan fuera del encuadre, y por eso se lee como atmósfera.
+
+     LOS NÚMEROS SON LOS DE LA REFERENCIA, MEDIDOS EN VIVO
+     Leídos del DOM de Lofty con `offsetWidth`/`offsetHeight` y
+     `getComputedStyle`, o sea sin el transform encima, a 1440×743:
+
+       capa de la textura   2832 × 1197.48   (= 1440 + 1392)
+       left                 -696px           (= 1392 / 2)
+       top                  594.398px        (= 80% de 743)
+       transform            translateY(-50%)
+
+     Tres cosas quedan confirmadas ahí. El ancho es ADITIVO, no
+     porcentual: asoma 696px de cada lado sea cual sea la ventana.
+     La proporción del PNG se respeta —2832/1197.48 = 2.3659, la
+     del archivo—, así que no hay ningún estiramiento que imitar.
+     Y el centro va al 80% del alto del hero.
+
+     POR QUÉ EL PORCENTAJE ERA EL ERROR
+     El 238% del hero que tenía antes crece en los dos ejes a la
+     vez y en pantallas anchas tapaba el cielo entero; el
+     `min(…, 250vh)` con el que lo había frenado hacía lo
+     contrario: a 1340×668 dejaba la textura en 1670 × 706 —contra
+     los 2732 × 1155 que corresponden— y el desvanecimiento de
+     abajo entraba en cuadro. De ahí el contorno inferior visible.
+     El término aditivo no tiene ninguno de los dos problemas.
+
+     EL BORDE DE ABAJO NO ES EL DEL RECTÁNGULO
+     El PNG se desvanece por su cuenta: medido fila por fila sobre
+     el archivo, el alfa medio cae a 57/255 al 80% de su alto, a
+     15 al 85% y a 0 al 95%. Lo que hay que mantener fuera de cuadro no
+     es el borde de la imagen sino esa zona de apagado. Por eso el
+     margen se cuenta desde el 85% del alto de la textura y no
+     desde su base: si entrara, se vería morir la masa y reaparecer
+     el azul, que es exactamente el síntoma que había.
+
+     EL SEGUNDO TÉRMINO DEL `max()` NO ES DECORATIVO
+     Como el alto lo fija el ancho, en una ventana angosta y alta
+     —820×1180, un iPad en vertical— el ancho aditivo da una
+     textura de 935px de alto y esa zona de apagado entra en el
+     hero. El segundo término agranda la textura hasta que vuelva a
+     quedar afuera. Agranda, nunca achica.
+
+     `.b1` recorta con `overflow: hidden`: nada de esto produce
+     scroll horizontal. */
+  .b1__mancha {
+    /* ---- LOS DOS PARÁMETROS DEL ENCUADRE ----
+       Es lo único que hay que tocar para recomponer la mancha.
+
+       Dónde cae el centro de la textura. 80% es el de la
+       referencia: subilo y la franja sube, tapando más cielo. */
+    --mancha-centro: 80%;
+    /* Cuánto tiene que sobrar por debajo del hero, contado desde
+       el 85% del alto de la textura. Cubre el peor caso simultáneo
+       de movimiento: cursor 150px, flotación 27 y la rotación de
+       3°, que a media ventana de 1920 baja la arista otros 50. */
+    --mancha-margen: 200px;
+
+    /* El ancho de la referencia, con el piso que mantiene el
+       apagado fuera de cuadro. `100vw` y no `100%` porque el mismo
+       valor se usa en `top`, donde un porcentaje se resolvería
+       contra el ALTO.
+
+       6.758 = 2.3653 / 0.35, y el 0.35 sale de despejar
+       `centro·H - alto/2 + 0.85·alto ≥ H + margen`. */
+    --mancha-ancho: max(calc(100vw + 1392px), calc((20dvh + var(--mancha-margen)) * 6.758));
+
+    position: absolute;
+    top: var(--mancha-centro);
     left: 50%;
-    width: 170vmax;
-    height: 170vmax;
-    margin: -85vmax 0 0 -85vmax;
-    /* Más densas y más contrastadas que antes: una nube casi
-       transparente moviéndose despacio es dos veces invisible. */
-    background:
-      radial-gradient(17% 10% at 33% 37%, rgb(255 255 255 / 0.85) 0%, rgb(255 255 255 / 0) 72%),
-      radial-gradient(14% 8% at 63% 33%, rgb(255 255 255 / 0.72) 0%, rgb(255 255 255 / 0) 72%),
-      radial-gradient(21% 9% at 47% 28%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 74%),
-      radial-gradient(13% 7% at 70% 45%, rgb(255 255 255 / 0.55) 0%, rgb(255 255 255 / 0) 72%),
-      radial-gradient(15% 8% at 38% 55%, rgb(255 255 255 / 0.45) 0%, rgb(255 255 255 / 0) 72%);
-    /* 200s eran 1.8° cada diez segundos: imperceptible. A 60s son
-       6° por segundo, que se nota en un par de segundos de mirar
-       sin llegar a leerse como un carrusel. */
-    animation: nube-girar 60s linear infinite;
+    width: var(--mancha-ancho);
+    /* El `-50%` vertical es el centrado de la referencia. Los
+       otros dos movimientos van en capas aparte justamente para
+       no pisarlo. */
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  /* EN MÓVIL EL TÉRMINO ADITIVO SE CAE, Y NO ES UN CAPRICHO.
+     Los 1392px son constantes: contra un hero de 1340 son un
+     desborde del 104%, pero contra uno de 386 son del 360%. La
+     textura queda 4.6 veces más ancha que la pantalla y lo único
+     que se ve es su centro, que es justo la zona más pálida: el
+     amarillo y el rosa quedan fuera de cuadro y el hero se ve azul
+     liso. Verificado renderizando la home en un iframe de 390×844.
+
+     Abajo de 810px, entonces, manda el otro término: el ancho
+     mínimo que mantiene el apagado fuera de cuadro, y ni un píxel
+     más. La franja de color vuelve a entrar —se ve cruzar a media
+     altura, detrás del CTA— y el desborde lateral sigue siendo de
+     500px por lado, así que tampoco aparece un borde recto.
+
+     El margen también baja: sin cursor —el hook no escucha sin
+     `(hover: hover)`— ni ascenso por scroll, lo único que mueve el
+     borde es la flotación y la escala, unos 38px. */
+  @media (max-width: 809.98px) {
+    .b1__mancha {
+      --mancha-margen: 40px;
+      --mancha-ancho: calc((20dvh + var(--mancha-margen)) * 6.758);
+    }
+  }
+
+  /* LA MANCHA · 2 de 3 — EL ASCENSO POR SCROLL.
+     Al bajar sube, al subir vuelve. Es reversible porque
+     `--cobertura` es un valor continuo, no un disparo.
+
+     Vive en CSS y no en el hook a propósito: la señal ya existe
+     —la publica `HeroSticky`— y agregarle al hook un listener del
+     scroll absoluto sería una segunda fuente para lo mismo.
+
+     ⚠ LAS DOS CONDICIONES DEL MEDIA QUERY NO SON DECORATIVAS.
+     Bajo 810px el pin está apagado y `--cobertura` arranca
+     distinta de cero con la página arriba de todo, así que la
+     mancha nacería desplazada. Y con movimiento reducido el
+     primitivo de scroll publica 1 como estado final neutro, que
+     acá significaría -400px de entrada: el fondo saltaría al
+     extremo. Apagada en los dos casos, la textura queda quieta en
+     su encuadre. */
+  .b1__mancha-scroll {
+    transform: none;
+  }
+
+  @media (min-width: 810px) and (prefers-reduced-motion: no-preference) {
+    .b1__mancha-scroll {
+      transform: translate3d(0, calc(var(--cobertura, 0) * -400px), 0);
+    }
+  }
+
+  /* LA MANCHA · 3 de 3 — FLOTACIÓN Y CURSOR.
+     Los cuatro valores los escribe el hook. Los respaldos son
+     neutros, así que sin JS —o con movimiento reducido— la
+     textura queda quieta y legible en su encuadre. */
+  .b1__mancha-flotar {
+    transform: translate3d(var(--mancha-x, 0px), var(--mancha-y, 0px), 0)
+      rotate(var(--mancha-rot, 0deg)) scale(var(--mancha-escala, 1));
     will-change: transform;
   }
 
-  @keyframes nube-girar {
-    to {
-      transform: rotate(-360deg);
-    }
+  .b1__mancha-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
   }
 
-  /* Red de CSS: el hook ya se abstiene de anotar nada con
-     movimiento reducido, pero si alguna variable quedara puesta
-     de antes, esto las deja quietas igual. */
   @media (prefers-reduced-motion: reduce) {
-    .b1__atmosfera,
-    .b1__nubes {
-      transform: none;
-      will-change: auto;
-    }
-
-    /* El giro también se detiene: es un loop, que es exactamente
-       lo que esta preferencia pide sacar. */
-    .b1__nubes-giro {
-      animation: none;
+    .b1__mancha-flotar {
       will-change: auto;
     }
   }

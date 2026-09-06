@@ -483,30 +483,53 @@ Son **dos capas anidadas**:
 | Capa | Transformación | Qué es |
 |---|---|---|
 | **Contenedor exterior** | `translate3d(84.9px, 106.5px, 0) rotate(-0.82deg) scale(1.018)` | Sigue al cursor. Desplazamiento, más rotación mínima y escala apenas mayor a 1 |
-| **Capa interior** | `translateY(-50%) rotate(-360deg)` con `will-change: transform` | Una **imagen PNG** girando sobre sí misma, en loop lento |
+| **Capa interior** | `translateY(-50%) rotate(-360deg)` con `will-change: transform` | Una **imagen PNG**. ⚠ Ver la corrección de abajo: ese `-360deg` es un valor fijo en el DOM, **no la prueba de un loop** |
 
 Dos cosas que corrigen el mapa:
 
 1. **El degradado del hero es una imagen**, no un degradado CSS. Ya estaba
    anotado más arriba y se confirma.
-2. **La nube gira en loop y no es estática.** La anotación original decía
-   "nubes flotando en loop lento — es falso". Era falso lo que yo había
-   inferido, pero **hay un loop**: no es una flotación de vaivén, es una
-   rotación completa y muy lenta sobre el propio eje.
+2. ~~**La nube gira en loop.**~~ ⚠ **CORREGIDO CON EL CONTROLADOR A LA VISTA.**
+   El `rotate(-360deg)` que aparece en el DOM es un valor **fijo**, no una
+   animación: no prueba ninguna vuelta continua. Leerlo como un loop fue un
+   error de interpretación mío, y estuvo escrito acá una tanda entera.
 
-Por qué el muestreo de 1,6 segundos no lo detectó: una vuelta completa a esa
-velocidad mueve fracciones de grado por segundo. En un muestreo corto, y sobre
-una nube blanda sin bordes duros, no se distingue del ruido.
+## ✅ EL CONTROLADOR REAL: `CloudSquiggleInteractive`
 
-**Construido así en B1:** contenedor que sigue al puntero con desplazamiento,
-rotación mínima y escala leve; y adentro la nube girando en loop continuo. Las
-dos cosas son independientes. La nuestra es una mancha de degradados y no un
-PNG, porque ese asset no existe — cuando exista, se reemplaza el fondo de la
-capa interior y nada más cambia.
+`[VERIFICADO]` sobre el bundle de la referencia. Lo que hay no es una rotación
+completa: son **tres movimientos que se suman** sobre una única textura.
 
-Lo único que se mantiene de la corrección anterior: **el par no responde a un
-temporizador para seguir al cursor.** Ese seguimiento es del puntero. El loop
-es aparte, y es el de la nube.
+**A · Flotación autónoma.** Cuatro osciladores de períodos distintos sobre una
+misma fase, así nunca vuelven a coincidir y el recorrido no se lee como un loop
+corto:
+
+```text
+floatX   = sin(fase * 1.3) * 45px
+floatY   = cos(fase * 0.9) * 27px
+rotation = sin(fase * 0.7) * 3deg
+scale    = 1 + sin(fase * 0.5) * 0.03
+```
+
+La fase avanza 0.015 por tick a 60Hz. **Reimplementado por tiempo** —0.9 por
+segundo— para que no corra al doble en pantallas de 120Hz.
+
+**B · Cursor con inercia.** Fuerza 300, radio de influencia 600px desde el
+centro, objetivo relativo al rectángulo del hero. Interpola el 50% por tick y
+decae al 90% por tick al alejarse; las dos tasas también se normalizaron por
+tiempo.
+
+**C · Scroll.** Desplazamiento interior de 0 a −400px ligado al progreso: al
+bajar la mancha asciende, al subir vuelve.
+
+Por qué el muestreo de 1,6 segundos no detectó nada: se hizo con el puntero
+quieto, y la flotación autónoma mueve pocos píxeles por segundo sobre una
+mancha blanda sin bordes duros. No se distingue del ruido en una ventana corta.
+
+**Construido así en B1**, con un envoltorio por movimiento para que el
+`transform` del CSS y el del JS no se pisen. La textura es el PNG original de
+Lofty, en `assets/hero-mancha-referencia.png`, **puesto como referencia y no
+como asset de Velocentum**: cuando exista la textura propia se cambia esa ruta y
+no hace falta tocar nada más.
 
 ## ⚠ SIGUE SIN VERIFICAR
 

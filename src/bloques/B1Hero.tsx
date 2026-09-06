@@ -12,20 +12,31 @@
    todavía, así que acá va con degradados —que el plan admite
    explícitamente como equivalente— y no con un blur.
 
-   EL FONDO SÍ SE MUEVE
-   El plan tenía anotado que en reposo la página está estática, y
-   eso sigue siendo cierto: con el puntero quieto no pasa nada.
-   Pero la corrección de `03_referencia` es que el fondo responde
-   al cursor y al scroll — el degradado entero se desplaza y las
-   nubes también, a otra velocidad.
+   EL FONDO ES UNA TEXTURA QUE FLOTA SOLA
+   Queda derogado lo que decía antes este comentario —que en
+   reposo no se mueve, y que la nube da una vuelta completa en
+   loop—. Ninguna de las dos cosas describe la referencia.
 
-   Son dos capas justamente por eso: si las dos se movieran igual
-   no habría profundidad, habría una imagen corriéndose. El
-   degradado se mueve poco y las nubes bastante más.
+   Lo que hay es una única mancha extensa y difuminada, en PNG con
+   alfa real, apoyada sobre el campo azul. Se mueve de tres
+   maneras que se suman, cada una en su propio envoltorio:
 
-   Se mueve el FONDO y nada más. El titular, el CTA y los objetos
-   del renglón quedan quietos: viven en `.b1__contenido`, que
-   ninguna de estas reglas toca.
+   A · flota sola, sin cursor y sin scroll, mientras el hero se
+       vea. Cuatro osciladores de períodos distintos, así el
+       recorrido no se lee como un loop corto.
+   B · sigue al cursor con inercia, y vuelve sola al centro
+       cuando el puntero se va.
+   C · asciende hasta -400px con el progreso de `--cobertura`, y
+       vuelve al subir. Eso vive en CSS, no en el hook.
+
+   Los degradados de colores que simulaban esta misma mancha se
+   fueron: superponerlos a la textura real lavaba los dos. Del
+   fondo anterior queda sólo el campo azul.
+
+   SE MUEVE EL FONDO Y NADA MÁS
+   Ni el cursor ni la flotación tocan el texto. Lo que el texto sí
+   conserva es su propio hundimiento por `--cobertura`, que es otra
+   cosa y sigue igual.
 
    LOS OBJETOS NO REEMPLAZAN LETRAS
    Van a los costados del renglón 2, no dentro de la palabra.
@@ -41,10 +52,10 @@ import { useParallaxDelHero } from "../lib/parallaxDelHero";
 export function B1Hero() {
   const idPendiente = useId();
 
-  /* El parallax escribe `--px`, `--py` y `--scroll` acá, y el CSS
-     los reparte entre las dos capas de fondo. Ver la nota del
-     hook: suavizado, sin bucle en reposo, y en táctil sólo
-     scroll. */
+  /* El hook escribe `--mancha-x/-y/-rot/-escala` acá, y el CSS
+     los aplica a la capa que flota. El ascenso por scroll no pasa
+     por el hook: sale de `--cobertura` directamente en CSS. Ver la
+     nota larga de `parallaxDelHero.ts`. */
   const heroRef = useRef<HTMLDivElement>(null);
   useParallaxDelHero(heroRef);
 
@@ -53,16 +64,40 @@ export function B1Hero() {
       {/* Dos capas decorativas, y ninguna toca el texto.
           Se mueven a distinta velocidad: eso es lo que se lee como
           profundidad. El degradado poco, las nubes bastante más. */}
+      {/* El campo azul base. Nada más: los degradados de colores
+          que simulaban la mancha se fueron, porque superponerlos a
+          la textura real lavaba los dos. */}
       <div className="b1__atmosfera" aria-hidden="true" />
 
-      {/* Dos capas ANIDADAS, como el código de la referencia.
-          El contenedor sigue al puntero —desplazamiento, más una
-          rotación mínima y una escala apenas mayor a 1— y la nube
-          de adentro gira sobre sí misma en loop continuo. Las dos
-          cosas son independientes: una responde al cursor, la otra
-          corre sola. */}
-      <div className="b1__nubes" aria-hidden="true">
-        <div className="b1__nubes-giro" />
+      {/* LA MANCHA, EN TRES ENVOLTORIOS.
+          Uno por movimiento, y no por prolijidad: si compartieran
+          elemento, el `transform` del CSS y el del JS se pisarían y
+          el último en escribir borraría al otro.
+
+          · `__mancha`         encuadre fijo. No se mueve nunca.
+          · `__mancha-scroll`  asciende con `--cobertura`, en CSS.
+          · `__mancha-flotar`  flotación y cursor, desde el hook.
+
+          Decorativa entera: `aria-hidden`, `alt` vacío y sin
+          eventos de puntero. */}
+      <div className="b1__mancha" aria-hidden="true">
+        <div className="b1__mancha-scroll">
+          <div className="b1__mancha-flotar">
+            {/* PENDIENTE DE REEMPLAZO: es el PNG original de
+                Lofty, no un asset de Velocentum. Está acá para
+                probar el encuadre y el movimiento. Cuando exista
+                la textura propia, se cambia esta ruta y no hace
+                falta tocar nada más. */}
+            <img
+              className="b1__mancha-img"
+              src="/assets/hero-mancha-referencia.png"
+              alt=""
+              width={2396}
+              height={1013}
+              decoding="async"
+            />
+          </div>
+        </div>
       </div>
 
       <div className="b1__contenido contenido">
