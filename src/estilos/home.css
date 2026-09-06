@@ -89,7 +89,12 @@
     background: transparent;
     color: var(--tinta);
     font-family: var(--font-texto);
-    font-weight: 700;
+    /* 500, el mismo peso que las píldoras de B5. Los dos son
+       controles chicos en píldora sobre el fondo de página, así que
+       tienen que leerse como la misma familia: a 700 el nav pesaba
+       bastante más que la banda. Comparados a tamaño real, lado a
+       lado. */
+    font-weight: 500;
     text-decoration: none;
     white-space: nowrap;
     transition:
@@ -119,7 +124,27 @@
     background: var(--acento);
     border-color: var(--acento);
     color: var(--sobre);
+    /* UN ESCALÓN MÁS QUE LOS INACTIVOS, Y NO POR jerarquía.
+       Acá el texto deja de estar sobre el fondo de página y pasa a
+       estar sobre el acento pleno. En Inicio y Contacto eso
+       significa BLANCO sobre color saturado, que son además los dos
+       pares de menor contraste de los cuatro —azul 4.56 y violeta
+       5.00— y a 500 el trazo fino se lava. A 600 se afirma sin
+       engrosar: comparados los cuatro estados a tamaño real, 700
+       vuelve al peso que estábamos sacando.
+
+       El ratio no cambia con el peso: lo que cambia es cuánta
+       tinta hay para sostenerlo. */
+    font-weight: 600;
   }
+
+  /* ⚠ EL HOVER NO SUBE DE PESO, A PROPÓSITO. Rellena igual que el
+     activo, así que tendría el mismo argumento — pero la card mide
+     `fit-content` y los enlaces son ítems flex: engordar el texto
+     al pasar el puntero ensancharía la píldora y correría a las
+     vecinas. Un salto de layout con el mouse encima es peor que
+     medio escalón de peso, y acá el hover ya se anuncia con el
+     relieve y la sombra. */
 
   @media (prefers-reduced-motion: reduce) {
     .b0__link {
