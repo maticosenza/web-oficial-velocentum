@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CasosRouteImport } from './routes/casos'
 import { Route as ContactoRouteImport } from './routes/contacto'
 import { Route as MetodoRouteImport } from './routes/metodo'
+import { Route as PruebasRevealRouteImport } from './routes/pruebas/reveal'
 import { Route as PruebasRouteCurtainRouteImport } from './routes/pruebas/route-curtain'
 import { Route as PruebasSectionEdgeRouteImport } from './routes/pruebas/section-edge'
 import { Route as PruebasServiceStackRouteImport } from './routes/pruebas/service-stack'
@@ -36,6 +37,11 @@ const ContactoRoute = ContactoRouteImport.update({
 const MetodoRoute = MetodoRouteImport.update({
   id: '/metodo',
   path: '/metodo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PruebasRevealRoute = PruebasRevealRouteImport.update({
+  id: '/pruebas/reveal',
+  path: '/pruebas/reveal',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PruebasRouteCurtainRoute = PruebasRouteCurtainRouteImport.update({
@@ -64,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/casos': typeof CasosRoute
   '/contacto': typeof ContactoRoute
   '/metodo': typeof MetodoRoute
+  '/pruebas/reveal': typeof PruebasRevealRoute
   '/pruebas/route-curtain': typeof PruebasRouteCurtainRoute
   '/pruebas/section-edge': typeof PruebasSectionEdgeRoute
   '/pruebas/service-stack': typeof PruebasServiceStackRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/casos': typeof CasosRoute
   '/contacto': typeof ContactoRoute
   '/metodo': typeof MetodoRoute
+  '/pruebas/reveal': typeof PruebasRevealRoute
   '/pruebas/route-curtain': typeof PruebasRouteCurtainRoute
   '/pruebas/section-edge': typeof PruebasSectionEdgeRoute
   '/pruebas/service-stack': typeof PruebasServiceStackRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/casos': typeof CasosRoute
   '/contacto': typeof ContactoRoute
   '/metodo': typeof MetodoRoute
+  '/pruebas/reveal': typeof PruebasRevealRoute
   '/pruebas/route-curtain': typeof PruebasRouteCurtainRoute
   '/pruebas/section-edge': typeof PruebasSectionEdgeRoute
   '/pruebas/service-stack': typeof PruebasServiceStackRoute
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/casos'
     | '/contacto'
     | '/metodo'
+    | '/pruebas/reveal'
     | '/pruebas/route-curtain'
     | '/pruebas/section-edge'
     | '/pruebas/service-stack'
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/casos'
     | '/contacto'
     | '/metodo'
+    | '/pruebas/reveal'
     | '/pruebas/route-curtain'
     | '/pruebas/section-edge'
     | '/pruebas/service-stack'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/casos'
     | '/contacto'
     | '/metodo'
+    | '/pruebas/reveal'
     | '/pruebas/route-curtain'
     | '/pruebas/section-edge'
     | '/pruebas/service-stack'
@@ -128,6 +140,7 @@ export interface RootRouteChildren {
   CasosRoute: typeof CasosRoute
   ContactoRoute: typeof ContactoRoute
   MetodoRoute: typeof MetodoRoute
+  PruebasRevealRoute: typeof PruebasRevealRoute
   PruebasRouteCurtainRoute: typeof PruebasRouteCurtainRoute
   PruebasSectionEdgeRoute: typeof PruebasSectionEdgeRoute
   PruebasServiceStackRoute: typeof PruebasServiceStackRoute
@@ -162,6 +175,13 @@ declare module '@tanstack/react-router' {
       path: '/metodo'
       fullPath: '/metodo'
       preLoaderRoute: typeof MetodoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pruebas/reveal': {
+      id: '/pruebas/reveal'
+      path: '/pruebas/reveal'
+      fullPath: '/pruebas/reveal'
+      preLoaderRoute: typeof PruebasRevealRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pruebas/route-curtain': {
@@ -200,6 +220,7 @@ const rootRouteChildren: RootRouteChildren = {
   CasosRoute: CasosRoute,
   ContactoRoute: ContactoRoute,
   MetodoRoute: MetodoRoute,
+  PruebasRevealRoute: PruebasRevealRoute,
   PruebasRouteCurtainRoute: PruebasRouteCurtainRoute,
   PruebasSectionEdgeRoute: PruebasSectionEdgeRoute,
   PruebasServiceStackRoute: PruebasServiceStackRoute,

@@ -253,6 +253,46 @@
   }
 
   /* =========================================================
+     Reveal — aparición al entrar en cuadro, una sola vez
+     ========================================================= */
+
+  /* Sin `data-revelado`, el elemento se ve normal. Es el estado
+     que sirve el servidor y el que queda si el JS no corre: el
+     contenido nunca depende de que algo se ejecute.
+
+     La transición vive SÓLO en el estado revelado. Si estuviera
+     en la clase base, esconder el elemento al montar sería
+     también una transición —el elemento se desvanecería HACIA
+     invisible— y encima queda una CSSTransition corriendo que
+     gana sobre cualquier declaración, incluso `!important`.
+     Esconder es instantáneo; aparecer es lo que se anima. */
+  .reveal[data-revelado="no"] {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  .reveal[data-revelado="sí"] {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity var(--motion-reveal) var(--motion-ease),
+      transform var(--motion-reveal) var(--motion-ease);
+    transition-delay: calc(var(--reveal-indice, 0) * var(--motion-stagger));
+  }
+
+  /* Con movimiento reducido el contenido se muestra entero y sin
+     animación. Ningún bloque arranca permanentemente oculto. */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .reveal[data-revelado="no"],
+    .reveal[data-revelado="sí"] {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  /* =========================================================
      RouteCurtain
      ========================================================= */
 
