@@ -7,7 +7,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
 import { EnlaceConCortina, useRouteCurtain } from "../../componentes/RouteCurtain";
-import { NavProvisional, PAGINAS, parDeColor } from "../../componentes/AndamioF0";
+import { PAGINAS, parDeColor } from "../../componentes/AndamioF0";
+import { B0Nav } from "../../bloques/B0Nav";
 import { duracionDeToken, textoDeToken } from "../../lib/tokens";
 
 export const Route = createFileRoute("/pruebas/route-curtain")({
@@ -39,7 +40,7 @@ function PruebaRouteCurtain() {
 
   return (
     <>
-      <NavProvisional />
+      <B0Nav />
 
       <div className="prueba contenido">
         <header className="prueba__encabezado">

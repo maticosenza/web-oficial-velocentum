@@ -9,14 +9,67 @@ Segmento: e-commerce que ya vende.
 
 ---
 
-## B0 · NAV `[ABIERTO]`
+## B0 · NAV `[CONSTRUIDO]`
 
 > Inicio · Método · Casos · Contacto
 
 **Sin CTA en el nav.** En la referencia son solo los links; el botón de agendar
 vive en el hero y en el cierre. Sumarlo acá le saca peso a los otros dos.
 
-**Abierto:** "Inicio" o "Home". El resto del sitio está en castellano.
+**`[DECIDIDO]` Va "Inicio".** El resto del sitio está en castellano.
+
+### Estado en obra
+
+Card blanca flotante centrada, esquinas de píldora, sombra suave y fondo sólido
+—sin `backdrop-filter`—. Logotipo negro con canal alfa a la izquierda, a 172px
+de ancho óptico, dentro del rango 160–190 de `identidad.md`. Los cuatro links
+como botones propios, cada uno con el borde de su acento, y el activo con fondo
+lleno.
+
+**El activo no lleva texto oscuro.** El plan lo pedía, y no se cumple: medido,
+tinta sobre el violeta de Contacto da 3.72:1 y sobre el azul de Inicio 4.08:1,
+los dos por debajo del mínimo de 4.5. Va el `--texto-sobre-N` de cada acento y
+con eso los cuatro pasan. Misma decisión que en las píldoras de B5.
+
+**El activo se lee de `aria-current`,** no de una clase, así el color y la
+semántica no se pueden desincronizar. Y no se distingue sólo por color: cambia
+el relleno, que es forma.
+
+**El nav se mide solo** y publica `--alto-nav`. Verificado: 108px en desktop, y
+el apilado de B4 se fija a 116px, que es ese alto más 8. Nadie adivina un 56.
+
+**La lista de páginas se mudó a `src/lib/paginas.ts`.** Antes había dos copias,
+una en el andamio y otra en B9. El plan dice que el nav es "la leyenda del
+sistema de color del sitio": con dos listas, esa leyenda podía mentir.
+
+### ⚠ Bajo 810px el nav deja de ser fijo
+
+Es una decisión, y se revierte borrando una declaración.
+
+En una sola fila no entra a ningún ancho de teléfono: con el wordmark y los
+cuatro links hacen falta ~440px contra los 358 de una pantalla de 390. Y el
+wordmark no se reemplaza por la V, porque `identidad.md` dice "palabra completa
+en el nav". Así que se parte en dos filas, y medido queda en **155px: el 18% de
+una pantalla de 844, ocupado de forma permanente** en una página de unas diez
+pantallas.
+
+El argumento no es sólo ese número. **Bajo 810px se apagan todas las mecánicas
+sticky del sitio** —el hero fijado, el apilado de B4, el par de B7— por la misma
+razón. Y el motivo por el que el nav tenía que ser fijo era verse por encima de
+esas pilas. Sin pilas, no hay nada por encima de lo que estar.
+
+Los links se compactan para entrar los cuatro en una fila —279px medidos contra
+326 disponibles— pero **conservan sus 48px de alto mínimo**: es el área táctil, y
+achicarla para ganar píxeles sería cambiar accesibilidad por estética.
+
+*El comportamiento móvil del nav de la referencia nunca se pudo medir: está en
+Framer. Ver `03_referencia`. Así que nada de esto se copió.*
+
+### Se borró el `NavProvisional`
+
+El andamio de F0 conserva sólo `parDeColor` y `PaginaProvisional`, que sostienen
+Método, Casos y Contacto hasta que se construyan. Las páginas de prueba y las
+tres rutas provisionales ahora usan B0, el nav de verdad.
 
 ---
 

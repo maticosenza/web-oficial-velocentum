@@ -6,7 +6,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { Reveal } from "../../componentes/Reveal";
-import { NavProvisional, parDeColor } from "../../componentes/AndamioF0";
+import { parDeColor } from "../../componentes/AndamioF0";
+import { B0Nav } from "../../bloques/B0Nav";
 
 export const Route = createFileRoute("/pruebas/reveal")({
   head: () => ({
@@ -34,7 +35,7 @@ const CICLO = [
 function PruebaReveal() {
   return (
     <>
-      <NavProvisional />
+      <B0Nav />
 
       <div className="prueba contenido">
         <header className="prueba__encabezado">

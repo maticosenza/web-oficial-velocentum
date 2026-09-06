@@ -6,7 +6,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { SectionEdge, SeccionConBorde } from "../../componentes/SectionEdge";
-import { NavProvisional, parDeColor } from "../../componentes/AndamioF0";
+import { parDeColor } from "../../componentes/AndamioF0";
+import { B0Nav } from "../../bloques/B0Nav";
 
 export const Route = createFileRoute("/pruebas/section-edge")({
   head: () => ({
@@ -23,7 +24,7 @@ const TARJETAS = [
 function PruebaSectionEdge() {
   return (
     <>
-      <NavProvisional />
+      <B0Nav />
 
       <div className="prueba__encabezado contenido">
         <p className="etiqueta etiqueta--apagada">Componente · F0</p>

@@ -27,9 +27,9 @@
    El mismo acento que el link de esa página en el nav, con su
    `--texto-sobre-N`. Son cuatro porque son cuatro páginas.
 
-   ⚠ Los nombres tienen que coincidir con los del nav, y la
-   decisión 2 del plan —"Inicio" u "Home"— sigue abierta. Si
-   cambia, cambia en los dos lados a la vez.
+   La lista sale de `lib/paginas.ts`, la misma que usa el nav, así
+   que los nombres y los colores no pueden decir cosas distintas
+   en los dos lados. Antes había una copia acá.
 
    LAS REDES ABREN EN PESTAÑA NUEVA Y LO AVISAN
    Abrir una pestaña sin decirlo desorienta a quien no ve el
@@ -46,6 +46,7 @@ import type { CSSProperties } from "react";
 import { SeccionConBorde } from "../componentes/SectionEdge";
 import { EnlaceConCortina } from "../componentes/RouteCurtain";
 import { Flecha } from "../componentes/Flecha";
+import { PAGINAS } from "../lib/paginas";
 
 const MAIL = "marketing@velocentum.com";
 
@@ -54,20 +55,6 @@ const REDES = [
   { nombre: "Instagram", url: "https://www.instagram.com/velocentum/" },
   { nombre: "Facebook", url: "https://www.facebook.com/velocentum/" },
 ];
-
-/* Las cuatro páginas con su acento. Se declaran acá y no se
-   importan del andamio de F0, que se borra cuando exista B0. */
-const PAGINAS = [
-  { ruta: "/", nombre: "Inicio", acento: "var(--acento-1)", sobre: "var(--texto-sobre-1)" },
-  { ruta: "/metodo", nombre: "Método", acento: "var(--acento-2)", sobre: "var(--texto-sobre-2)" },
-  { ruta: "/casos", nombre: "Casos", acento: "var(--acento-3)", sobre: "var(--texto-sobre-3)" },
-  {
-    ruta: "/contacto",
-    nombre: "Contacto",
-    acento: "var(--acento-4)",
-    sobre: "var(--texto-sobre-4)",
-  },
-] as const;
 
 export function B9Footer() {
   return (

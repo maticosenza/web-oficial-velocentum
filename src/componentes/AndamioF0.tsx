@@ -1,64 +1,24 @@
 /* ===========================================================
    ANDAMIO DE F0 — PROVISIONAL, SE BORRA EN F1
 
-   Esto NO es el nav (B0) ni el hero (B1). Es lo mínimo para
-   poder ver la cortina tapando y destapando algo, y para
-   navegar entre las cuatro rutas durante las pruebas.
+   El nav provisional YA NO ESTÁ: lo reemplazó B0, que es el
+   definitivo, y estas páginas lo usan tal cual.
 
-   No tiene la forma, ni la card flotante, ni el comportamiento
-   móvil que especifica 01_HOME_estructura.md. Cuando se
-   construya B0 de verdad, este archivo se borra.
+   Lo que queda acá es sólo lo que todavía no tiene reemplazo:
+   `parDeColor`, que usan las páginas de prueba de F0, y
+   `PaginaProvisional`, que sostiene Método, Casos y Contacto
+   hasta que se construyan. Cuando existan las tres, este archivo
+   se borra.
    =========================================================== */
 
-import { useRef, type CSSProperties } from "react";
-import { useRouterState } from "@tanstack/react-router";
+import { type CSSProperties } from "react";
 
-import { EnlaceConCortina } from "./RouteCurtain";
-import { useMedirNav } from "../lib/altoDeNav";
-
-const PAGINAS = [
-  { ruta: "/", nombre: "Inicio", acento: "var(--acento-1)", sobre: "var(--texto-sobre-1)" },
-  { ruta: "/metodo", nombre: "Método", acento: "var(--acento-2)", sobre: "var(--texto-sobre-2)" },
-  { ruta: "/casos", nombre: "Casos", acento: "var(--acento-3)", sobre: "var(--texto-sobre-3)" },
-  {
-    ruta: "/contacto",
-    nombre: "Contacto",
-    acento: "var(--acento-4)",
-    sobre: "var(--texto-sobre-4)",
-  },
-] as const;
+import { B0Nav } from "../bloques/B0Nav";
+import { PAGINAS } from "../lib/paginas";
 
 /** El par acento + texto-sobre-acento, como datos para el CSS. */
 export function parDeColor(acento: string, sobre: string): CSSProperties {
   return { "--acento": acento, "--sobre": sobre } as CSSProperties;
-}
-
-export function NavProvisional() {
-  const rutaActual = useRouterState({ select: (s) => s.location.pathname });
-
-  /* El nav publica su alto real para que el apilado sticky no
-     tenga que adivinarlo. El nav definitivo (B0) hace lo mismo. */
-  const navRef = useRef<HTMLElement>(null);
-  useMedirNav(navRef);
-
-  return (
-    <nav ref={navRef} aria-label="Principal" className="nav-provisional">
-      {PAGINAS.map((p) => (
-        <EnlaceConCortina
-          key={p.ruta}
-          to={p.ruta}
-          className="nav-provisional__link"
-          /* El estado activo no puede ser sólo color. El CSS se
-             engancha del propio `aria-current`, así que color y
-             semántica no se pueden desincronizar. */
-          {...(p.ruta === rutaActual ? { "aria-current": "page" as const } : {})}
-          style={parDeColor(p.acento, p.sobre)}
-        >
-          {p.nombre}
-        </EnlaceConCortina>
-      ))}
-    </nav>
-  );
 }
 
 export function PaginaProvisional({
@@ -72,7 +32,7 @@ export function PaginaProvisional({
 }) {
   return (
     <>
-      <NavProvisional />
+      <B0Nav />
       <section className="pagina-provisional__banda" style={parDeColor(acento, sobre)}>
         <p className="etiqueta">Andamio F0 · provisional</p>
         <h1 className="pagina-provisional__titulo">{nombre}</h1>

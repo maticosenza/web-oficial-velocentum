@@ -7,7 +7,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
 import { ScrollMedia, MarcoDeMedio } from "../../componentes/ScrollMedia";
-import { NavProvisional } from "../../componentes/AndamioF0";
+import { B0Nav } from "../../bloques/B0Nav";
 
 export const Route = createFileRoute("/pruebas/scroll-media")({
   head: () => ({
@@ -38,7 +38,7 @@ function PruebaScrollMedia() {
 
   return (
     <>
-      <NavProvisional />
+      <B0Nav />
 
       <div className="prueba contenido">
         <header className="prueba__encabezado">

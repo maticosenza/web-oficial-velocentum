@@ -7,7 +7,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { HeroSticky } from "../../componentes/HeroSticky";
 import { SeccionConBorde } from "../../componentes/SectionEdge";
-import { NavProvisional } from "../../componentes/AndamioF0";
+import { B0Nav } from "../../bloques/B0Nav";
 
 export const Route = createFileRoute("/pruebas/hero-sticky")({
   head: () => ({
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/pruebas/hero-sticky")({
 function PruebaHeroSticky() {
   return (
     <>
-      <NavProvisional />
+      <B0Nav />
 
       <HeroSticky
         hero={

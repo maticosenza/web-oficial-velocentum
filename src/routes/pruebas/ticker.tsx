@@ -6,7 +6,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { Ticker, Pildora } from "../../componentes/Ticker";
-import { NavProvisional } from "../../componentes/AndamioF0";
+import { B0Nav } from "../../bloques/B0Nav";
 
 export const Route = createFileRoute("/pruebas/ticker")({
   head: () => ({
@@ -43,7 +43,7 @@ const CICLO = [
 function PruebaTicker() {
   return (
     <>
-      <NavProvisional />
+      <B0Nav />
 
       <div className="prueba contenido">
         <header className="prueba__encabezado">

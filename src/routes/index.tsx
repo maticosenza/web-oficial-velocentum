@@ -10,7 +10,7 @@ import { B6Proceso } from "../bloques/B6Proceso";
 import { B7Clientes } from "../bloques/B7Clientes";
 import { B8Cierre } from "../bloques/B8Cierre";
 import { B9Footer } from "../bloques/B9Footer";
-import { NavProvisional } from "../componentes/AndamioF0";
+import { B0Nav } from "../bloques/B0Nav";
 import { CursorPropio } from "../componentes/CursorPropio";
 
 export const Route = createFileRoute("/")({
@@ -47,7 +47,7 @@ function Inicio() {
 
       {/* PROVISIONAL: el nav real es B0 y todavía no se construyó.
           Se reemplaza en la tanda que lo incluya. */}
-      <NavProvisional />
+      <B0Nav />
 
       {/* B1 y B2 van cosidos: el hero se fija y B2 sube encima. */}
       <HeroSticky hero={<B1Hero />} siguiente={<B2QuienesSomos />} />

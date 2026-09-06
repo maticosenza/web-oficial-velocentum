@@ -129,7 +129,7 @@ criterio de cada componente, no una fase final.
 | # | Decisión |
 |---|---|
 | ~~1~~ | ~~Titular del hero: A, B, C o D~~ — **DECIDIDO Y CONSTRUIDO.** Ver abajo |
-| 2 | "Inicio" u "Home" en el nav |
+| ~~2~~ | ~~"Inicio" u "Home" en el nav~~ — **DECIDIDO: "Inicio".** El resto del sitio está en castellano |
 | 3 | Panel izquierdo de Contacto: campo oscuro con objeto, o foto |
 | ~~4~~ | ~~Qué reemplaza al botón por caso~~ — **DECIDIDO: chips de intervención.** Ver abajo |
 | ~~5~~ | ~~Si `RouteCurtain` es viable en el stack real~~ — **SÍ.** Construido en `src/componentes/RouteCurtain.tsx` y en uso: B2 enlaza a `/metodo` con `EnlaceConCortina` |

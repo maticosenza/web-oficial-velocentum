@@ -7,7 +7,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
 import { ServiceStack } from "../../componentes/ServiceStack";
-import { NavProvisional, parDeColor } from "../../componentes/AndamioF0";
+import { parDeColor } from "../../componentes/AndamioF0";
+import { B0Nav } from "../../bloques/B0Nav";
 import { textoDeToken } from "../../lib/tokens";
 
 export const Route = createFileRoute("/pruebas/service-stack")({
@@ -67,7 +68,7 @@ function PruebaServiceStack() {
 
   return (
     <>
-      <NavProvisional />
+      <B0Nav />
 
       <div className="prueba contenido">
         <header className="prueba__encabezado">
