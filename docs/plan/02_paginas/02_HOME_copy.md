@@ -210,9 +210,31 @@ scroll: el contenido se mueve 300, el degradado 258 y las nubes 206.
 
 **El seguimiento del puntero va suavizado,** no directo: el valor aplicado se
 acerca al del puntero un 8% por cuadro. Directo se lee como un elemento
-persiguiendo al mouse; con retardo se lee como profundidad. Y el bucle **se
-detiene solo** cuando llega: con el puntero quieto no hay `requestAnimationFrame`
-corriendo, que es lo que la referencia también hace.
+persiguiendo al mouse; con retardo se lee como profundidad. Y ese bucle **se
+detiene solo** cuando llega: con el puntero quieto no queda un
+`requestAnimationFrame` girando por el seguimiento.
+
+*Corrección a lo que decía antes esta ficha:* llegó a estar escrito que "la
+referencia tampoco tiene ningún loop". **Es falso.** Con el código a la vista,
+la nube de la referencia gira en loop continuo sobre su propio eje. Lo que no
+tiene loop es el seguimiento del cursor, que es otra cosa.
+
+### Las nubes: dos capas anidadas, como el código de la referencia
+
+- **El contenedor** sigue al puntero: desplazamiento, más una rotación mínima
+  —del orden de 0.9°— y una escala apenas por encima de 1. Esa rotación y esa
+  escala son lo que separa un desplazamiento plano de algo con volumen.
+- **La nube de adentro gira sobre sí misma** en loop continuo, 200s por vuelta.
+  Son ~1.8° cada diez segundos: se lee como deriva, no como un carrusel. Es
+  independiente del puntero.
+
+Va sobredimensionada y cuadrada —170vmax— para que al girar no asome ninguna
+esquina, y centrada por `top`/`left` más margen negativo en vez de por
+`transform`: si el centrado estuviera en la transformación, la animación tendría
+que arrastrarlo en cada fotograma y cualquier cambio de uno rompería al otro.
+
+El loop se detiene con `prefers-reduced-motion`, que es exactamente lo que esa
+preferencia pide sacar.
 
 **Sólo se mueve el fondo.** Verificado: con el parallax activo, el titular queda
 en `transform: none`, el contenido en la matriz identidad y los objetos del
@@ -290,8 +312,13 @@ está el botón de B2.
 **CTA** `[APROBADO]`
 > Reservá tu análisis ↗
 
-**Estado en obra:** el botón va deshabilitado y con el pendiente escrito al
-lado, porque el destino de la agenda no está decidido.
+**Color: azul `--acento-1`** con su `--texto-sobre-1`.
+
+**Estado en obra:** el botón va deshabilitado y el pendiente pasó a ser su
+descripción accesible. Por eso **no muestra el relieve en hover**: la regla
+general de `.boton` excluye los deshabilitados, porque un control que no
+responde no puede parecer que responde. Cuando se defina el destino y se saque
+el `aria-disabled`, lo hereda solo.
 
 ---
 
@@ -791,8 +818,20 @@ fondo `--fondo`, texto `--tinta`. Nada de `etiqueta--apagada` adentro del campo
 azul — `--texto-2` está calculado contra el fondo crema y sobre el azul pierde
 contraste sin avisar. Misma lección que el eyebrow del hero.
 
-**El CTA va con el mismo marcador que el hero:** botón deshabilitado y el
-pendiente escrito al lado, porque el destino de la agenda sigue sin definir.
+**El CTA es CREMA, y está medido.** El rosa anterior quedaba apagado contra el
+campo azul. Se probaron violeta y el rosa de marca, y **ninguno de los dos
+sirve**: contra `--acento-1` un botón necesita 3.0 de contraste para leerse como
+un objeto aparte, y violeta da **1.10**, el rosa de marca **1.23**, bermellón
+1.25, verde 2.07 y amarillo 2.84. Ninguno llega.
+
+*El problema no era la saturación sino la luminancia:* todos esos acentos pesan
+casi lo mismo que el azul. De la paleta entera sólo dos separan — crema (4.45) y
+tinta (4.08)—. Queda **crema con texto en tinta**, que además da 18.14 de
+contraste de texto.
+
+**El marcador sigue a la vista acá,** a diferencia del hero: sobre el campo azul
+no compite con ningún titular. Y el botón **no muestra el relieve en hover**,
+porque está deshabilitado.
 **Por eso tampoco tiene el glow en hover que pide el plan:** un glow sobre un
 control que no responde promete lo mismo que un enlace a ninguna parte. Cuando
 se decida el destino se cambian las dos cosas juntas, acá y en `B1Hero.tsx`.

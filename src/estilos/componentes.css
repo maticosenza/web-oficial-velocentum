@@ -656,6 +656,16 @@
     color: var(--texto-sobre-marca);
   }
 
+  /* Relleno con el par pasado como datos, igual que las píldoras,
+     las tarjetas de proceso y los rectángulos del footer. Existe
+     porque los dos CTA de la agenda ya no comparten color: el del
+     hero es azul y el del cierre crema, y cada uno se decidió
+     contra el fondo sobre el que se apoya. */
+  .boton--relleno {
+    background: var(--acento);
+    color: var(--sobre);
+  }
+
   .boton--contorno {
     background: transparent;
     color: currentColor;

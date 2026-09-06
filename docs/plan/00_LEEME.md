@@ -82,10 +82,12 @@ Salieron de medir. **No las "corrijas":**
    ancestro con `sticky`, `transform` u `opacity` le crea contexto de apilado,
    su `z-index` deja de competir contra la página y queda tapado — con el
    cursor del sistema escondido, o sea sin puntero. Ver `CursorPropio.tsx`.
-4. **En reposo la página está estática.** Las nubes no flotan **en loop**.
-   ⚠ Corregido: eso vale con el puntero quieto y sin scrollear. **El fondo del
-   hero sí se mueve** —el degradado y las nubes, a distinta velocidad— pero
-   responde al cursor y al scroll, no a un temporizador. Ver la corrección en
+4. ~~**En reposo la página está estática.** Las nubes no flotan.~~
+   ⚠ **DEROGADO, con el código de la referencia a la vista.** El fondo del hero
+   se mueve de dos maneras a la vez: el degradado y el contenedor de la nube
+   **siguen al cursor y al scroll**, y adentro **la nube gira en loop continuo**
+   sobre su propio eje. El loop existe; lo que no existe es la flotación de
+   vaivén que se había inferido al principio. Ver
    `03_referencia/mapa_lofty_decodificado.md`.
 5. **Los "blur" de Casos no son blur:** degradados blancos planos de `10vh`.
 6. **`mask-image: url(...) 50%/cover no-repeat alpha` NO ES VÁLIDO.**

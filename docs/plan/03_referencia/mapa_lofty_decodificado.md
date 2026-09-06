@@ -473,8 +473,40 @@ fondo responde al cursor y al scroll**, no a un temporizador.
 - Se apaga entero con `prefers-reduced-motion`. En táctil no hay cursor, así que
   ahí queda sólo el scroll.
 
-Y sigue en pie lo otro: **no hay loop.** Con el puntero quieto y sin scrollear,
-el hero no se mueve, y el bucle de animación ni siquiera está corriendo.
+## ✅ CÓDIGO REAL DE LA REFERENCIA: LA NUBE **SÍ** GIRA EN LOOP
+
+`[VERIFICADO]` — Matías consiguió el código de la referencia. Esto cierra el
+tema y **descarta lo que quedaba de la anotación original.**
+
+Son **dos capas anidadas**:
+
+| Capa | Transformación | Qué es |
+|---|---|---|
+| **Contenedor exterior** | `translate3d(84.9px, 106.5px, 0) rotate(-0.82deg) scale(1.018)` | Sigue al cursor. Desplazamiento, más rotación mínima y escala apenas mayor a 1 |
+| **Capa interior** | `translateY(-50%) rotate(-360deg)` con `will-change: transform` | Una **imagen PNG** girando sobre sí misma, en loop lento |
+
+Dos cosas que corrigen el mapa:
+
+1. **El degradado del hero es una imagen**, no un degradado CSS. Ya estaba
+   anotado más arriba y se confirma.
+2. **La nube gira en loop y no es estática.** La anotación original decía
+   "nubes flotando en loop lento — es falso". Era falso lo que yo había
+   inferido, pero **hay un loop**: no es una flotación de vaivén, es una
+   rotación completa y muy lenta sobre el propio eje.
+
+Por qué el muestreo de 1,6 segundos no lo detectó: una vuelta completa a esa
+velocidad mueve fracciones de grado por segundo. En un muestreo corto, y sobre
+una nube blanda sin bordes duros, no se distingue del ruido.
+
+**Construido así en B1:** contenedor que sigue al puntero con desplazamiento,
+rotación mínima y escala leve; y adentro la nube girando en loop continuo. Las
+dos cosas son independientes. La nuestra es una mancha de degradados y no un
+PNG, porque ese asset no existe — cuando exista, se reemplaza el fondo de la
+capa interior y nada más cambia.
+
+Lo único que se mantiene de la corrección anterior: **el par no responde a un
+temporizador para seguir al cursor.** Ese seguimiento es del puntero. El loop
+es aparte, y es el de la nube.
 
 ## ⚠ SIGUE SIN VERIFICAR
 

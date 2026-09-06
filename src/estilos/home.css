@@ -280,22 +280,61 @@
     );
   }
 
-  /* Las nubes: manchas blancas blandas en la mitad de arriba del
-     cielo. Van en su propia capa para poder moverse más rápido
-     que el degradado. */
+  /* LAS NUBES SON DOS CAPAS ANIDADAS, como la referencia.
+
+     El CONTENEDOR sigue al puntero: se desplaza bastante más que
+     el degradado —el doble largo— y además rota un poco y escala
+     apenas por encima de 1. Esa rotación mínima y esa escala son
+     lo que separa un desplazamiento plano de algo que parece
+     tener volumen. Los valores del original eran del orden de
+     -0.8° y 1.018. */
   .b1__nubes {
     inset: -12%;
-    background:
-      radial-gradient(30% 16% at 16% 26%, rgb(255 255 255 / 0.62) 0%, rgb(255 255 255 / 0) 70%),
-      radial-gradient(24% 13% at 74% 18%, rgb(255 255 255 / 0.5) 0%, rgb(255 255 255 / 0) 70%),
-      radial-gradient(38% 15% at 48% 6%, rgb(255 255 255 / 0.4) 0%, rgb(255 255 255 / 0) 72%),
-      radial-gradient(22% 12% at 90% 40%, rgb(255 255 255 / 0.34) 0%, rgb(255 255 255 / 0) 70%);
-    /* Bastante más que el degradado: el doble largo. */
+    overflow: hidden;
     transform: translate3d(
-      calc(var(--px, 0) * 26px),
-      calc(var(--py, 0) * 26px + var(--scroll, 0) * 0.26px),
-      0
-    );
+        calc(var(--px, 0) * 26px),
+        calc(var(--py, 0) * 26px + var(--scroll, 0) * 0.26px),
+        0
+      )
+      rotate(calc(var(--px, 0) * -0.9deg)) scale(calc(1.012 + var(--py, 0) * 0.008));
+  }
+
+  /* Y la NUBE de adentro gira sobre sí misma, en loop lento y
+     continuo. Es independiente del puntero: corre sola.
+
+     Va sobredimensionada y centrada por `top`/`left` más margen
+     negativo, no por `transform`: si el centrado estuviera en la
+     transformación, la animación tendría que arrastrarlo en cada
+     fotograma y cualquier cambio de uno rompería al otro. Así la
+     animación es rotación pura.
+
+     Cuadrada y más grande que el viewport para que al girar no
+     asome ninguna esquina.
+
+     200s por vuelta. Es deliberadamente lentísimo: son ~1.8° cada
+     diez segundos, que se lee como deriva y no como un carrusel.
+     La referencia usa un PNG de nube; acá va la misma mancha de
+     degradados que teníamos, porque ese asset no existe. */
+  .b1__nubes-giro {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 170vmax;
+    height: 170vmax;
+    margin: -85vmax 0 0 -85vmax;
+    background:
+      radial-gradient(16% 9% at 34% 38%, rgb(255 255 255 / 0.62) 0%, rgb(255 255 255 / 0) 70%),
+      radial-gradient(13% 7% at 62% 34%, rgb(255 255 255 / 0.5) 0%, rgb(255 255 255 / 0) 70%),
+      radial-gradient(20% 8% at 48% 29%, rgb(255 255 255 / 0.4) 0%, rgb(255 255 255 / 0) 72%),
+      radial-gradient(12% 6% at 70% 46%, rgb(255 255 255 / 0.34) 0%, rgb(255 255 255 / 0) 70%);
+    animation: nube-girar 200s linear infinite;
+    will-change: transform;
+  }
+
+  @keyframes nube-girar {
+    to {
+      transform: rotate(-360deg);
+    }
   }
 
   /* Red de CSS: el hook ya se abstiene de anotar nada con
@@ -305,6 +344,13 @@
     .b1__atmosfera,
     .b1__nubes {
       transform: none;
+      will-change: auto;
+    }
+
+    /* El giro también se detiene: es un loop, que es exactamente
+       lo que esta preferencia pide sacar. */
+    .b1__nubes-giro {
+      animation: none;
       will-change: auto;
     }
   }

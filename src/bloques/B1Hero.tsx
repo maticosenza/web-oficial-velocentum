@@ -32,7 +32,7 @@
    Máximo dos en el hero, y no más de 6° de rotación.
    =========================================================== */
 
-import { useId, useRef } from "react";
+import { useId, useRef, type CSSProperties } from "react";
 
 import { TitularPorLetras } from "../componentes/TitularPorLetras";
 import { Flecha } from "../componentes/Flecha";
@@ -54,7 +54,16 @@ export function B1Hero() {
           Se mueven a distinta velocidad: eso es lo que se lee como
           profundidad. El degradado poco, las nubes bastante más. */}
       <div className="b1__atmosfera" aria-hidden="true" />
-      <div className="b1__nubes" aria-hidden="true" />
+
+      {/* Dos capas ANIDADAS, como el código de la referencia.
+          El contenedor sigue al puntero —desplazamiento, más una
+          rotación mínima y una escala apenas mayor a 1— y la nube
+          de adentro gira sobre sí misma en loop continuo. Las dos
+          cosas son independientes: una responde al cursor, la otra
+          corre sola. */}
+      <div className="b1__nubes" aria-hidden="true">
+        <div className="b1__nubes-giro" />
+      </div>
 
       <div className="b1__contenido contenido">
         {/* Sin eyebrow. Estaba `EQUIPO DE CRECIMIENTO` y se sacó:
@@ -108,9 +117,18 @@ export function B1Hero() {
             El aviso sigue a la vista en el CTA de B8, que está
             sobre el campo azul y no compite con ningún titular. */}
         <div className="b1__cta">
+          {/* Azul `--acento-1` con su par de texto. El relieve en
+              hover lo da la regla general de `.boton`, que excluye
+              los deshabilitados: mientras el destino de la agenda
+              no exista, este botón no se levanta. Cuando se
+              defina y se saque el `aria-disabled`, lo hereda solo,
+              sin tocar nada. */}
           <button
             type="button"
-            className="boton boton--marca"
+            className="boton boton--relleno"
+            style={
+              { "--acento": "var(--acento-1)", "--sobre": "var(--texto-sobre-1)" } as CSSProperties
+            }
             aria-disabled="true"
             aria-describedby={idPendiente}
           >

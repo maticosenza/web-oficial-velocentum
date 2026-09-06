@@ -35,6 +35,8 @@
    Misma lección que el eyebrow del hero.
    =========================================================== */
 
+import type { CSSProperties } from "react";
+
 import { SeccionConBorde } from "../componentes/SectionEdge";
 import { Reveal } from "../componentes/Reveal";
 import { Flecha } from "../componentes/Flecha";
@@ -70,7 +72,21 @@ export function B8Cierre() {
           </p>
 
           <div className="b8__cta">
-            <button type="button" className="boton boton--marca" disabled>
+            {/* CREMA, NO ROSA NI VIOLETA, Y ESTÁ MEDIDO.
+                Contra el campo azul `--acento-1`, el botón necesita
+                3.0 de contraste para leerse como un objeto aparte.
+                Ningún acento llega: violeta da 1.10, el rosa de
+                marca 1.23, bermellón 1.25, verde 2.07 y amarillo
+                2.84. El problema no es la saturación sino la
+                luminancia — todos pesan casi lo mismo que el azul.
+                Crema da 4.45 y su texto en tinta 18.14, que es lo
+                más lejos que se puede llegar con la paleta. */}
+            <button
+              type="button"
+              className="boton boton--relleno"
+              style={{ "--acento": "var(--fondo)", "--sobre": "var(--tinta)" } as CSSProperties}
+              disabled
+            >
               Reservá tu análisis
               <Flecha />
             </button>
