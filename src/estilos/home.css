@@ -846,6 +846,15 @@
     margin-top: var(--space-4);
   }
 
+  /* En columna única no hay «dos que se cierran hacia el centro»
+     que preservar: la fila es una tarjeta sola, así que manda el
+     ancho y la pieza usa la columna entera. */
+  @media (max-width: 599px) {
+    .b3-trabajo__medio {
+      width: 100%;
+    }
+  }
+
   /* Dos columnas desde 600 y no desde 810: con cuatro piezas, el
      corte tardío dejaba la columna única también en tablets y
      teléfonos apaisados, donde entran dos sin problema. Así el
@@ -912,6 +921,31 @@
        recortarlas otra vez para meterlas en apaisado volvería a
        descabezar a Glam y a Vinotique. */
     aspect-ratio: 3 / 4;
+
+    /* ⚠ EL ANCHO SALE DEL ALTO DEL VIEWPORT, Y ES EL CRITERIO DEL
+       BLOQUE. La entrada de las piezas es «dos que se cierran hacia
+       el centro»: si no se ven las dos juntas, el gesto no se lee.
+       Con las piezas en vertical a ancho de columna la fila medía
+       850px y no entraba en ninguna pantalla de escritorio.
+
+       Así que la tarjeta se dimensiona para que la FILA ENTERA
+       —medio más pie— entre en el viewport. Los 150px son el pie
+       con su aire; el 0.75 convierte alto disponible en ancho, que
+       es la proporción 3:4.
+
+       El `min()` con `100%` es el que manda en pantallas anchas y
+       bajas: ahí gana la columna y la tarjeta no se estira de más.
+       Se usa el ancho y no el alto a propósito: un porcentaje de
+       ALTO contra un padre de alto automático resuelve a `auto` y
+       no limita nada. Ya pasó en Casos.
+
+       Que queden más chicas que en `/casos` es deliberado: la home
+       es el adelanto y el caso se ve grande allá. La pieza chica
+       refuerza el «Ver casos» en vez de competirle. */
+    width: min(100%, calc((88vh - 150px) * 0.75));
+    height: auto;
+    margin-inline: auto;
+
     background: var(--b3-campo);
     /* Sólo las esquinas de arriba: abajo manda la onda. */
     border-radius: var(--r-media) var(--r-media) 0 0;
