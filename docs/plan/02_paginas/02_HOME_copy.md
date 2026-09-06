@@ -47,6 +47,33 @@ sistema de color del sitio": con dos listas, esa leyenda podía mentir.
 No se estira al ancho de contenido. Medido: **735px contra los 1200 de la
 columna de texto.** Estirada se leía como una barra, no como una card.
 
+### El hero reserva el alto del nav
+
+El nav no pisaba el titular por culpa del nav: el hero no le dejaba lugar.
+`.b1__contenido` reserva arriba `--alto-nav` más holgura, así que si el nav
+crece —móvil, zoom, dos renglones— el hero se corre solo y no hay número que
+mantener.
+
+**Dos cosas que hicieron falta además, y no eran obvias:**
+
+1. **`align-content: safe center`.** Centrar centra la caja entera, padding
+   incluido. En una ventana de 654px de alto la caja mide más que el viewport,
+   el centrado le corría el tope a -96px y la reserva no garantizaba nada: el
+   eyebrow volvía a quedar 32px por debajo de la card. `safe` alinea al inicio
+   justo cuando desborda, que es el único caso donde el centrado hacía daño.
+
+2. **Un bloque `@media (max-height: 760px)`** que achica el aire interno y el
+   cuerpo del titular. El hero mide `100dvh` y recorta lo que sobra, y encima
+   reserva abajo el alto de la onda de B2: con la reserva del nav sumada arriba,
+   el bloque del CTA quedaba 79px por debajo de donde arranca la onda.
+
+   *Va al final de la sección, después de las reglas base:* una media query no
+   suma especificidad, y declarada antes, la regla base de `.titular-letras` la
+   pisaba y el titular se quedaba en 101px. Verificado fallando.
+
+Medido a 1371×654, que es el peor caso probado: **40px de holgura entre la card
+y el eyebrow, y 23px entre el pendiente del CTA y la onda.** Entra todo.
+
 ### Se esconde al bajar y vuelve al subir
 
 En desktop y en móvil. Con eso deja de chocar con el titular del hero. Tres
@@ -68,11 +95,16 @@ reglas que no son obvias, en `lib/navAlScrollear.ts`:
 aquella era que ocupaba una banda del 18% de forma permanente; ahora se esconde
 al bajar, así que ese motivo ya no existe.
 
-Sigue siendo una card flotante y no una barra: medido, **311px de ancho en una
-pantalla de 390, con 39px de aire a cada lado**. Se parte en dos filas porque en
-una sola no entra a ningún ancho de teléfono —con el wordmark y los cuatro links
-hacen falta ~440px contra 358—, y el wordmark no se reemplaza por la V porque
-`identidad.md` dice "palabra completa en el nav".
+Sigue siendo una card flotante y no una barra: medido, **295px de ancho en una
+pantalla de 500, con 102px de aire a cada lado**.
+
+**Se apretó todo lo que da.** La banda pasó de 150px a **131px**. Una sola fila
+no entra a ningún ancho de teléfono, y está medido: a 390px quedan 334px útiles,
+los cuatro links ocupan 236px en el tamaño más chico que sigue siendo legible
+—12px de cuerpo—, y al logotipo le sobrarían **90px contra los 135–155** que
+pide `identidad.md`. Achicarlo hasta ahí sería romper la identidad para ganar
+48px de alto. Así que siguen las dos filas, con el logotipo en 135px, que es el
+mínimo del rango.
 
 Los links entran los cuatro en una fila y **conservan sus 48px de alto mínimo**:
 es el área táctil, y achicarla para ganar píxeles sería cambiar accesibilidad
@@ -479,8 +511,14 @@ va en `/casos`, no acá.
 desvanece ese borde, así que cortarla contra la columna de contenido
 desperdiciaría el efecto y acortaría la banda sin ganar nada.
 
-**Bajo 810px el titular y la banda se apilan.** El titular toma el margen; la
-banda sigue sangrando.
+**Título y banda van en la misma línea EN TODOS LOS ANCHOS,** también en móvil.
+Antes se apilaban bajo 810px. La banda entra desde la derecha y avanza hacia la
+izquierda, que es la dirección propia del Ticker.
+
+**Salió el párrafo de pendiente.** Decía que los doce logos no existen y que el
+uso autorizado está sin confirmar. El marcador ya se lee en los anillos, que
+dicen "Logo" y "Cliente pendiente" doce veces: el aviso duplicaba algo que el
+bloque muestra solo. Lo que sigue vigente está en esta ficha.
 
 ### Estado en obra `[CONSTRUIDO CON MARCADORES]`
 
@@ -552,6 +590,12 @@ se decida el destino se cambian las dos cosas juntas, acá y en `B1Hero.tsx`.
 **La mancha no lleva borde de onda.** La onda ya corona la sección; repetirla
 adentro compite con ella. Son bordes muy redondeados, que es lo que pide la
 variante "mancha".
+
+**Bajo 810px se saca el `min-height: 108vh`.** Ese alto existe para que B7 siga
+fijado mientras este bloque sube, y bajo 810px ese pin está apagado: ahí el
+108vh no sostenía nada, sólo dejaba un hueco muerto grande entre el CTA y la
+nube del footer. El alto pasa a ser el del contenido, y el padding de abajo baja
+a `--space-5`.
 
 **B7 fijado mientras B8 sube** lo resuelve `HeroSticky`, no `ServiceStack`. El
 plan lo llama "variante de M2 con top alto", pero M2 no alcanza solo: un

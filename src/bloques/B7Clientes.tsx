@@ -2,8 +2,11 @@
    B7 · MARCAS
 
    Titular display corto a la IZQUIERDA y la banda de anillos a
-   la derecha, en la misma línea, como la referencia. Sin párrafo
+   la derecha, EN LA MISMA LÍNEA, también en móvil. Sin párrafo
    debajo: el bloque es el título y la banda, nada más.
+
+   La banda entra desde la derecha y avanza hacia la izquierda:
+   es la dirección propia del Ticker, no hay nada que configurar.
 
    La banda sangra hasta el borde derecho de la ventana a
    propósito — la máscara del Ticker desvanece ese borde, así que
@@ -28,9 +31,11 @@
    NADA DE ESTO ES CONTENIDO REAL
    No hay un solo logo de cliente en `public/assets`, y de los
    doce nombres sólo se conocen dos, que están en B3. Encima el
-   uso autorizado por cliente sigue sin confirmar. Así que van
-   doce marcadores, y el bloque lo dice una vez arriba en vez de
-   repetirlo doce veces.
+   uso autorizado por cliente sigue sin confirmar.
+
+   El párrafo que lo decía se sacó: el marcador ya se lee en los
+   anillos, que dicen "Logo" y "Cliente pendiente" doce veces. El
+   aviso duplicaba algo que el bloque muestra solo.
 
    Se construye igual con los doce, y no con tres o cuatro, para
    que el loop y la máscara del Ticker queden probados con el
@@ -67,13 +72,6 @@ export function B7Clientes() {
           <Reveal as="h2" indice={0} id="b7-titulo" className="b7__titular">
             Marcas
           </Reveal>
-
-          {/* El andamio se queda aunque el párrafo de copy se haya
-              ido: sin él el bloque parece terminado y no lo está. */}
-          <p className="etiqueta etiqueta--apagada b7__pendiente">
-            Pendiente · los doce logos no existen, sólo se conocen dos de los doce nombres, y el uso
-            autorizado de cada cliente está sin confirmar.
-          </p>
         </div>
 
         <Ticker etiqueta="Marcas que confían en Velocentum" className="b7__ticker">
