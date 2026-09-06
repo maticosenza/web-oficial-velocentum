@@ -5,8 +5,10 @@
    logos a la derecha. En mobile se apilan para darle ancho real al
    ticker. La pista conserva su movimiento, máscara y duplicación.
 
-   Los logos son negros y el color vive solamente en el contorno
-   del anillo, siguiendo el tratamiento visual de la referencia.
+   Los logos son negros sobre un disco del acento rebajado al 40%,
+   la misma regla que las píldoras de B5: disco pastel, contenido
+   oscuro. Con el color en el campo y no en un contorno, el acento
+   significa algo en vez de decorar.
    El bloque queda fijado mientras B8 sube por encima; eso lo
    resuelve `HeroSticky`.
    =========================================================== */
@@ -17,17 +19,19 @@ import { Ticker } from "../componentes/Ticker";
 import { Reveal } from "../componentes/Reveal";
 import { LOGOS, MARCAS_DEL_MARQUEE } from "../data/casos";
 
-/* El marquee arranca con los ocho casos en su orden, sigue con
-   `Patagonia Vessels` —que es cliente pero no caso, así que acá
-   está y en `/casos` no— y cierra con tres marcadores hasta que
-   Matías defina los que faltan.
+/* El marquee arranca con los ocho casos en su orden y sigue con
+   los cuatro clientes que tienen logo pero no caso: Patagonia
+   Vessels, BuyNow, Lámina y Uprise. Las doce ranuras tienen nombre
+   real — ya no queda ningún marcador.
 
    Sale de `data/casos.ts`: la home y `/casos` tienen que leerse
    como un mismo conjunto y no como dos listas distintas, y la
    única forma de garantizarlo es que sean la misma lista. */
 
-/* Con los logos negros sobre el fondo blanco, los cinco acentos
-   vuelven a estar disponibles para el borde de los anillos. */
+/* Los cinco acentos. Con los logos negros sobre el disco pastel el
+   contraste dejó de ser la restricción —de 10.89 a 16.32 sobre los
+   cinco, contra el mínimo de 3 para objeto gráfico—, así que ya no
+   hay que sacar verde ni amarillo como con los logos blancos. */
 const ACENTOS = [
   "var(--acento-1)",
   "var(--acento-2)",

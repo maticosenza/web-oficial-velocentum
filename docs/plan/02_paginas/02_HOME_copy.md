@@ -923,20 +923,32 @@ garantizarlo es que sean la misma lista. Sale de `src/data/casos.ts`.
 
 `Patagonia Vessels` va acá y **no** en `/casos`: es cliente, no caso.
 
-**Lo que sigue faltando son los logos:** no hay uno solo en `public/assets` y el
-uso autorizado por cliente sigue sin confirmar. Las nueve ranuras con nombre
-muestran el nombre; las tres restantes, el marcador.
+**Los doce logos ya están**, en `public/assets/logos-clientes/`: SVG de un solo
+relleno `#05050C`. Reemplazaron a unos PNG blancos, y ese cambio es el que
+habilitó todo lo que sigue.
 
-Se construye con los **doce** y no con tres o cuatro para que el loop y la
-máscara del Ticker queden probados con el ancho de pista real. El nombre
-marcador mide 17 caracteres contra un techo de 18.
+### Disco pastel con el logo negro `[DECIDIDO]`
 
-**El anillo es borde, no relleno**, como pide el plan. Con un disco pintado, un
-logo oscuro adentro se pierde contra media paleta.
+El anillo pasó de **contorno de color sobre crema** a **disco del acento
+rebajado al 40%**, con el mismo `color-mix(in srgb, var(--acento-N) 40%,
+var(--fondo))` que las píldoras de B5 — no dos declaraciones parecidas, la misma
+fórmula, así que si se ajusta un acento en `tokens.css` los dos bloques lo
+siguen solos.
 
-**Doce anillos sobre cinco acentos:** el ciclo queda cortado al final —el doce
-cae en acento-2, no en acento-5— y así queda. Forzar que cierre justo pediría
-diez o quince clientes, y la cantidad la manda el cliente real, no la paleta.
+**Por qué disco y no contorno.** Con contorno, el logo queda apoyado sobre el
+mismo fondo de la página: el anillo se vuelve decorativo y el color deja de
+significar algo. Con el disco pintado, el color **es** el campo. Y B7 y B5 pasan
+a ser el mismo lenguaje —disco pastel, contenido oscuro— en vez de dos
+tratamientos parecidos pero distintos.
+
+**Los cinco acentos entran.** Con los logos negros el contraste dejó de ser la
+restricción: `#05050C` sobre los cinco pasteles da de **10.92 a 16.33**, contra
+el mínimo de 3 para objeto gráfico. Medido en el DOM. Con los logos blancos de
+antes había que sacar verde y amarillo del ciclo; ya no.
+
+**Doce ranuras sobre cinco acentos:** el ciclo no divide, pero el Ticker duplica
+la pista y en la costura la ranura 12 (bermellón) queda seguida por la 1 (azul),
+así que no se ve un color repetido. Verificado.
 
 ### La pausa del Ticker es por teclado, y nada más
 

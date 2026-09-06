@@ -165,34 +165,28 @@
     gap: var(--space-2);
   }
 
-  /* El mismo anillo de contorno de B7, más grande: acá el logo es
-     la identificación del caso y no una ranura de un marquee.
+  /* El mismo disco pastel de B7, más grande: acá el logo es la
+     identificación del caso y no una ranura de un marquee.
 
-     120 y no 160: acá el logo compite con el nombre del cliente en
-     display justo debajo, y un círculo grande con el logo adentro
-     convertía al círculo en el protagonista de la columna. Al
-     achicarlo, el disco de color y el bloque del nombre pesan
-     parecido. El logo lo sigue solo: su ancho es una fracción del
-     contenedor, no un tamaño fijo. */
+     120 y no 160: el logo compite con el nombre del cliente en
+     display justo debajo, y un círculo grande convertía al círculo
+     en el protagonista de la columna. */
   .cas-caso__logo {
     display: grid;
     place-items: center;
     width: 120px;
     aspect-ratio: 1;
     border-radius: var(--r-pill);
-    background: var(--fondo);
-    border: 3px solid var(--anillo);
+    background: color-mix(in srgb, var(--anillo) 40%, var(--fondo));
   }
 
   /* El mismo `--logo-ancho` de B7: fracción del diámetro, ya
-     normalizada por área de tinta. Ver `data/casos.ts`. */
+     normalizada por área de tinta y con sus topes aplicados. Sin
+     `max-width` acá, por lo mismo que allá. */
   .cas-caso__logo img {
     display: block;
     width: calc(var(--logo-ancho, 0.6) * 100%);
-    max-width: 84%;
-    max-height: 52%;
     height: auto;
-    object-fit: contain;
   }
 
   .cas-caso__nombre {

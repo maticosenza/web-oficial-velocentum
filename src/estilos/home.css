@@ -1409,29 +1409,43 @@
     margin-inline: var(--space-4);
   }
 
-  /* El logo negro vive sobre blanco; el acento queda en el borde,
-     como en el lenguaje visual de la referencia. */
+  /* DISCO PASTEL CON EL LOGO NEGRO ADENTRO, LA MISMA REGLA QUE LAS
+     PÍLDORAS DE B5. Y no es coincidencia buscada de a dos: es el
+     mismo `color-mix` al 40%, así que si algún día se ajusta un
+     acento en `tokens.css`, los dos bloques lo siguen solos.
+
+     Contra la variante de contorno —crema con borde de color— gana
+     porque ahí el logo queda apoyado sobre el mismo fondo de la
+     página: el anillo se vuelve decorativo y el color deja de
+     significar algo. Con el disco pintado, el color ES el campo.
+
+     Con los logos negros el contraste dejó de ser la restricción:
+     `#05050C` sobre los cinco pasteles da de 10.89 a 16.32, contra
+     el mínimo de 3 para objeto gráfico. Por eso los CINCO acentos
+     entran en el ciclo — con los logos blancos de antes había que
+     sacar verde y amarillo. */
   .b7-cliente__anillo {
     display: grid;
     place-items: center;
     width: 120px;
     height: 120px;
     border-radius: var(--r-pill);
-    background: var(--fondo);
-    border: 2px solid var(--anillo);
+    background: color-mix(in srgb, var(--anillo) 40%, var(--fondo));
   }
 
   /* El ancho sale de `data/casos.ts`, normalizado por área de
      tinta y ya con los topes aplicados. Va como fracción del
      contenedor, así que el mismo número sirve acá y en el círculo
      más grande de Casos. */
+  /* ⚠ SIN `max-width` NI `max-height`. `--logo-ancho` ya viene con
+     los topes aplicados sobre la caja de TINTA de cada archivo, que
+     es lo que se ve; un tope acá se pisaría con ese número y ganaría
+     en silencio, dejando la normalización a medias. Ver la nota de
+     `LOGOS` en `data/casos.ts`. */
   .b7-cliente__logo {
     display: block;
     width: calc(var(--logo-ancho, 0.6) * 100%);
-    max-width: 84%;
-    max-height: 52%;
     height: auto;
-    object-fit: contain;
   }
 
   .b7-cliente__nombre {
