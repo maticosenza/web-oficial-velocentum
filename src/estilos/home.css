@@ -375,13 +375,27 @@
 
   .b3__piezas {
     display: grid;
-    gap: var(--space-6);
+    /* Columna única sólo en teléfonos angostos. Con cuatro piezas
+       apiladas la sección se va a ~2,4 pantallas, así que acá el
+       aire se recorta: son tres huecos, y cada uno que sobra son
+       16px más de scroll. */
+    gap: var(--space-5);
     margin-top: var(--space-4);
+  }
+
+  /* Dos columnas desde 600 y no desde 810: con cuatro piezas, el
+     corte tardío dejaba la columna única también en tablets y
+     teléfonos apaisados, donde entran dos sin problema. Así el
+     apilado largo queda sólo donde no hay alternativa. */
+  @media (min-width: 600px) {
+    .b3__piezas {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-6);
+    }
   }
 
   @media (min-width: 810px) {
     .b3__piezas {
-      grid-template-columns: 1fr 1fr;
       gap: var(--space-7);
     }
   }

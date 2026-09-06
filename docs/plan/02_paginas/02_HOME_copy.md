@@ -136,8 +136,45 @@ display condensado. Se puede recuperar como bajada, o dejarla para `/casos`.
 
 ### Estado en obra `[CONSTRUIDO CON MARCADORES]`
 
-**Dos piezas,** `Patagonia Vessels` (17 car.) y `Comercial Pas` (13), dentro del
-rango medido de 4–23.
+**Cuatro piezas, en dos filas de dos.** Eran dos. Sólo se conocen dos clientes
+—`Patagonia Vessels` (17 car.) y `Comercial Pas` (13), dentro del rango medido
+de 4–23— así que las otras dos ranuras llevan el mismo marcador que B7, para que
+se lean como el mismo hueco y no como dos clientes distintos.
+
+### La entrada: una sola regla para las dos filas
+
+Cada pieza entra desde el lado de **su columna**: izquierda por la izquierda,
+derecha por la derecha, **en las dos filas igual**. La fila de abajo no hace
+nada distinto de la de arriba.
+
+Se descartaron dos alternativas por contradecir a la fila de arriba:
+
+- **Cruzada** (fila 2 al revés que fila 1): los recorridos se pisan y deja de
+  leerse "se cierran hacia el centro".
+- **Desde abajo**: es otro gesto dentro del mismo bloque.
+
+La dirección **se deriva del índice**, no se escribe a mano, así no puede quedar
+desalineada de la columna que le toca. Y no hace falta escalonar nada:
+`useProgresoDeScroll` mide por elemento, así que la fila de abajo arranca sola
+cuando le toca entrar en cuadro.
+
+*Si al verlo resulta mecánico,* la variante mínima es bajarle amplitud a la fila
+2 —62% a ~40% de recorrido, 5° a 3°— manteniendo la dirección. No se hizo:
+introduce una segunda regla que habría que justificar.
+
+### El corte de columnas baja de 810 a 600
+
+Con cuatro piezas, una columna única a 390px deja la sección en **~1.670px, unas
+2,4 pantallas**, contra ~820px con dos piezas. El modelo está verificado: cada
+pieza mide `ancho × 0,75 + festón + pie`, y a 1379px da 596px medidos.
+
+El corte a 810 dejaba la columna única también en tablets y teléfonos apaisados,
+donde entran dos sin problema. **Desde 600px van dos columnas**, así el apilado
+largo queda sólo donde no hay alternativa. En la columna única el gap baja a
+`--space-5`: son tres huecos, y cada uno que sobra son 16px más de scroll.
+
+**No se esconden piezas en móvil.** Ocultar contenido por ancho de pantalla es
+peor que una página larga, y para eso ya está el botón a `/casos`.
 
 **Tres cosas van como marcador explícito**, dichas una sola vez para todo el
 bloque en vez de repetirlas por tarjeta:

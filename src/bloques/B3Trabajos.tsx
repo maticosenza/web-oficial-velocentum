@@ -2,9 +2,25 @@
    B3 · TRABAJOS
 
    Titular a la izquierda, botón a la derecha en la misma línea
-   de base, y dos piezas que entran inclinadas y salidas de
-   cuadro por los costados, se enderezan y se cierran hacia el
-   centro. Cada tarjeta con el pie festoneado.
+   de base, y cuatro piezas en dos filas de dos, que entran
+   inclinadas y salidas de cuadro por los costados, se enderezan
+   y se cierran hacia el centro. Cada tarjeta con el pie
+   festoneado.
+
+   UNA SOLA REGLA PARA LAS DOS FILAS
+   Cada pieza entra desde el lado de SU COLUMNA. Izquierda por la
+   izquierda, derecha por la derecha, en las dos filas igual. La
+   fila de abajo no hace nada distinto de la de arriba: si
+   entrara cruzada, los recorridos se pisarían y dejaría de
+   leerse "se cierran hacia el centro"; si entrara desde abajo,
+   sería otro gesto dentro del mismo bloque.
+
+   La dirección se deriva del índice y no se escribe a mano, así
+   no puede quedar desalineada de la columna que le toca.
+
+   No hace falta escalonar nada: `useProgresoDeScroll` mide por
+   elemento, así que la fila de abajo arranca sola cuando le toca
+   entrar en cuadro. La repetición se lee como ritmo.
 
    ES UN VALOR CONTINUO, NO UN REVEAL
    El plan es explícito: `translateX` + `rotate` + `scale`
@@ -81,20 +97,23 @@ import { useProgresoDeScroll } from "../lib/progresoDeScroll";
    así el copy real entra sin mover el layout. */
 const CATEGORIA_PENDIENTE = "Categoría pendiente";
 
-type Pieza = {
-  nombre: string;
-  /** -1 entra por la izquierda, 1 por la derecha. */
-  direccion: number;
-};
+/* PENDIENTE: sólo se conocen dos clientes, y las piezas son
+   cuatro. Los dos nombres reales salen de `03_referencia` y
+   `04_CASOS`, donde están medidos. Las otras dos ranuras llevan
+   el mismo marcador que usa B7, para que se lean como el mismo
+   hueco y no como dos clientes distintos.
+   17 caracteres, dentro del rango medido de 4-23. */
+const CLIENTE_PENDIENTE = "Cliente pendiente";
 
-/* Dos piezas, como pide el plan. Los nombres salen de
-   `03_referencia` y `04_CASOS`, donde están medidos como reales.
-   El uso autorizado de cada cliente sigue sin confirmar: ver la
-   nota del bloque. */
-const PIEZAS: Pieza[] = [
-  { nombre: "Patagonia Vessels", direccion: -1 },
-  { nombre: "Comercial Pas", direccion: 1 },
-];
+/* Cuatro piezas, en dos filas de dos. El orden es el de la
+   grilla: 0 y 2 caen en la columna izquierda, 1 y 3 en la
+   derecha. */
+const PIEZAS = ["Patagonia Vessels", "Comercial Pas", CLIENTE_PENDIENTE, CLIENTE_PENDIENTE];
+
+/** Indice par -> columna izquierda -> entra por la izquierda. */
+function direccionDe(indice: number): number {
+  return indice % 2 === 0 ? -1 : 1;
+}
 
 export function B3Trabajos() {
   return (
@@ -117,13 +136,13 @@ export function B3Trabajos() {
         </div>
 
         <p className="etiqueta etiqueta--apagada b3__pendiente">
-          Pendiente · los videos y los posters no existen todavía, y el uso autorizado de cada
-          cliente está sin confirmar.
+          Pendiente · los videos y los posters no existen todavía, dos de las cuatro piezas no
+          tienen cliente asignado, y el uso autorizado de cada cliente está sin confirmar.
         </p>
 
         <div className="b3__piezas">
-          {PIEZAS.map((p) => (
-            <Trabajo key={p.nombre} pieza={p} />
+          {PIEZAS.map((nombre, i) => (
+            <Trabajo key={`${nombre}-${i}`} nombre={nombre} direccion={direccionDe(i)} />
           ))}
         </div>
       </div>
@@ -131,7 +150,7 @@ export function B3Trabajos() {
   );
 }
 
-function Trabajo({ pieza }: { pieza: Pieza }) {
+function Trabajo({ nombre, direccion }: { nombre: string; direccion: number }) {
   /* El hook mide la capa de afuera, que no se mueve. Ver la nota
      de arriba: medir la capa transformada traba el bloque. */
   const ref = useRef<HTMLElement>(null);
@@ -141,17 +160,14 @@ function Trabajo({ pieza }: { pieza: Pieza }) {
     <article ref={ref} className="b3-trabajo">
       {/* Capa 2: la que se mueve. El medio, el festón y el pie van
           adentro, así entran como una sola pieza. */}
-      <div
-        className="b3-trabajo__movil"
-        style={{ "--dir": pieza.direccion } as React.CSSProperties}
-      >
+      <div className="b3-trabajo__movil" style={{ "--dir": direccion } as React.CSSProperties}>
         {/* PENDIENTE: el video en loop no existe. Va el campo con
             la proporción y el nombre accesible diciendo de qué
             pieza es, para que los dos no suenen iguales. */}
         <div
           className="b3-trabajo__medio"
           role="img"
-          aria-label={`Marco reservado para el video de ${pieza.nombre}. El video real todavía no existe.`}
+          aria-label={`Marco reservado para el video de ${nombre}. El video real todavía no existe.`}
         >
           <p className="etiqueta b3-trabajo__medio-nota">Video pendiente</p>
 
@@ -164,7 +180,7 @@ function Trabajo({ pieza }: { pieza: Pieza }) {
         {/* Categoría chica arriba, nombre grande abajo. */}
         <div className="b3-trabajo__pie">
           <p className="etiqueta etiqueta--apagada">{CATEGORIA_PENDIENTE}</p>
-          <h3 className="b3-trabajo__nombre">{pieza.nombre}</h3>
+          <h3 className="b3-trabajo__nombre">{nombre}</h3>
         </div>
       </div>
     </article>
