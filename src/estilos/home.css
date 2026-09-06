@@ -905,16 +905,43 @@
        píxeles de alto. Apaisado es la única proporción que deja
        ver las dos piezas juntas, que es de lo que se trata el
        bloque. */
-    aspect-ratio: 4 / 3;
+    /* 3:4 vertical, el mismo de `/casos`: son los mismos archivos,
+       recortados una sola vez. El comentario de arriba defendía
+       4:3 apaisado cuando el campo era un color plano y no había
+       piezas; con las piezas reales, encuadradas en vertical,
+       recortarlas otra vez para meterlas en apaisado volvería a
+       descabezar a Glam y a Vinotique. */
+    aspect-ratio: 3 / 4;
     background: var(--b3-campo);
-    /* Sólo las esquinas de arriba: abajo manda el festón. */
+    /* Sólo las esquinas de arriba: abajo manda la onda. */
     border-radius: var(--r-media) var(--r-media) 0 0;
-    border: 1.5px dashed var(--texto-2);
-    border-bottom: none;
+
+    /* LA ONDA RECORTA EL MEDIO. Dos capas de máscara sumadas: un
+       rectángulo opaco para todo menos la franja de abajo, y la
+       silueta de la nube en esa franja. `add` las une; sin eso, la
+       segunda reemplazaría a la primera y quedaría sólo la onda.
+
+       El SVG es el espejo vertical del mismo trazado que usa
+       `SectionEdge`: el relleno tiene que quedar ARRIBA de la
+       curva, no abajo. Se genera del mismo `d`, así que la silueta
+       es idéntica a la del resto del sitio. */
+    mask-image: linear-gradient(#000, #000), url("/assets/borde-onda-abajo.svg");
+    mask-position:
+      top left,
+      bottom left;
+    mask-size:
+      100% calc(100% - var(--borde-onda-alto)),
+      100% var(--borde-onda-alto);
+    mask-repeat: no-repeat, no-repeat;
+    mask-mode: alpha, alpha;
+    mask-composite: add;
   }
 
-  .b3-trabajo__medio-nota {
-    color: var(--texto-2);
+  .b3-trabajo__pieza {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   /* El festón ya reserva su alto por debajo: la regla de

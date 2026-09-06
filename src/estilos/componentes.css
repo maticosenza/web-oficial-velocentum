@@ -461,13 +461,17 @@
     will-change: transform;
   }
 
-  /* Tres columnas: identificación · medio · frase. El medio pesa
-     más que las dos laterales juntas, que es la proporción de la
-     referencia. Abajo de 810px la variante apila, y el orden lo
-     define cada página. */
+  /* Tres columnas: identificación · medio · frase.
+
+     La del medio es `auto` y no una fracción: cuando el marco es
+     vertical se dimensiona por el ALTO disponible, así que su ancho
+     no lo decide la grilla. Con `2.2fr` la columna reservaba 2.2
+     partes de la fila y el medio dejaba media pantalla de aire a
+     los costados. Con `auto` toma lo que el medio mide y las dos
+     laterales se reparten el resto. */
   @media (min-width: 810px) {
     .scroll-medio--tres {
-      grid-template-columns: 1fr 2.2fr 1fr;
+      grid-template-columns: 1fr auto 1fr;
     }
   }
 

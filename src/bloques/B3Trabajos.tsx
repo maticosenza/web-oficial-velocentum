@@ -86,8 +86,8 @@
 
 import { useRef } from "react";
 
-import { SectionEdge } from "../componentes/SectionEdge";
-import { CASOS_EN_LA_HOME } from "../data/casos";
+import { CASOS_EN_LA_HOME, type Medio } from "../data/casos";
+import { MedioDeCaso } from "../componentes/MedioDeCaso";
 import { EnlaceConCortina } from "../componentes/RouteCurtain";
 import { Reveal } from "../componentes/Reveal";
 import { Flecha } from "../componentes/Flecha";
@@ -144,8 +144,7 @@ export function B3Trabajos() {
         </div>
 
         <p className="etiqueta etiqueta--apagada b3__pendiente">
-          Pendiente · los videos y los posters no existen todavía, y el uso autorizado de cada
-          cliente está sin confirmar.
+          Pendiente · el uso autorizado de cada cliente está sin confirmar.
         </p>
 
         <div className="b3__piezas">
@@ -154,7 +153,9 @@ export function B3Trabajos() {
               key={caso.nombre}
               nombre={caso.nombre}
               rubro={caso.rubro}
+              medio={caso.medio}
               direccion={direccionDe(i)}
+              prioritario={i === 0}
             />
           ))}
         </div>
@@ -166,11 +167,15 @@ export function B3Trabajos() {
 function Trabajo({
   nombre,
   rubro,
+  medio,
   direccion,
+  prioritario,
 }: {
   nombre: string;
   rubro: string;
+  medio: Medio;
   direccion: number;
+  prioritario: boolean;
 }) {
   /* El hook mide la capa de afuera, que no se mueve. Ver la nota
      de arriba: medir la capa transformada traba el bloque. */
@@ -182,20 +187,16 @@ function Trabajo({
       {/* Capa 2: la que se mueve. El medio, el festón y el pie van
           adentro, así entran como una sola pieza. */}
       <div className="b3-trabajo__movil" style={{ "--dir": direccion } as React.CSSProperties}>
-        {/* PENDIENTE: el video en loop no existe. Va el campo con
-            la proporción y el nombre accesible diciendo de qué
-            pieza es, para que los dos no suenen iguales. */}
-        <div
-          className="b3-trabajo__medio"
-          role="img"
-          aria-label={`Marco reservado para el video de ${nombre}. El video real todavía no existe.`}
-        >
-          <p className="etiqueta b3-trabajo__medio-nota">Video pendiente</p>
-
-          {/* El pie festoneado: misma silueta de nube que cose toda
-              la página, en la variante de tarjeta. Cuelga por debajo
-              del campo y el CSS le reserva el alto solo. */}
-          <SectionEdge borde="abajo" color="var(--b3-campo)" />
+        {/* LA ONDA ENMASCARA EL MEDIO, NO CUELGA DEBAJO.
+            Mientras el campo era un color plano, un festón del
+            mismo color colgando abajo se leía como parte de él.
+            Con una foto o un video adentro, ese festón pasa a ser
+            una guarda de color que no pertenece a la pieza. Así
+            que ahora la onda RECORTA el propio medio: sigue siendo
+            el hilo que cose el sitio, y el borde de abajo del
+            video es la nube. La máscara vive en el CSS. */}
+        <div className="b3-trabajo__medio">
+          <MedioDeCaso className="b3-trabajo__pieza" medio={medio} prioritario={prioritario} />
         </div>
 
         {/* Categoría chica arriba, nombre grande abajo. */}

@@ -168,14 +168,16 @@
   /* El mismo círculo relleno de B7, más grande: acá el logo es la
      identificación del caso y no una ranura de un marquee.
 
-     160 y no 120 porque el logo más chico en proporción
-     —`vinotique`, al 44.7% del diámetro— rinde 71px de ancho, o
-     sea 143 en pantalla 2x, contra los 191 que tiene el archivo.
-     Con 120 quedaba justo; con 160 sobra. */
+     120 y no 160: acá el logo compite con el nombre del cliente en
+     display justo debajo, y un círculo grande con el logo adentro
+     convertía al círculo en el protagonista de la columna. Al
+     achicarlo, el disco de color y el bloque del nombre pesan
+     parecido. El logo lo sigue solo: su ancho es una fracción del
+     contenedor, no un tamaño fijo. */
   .cas-caso__logo {
     display: grid;
     place-items: center;
-    width: 160px;
+    width: 120px;
     aspect-ratio: 1;
     border-radius: var(--r-pill);
     background: var(--anillo);
@@ -218,12 +220,32 @@
      campo del acento que un hueco blanco. */
   .cas-caso__medio {
     display: block;
-    aspect-ratio: 4 / 3;
-    width: 100%;
-    height: auto;
+    aspect-ratio: 3 / 4;
+    /* ⚠ SE DIMENSIONA POR ALTO, NO POR ANCHO. Un marco vertical de
+       ancho completo en una columna de ~600px daría 800 de alto, y
+       el bloque mide 80vh: reventaría el encuadre en cuanto la
+       ventana no sea altísima. Atándolo al alto disponible, el
+       marco crece con la pantalla y nunca desborda su bloque.
+       Ojo con el `100%`: un porcentaje de alto contra un padre de
+       alto automático resuelve a `auto`, así que `min(62vh, 100%)`
+       no limitaba nada y el marco se dimensionaba por ancho — 757px
+       de alto en un bloque de 537. Va sólo la unidad de viewport.
+       El tope en píxeles evita que en pantallas muy altas el marco
+       se coma la fila. */
+    height: min(62vh, 620px);
+    width: auto;
+    max-width: 100%;
+    margin-inline: auto;
     object-fit: cover;
     border-radius: var(--r-media);
     background: color-mix(in srgb, var(--acento) 22%, var(--fondo));
+  }
+
+  /* Sin esto el marco se estira a toda la columna y el medio queda
+     pegado a un costado: el ítem de la grilla tiene que
+     encogerse hasta su contenido. */
+  .cas-caso__cuerpo > .scroll-medio__marco {
+    justify-self: center;
   }
 
   /* --- La frase --- */
@@ -331,6 +353,14 @@
       text-align: center;
     }
 
+    /* Apilado manda el ancho, no el alto: un marco vertical a 62vh
+       en un teléfono se comería la pantalla entera. */
+    .cas-caso__medio {
+      height: auto;
+      width: 100%;
+      max-width: 380px;
+    }
+
     /* El titular pinneado se achica: a 22vw de un teléfono la
        palabra se sale de la pantalla. */
     .cas2__pin-texto {
@@ -340,7 +370,7 @@
     /* El círculo se achica con el bloque. Los logos lo siguen
        solos: su ancho es una fracción del contenedor. */
     .cas-caso__logo {
-      width: 120px;
+      width: 96px;
     }
   }
 
