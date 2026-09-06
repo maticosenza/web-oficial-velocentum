@@ -98,6 +98,11 @@ al bajar, así que ese motivo ya no existe.
 Sigue siendo una card flotante y no una barra: medido, **295px de ancho en una
 pantalla de 500, con 102px de aire a cada lado**.
 
+**El isotipo va con contorno fino y sin relleno, con la V negra.** Antes era un
+círculo negro relleno con la V blanca. La card ya es clara, así que la regla de
+`identidad.md` —negro sobre claro— se cumple sin inventar un campo oscuro: el
+círculo pasa a ser sólo el contorno.
+
 **Se apretó todo lo que da.** La banda pasó de 150px a **131px**. Una sola fila
 no entra a ningún ancho de teléfono, y está medido: a 390px quedan 334px útiles,
 los cuatro links ocupan 236px en el tamaño más chico que sigue siendo legible
@@ -259,13 +264,25 @@ cuerpo grande —`clamp(24px, 3.4vw, 40px)`— porque es el único párrafo suel
 la página y puede permitirse presencia. Su medida va en `ch` y no en px: a 40px,
 los 650px de `--medida-parrafo` darían renglones de una docena de palabras.
 
-**El alto bajó de 108vh a 100dvh**, y el contenido va centrado en vez de
-apoyado arriba. Antes sobraba alto y todo el hueco caía debajo del párrafo;
-ahora el sobrante se reparte. Medido a 711px de ventana: bloque 711, contenido
-542, sobrante 169 repartido en dos.
+**El alto bajó de 108vh a 80dvh**, en dos pasos, y el contenido va centrado en
+vez de apoyado arriba.
 
-Un viewport es además exactamente el recorrido que necesita `--cobertura` para
-ir de 0 a 1, así que el hundimiento del hero termina justo cuando B2 lo tapa.
+*Este alto no es libre: ES el recorrido del pin del hero.* La cobertura al
+soltarse es exactamente `altoB2 / viewport`. Con 100dvh la cobertura llegaba a 1
+—el hero quedaba tapado del todo— pero medido a 790px de ventana sobraban 200px
+de aire arriba del texto y 176 abajo.
+
+**El hundimiento no necesita esa cobertura completa: la opacidad llega a cero en
+0.588**, porque el multiplicador es 1.7. Con 80dvh el texto desaparece bastante
+antes de que el hero se suelte, y lo único que cambia es que queda una franja
+del campo del hero asomando arriba de la onda mientras el par se va scrolleando
+— que se lee como el hero yéndose detrás de la nube, no como un corte.
+
+Medido después del cambio: bloque 632 en vez de 790, con 121px de aire arriba
+del texto y 97 abajo, contra 200 y 176.
+
+**⚠ Abajo de ~60dvh esto sí se rompe:** la cobertura no llegaría a 0.588 y el
+titular se soltaría todavía visible.
 
 **Bajo 810px el `min-height` se va a 0:** ahí el pin está apagado y el viewport
 de alto no sostiene nada, sólo dejaría el mismo hueco muerto.
@@ -316,7 +333,9 @@ Es una consecuencia del titular, no un recorte suelto.
 **Botón a la derecha, misma línea de base** `[APROBADO]`
 > Ver casos ↗ → `/casos`
 
-**Bajo cada card:** categoría chica arriba, nombre grande abajo.
+**Bajo cada card, CENTRADO:** categoría chica en mono arriba, nombre grande
+abajo. El nombre subió a `clamp(32px, 4.2vw, 56px)`: es lo que identifica la
+pieza, y alineado a la izquierda competía con el titular del bloque.
 
 **Nota:** la línea aprobada *"Trabajo real, pensado para hacer crecer marcas"*
 no entra en este formato — el titular de la referencia es una o dos palabras en
@@ -535,17 +554,21 @@ lista de capacidades, no la paleta.
 
 ---
 
-## B6 · NUESTRO PROCESO `[DECIDIDO: 4 tarjetas]`
+## B6 · NUESTRO PROCESO `[DECIDIDO: 3 tarjetas]`
 
 **Titular display centrado**
 > NUESTRO PROCESO
 
-Cuatro tarjetas, una por paso del método. No se toca `/metodo`.
+**Tres** tarjetas, más grandes. Eran cuatro. No se toca `/metodo`.
 
-> **01 Preguntamos** · Qué vendés, a qué margen y con qué costos.
-> **02 Medimos** · Dónde se frena el crecimiento.
-> **03 Proyectamos** · Qué pasa si se corrigen esas fugas.
-> **04 Recomendamos** · Un plan con presupuesto y prioridad. Escrito.
+> **01 Analizamos** · Qué vendés, a qué margen y dónde se frena el crecimiento.
+> **02 Proyectamos** · Qué pasa con tus números si se corrigen esas fugas.
+> **03 Ejecutamos** · Un plan con presupuesto y prioridad, y lo ejecutamos.
+
+`Preguntamos` y `Medimos` se fusionaron en `Analizamos`, y `Recomendamos` pasó a
+`Ejecutamos`. Las tres bajadas se reescribieron para tres pasos: miden 56, 50 y
+52 caracteres, contra las de cuatro columnas que topeaban en 45. Con tres
+columnas la tarjeta es más ancha y el techo sube.
 
 **Grilla:** 4 columnas iguales en desktop · 2×2 en tablet · 1 columna en mobile.
 La referencia usa 3 columnas a `flex: 1 0 0`; con 4 cada tarjeta baja de ~393px
@@ -589,26 +612,22 @@ faltaba que tuviera color.
 Escrito.` mide **exactamente 45**, que es el techo con cuatro columnas. Está en
 el límite, no debajo. Un carácter más y pasa a tres líneas, que desalinea la fila.
 
-### Los objetos, asignados por significado
+### Los objetos: con tres pasos, los tres cierran exacto
 
-Según `01_sistema/identidad.md`. Tres de los cuatro son exactos:
+Según `01_sistema/identidad.md`:
 
 | Paso | Objeto | Significado en identidad.md |
 |---|---|---|
-| 01 Preguntamos | foco | Entender, diagnosticar |
-| 02 Medimos | barras | Medir y proyectar |
-| 03 Proyectamos | conexión | Coordinar disciplinas |
-| 04 Recomendamos | rayo | Activar una **prioridad** |
+| 01 Analizamos | foco | Entender, diagnosticar |
+| 02 Proyectamos | barras | Medir **y proyectar** |
+| 03 Ejecutamos | rayo | Activar una **prioridad** |
 
-**⚠ El 03 no cierra, y conviene saberlo.** `Proyectamos` querría barras, porque
-el significado de barras es "medir **y proyectar**": los pasos 02 y 03 se pelean
-el mismo objeto. Repetirlo en una fila de cuatro se leería como un error, así
-que al 03 le toca conexión, que es el que sobra y el que peor encaja —
-"coordinar disciplinas" no es proyectar.
+**Se resolvió solo al pasar a tres.** Con cuatro pasos, `Medimos` y
+`Proyectamos` se peleaban barras, y al que perdía le tocaba conexión, que no
+significa proyectar — era la asignación menos mala y estaba anotada como tal.
+Fusionados en `Analizamos`, cada objeto vuelve a su significado exacto.
 
-Es la asignación menos mala, no una buena. **Revisado y aparcado a propósito:
-queda conexión.** No es un pendiente. Si aparece un quinto objeto, o si se
-prefiere repetir barras en 02 y 03, se cambia en `B6Proceso.tsx`.
+**Conexión sale del bloque.** Su lugar, según `identidad.md`, es B2 y Contacto.
 
 ## B7 · MARCAS `[DECIDIDO]`
 

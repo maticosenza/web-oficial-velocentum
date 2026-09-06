@@ -107,9 +107,10 @@ export function B0Nav() {
               no se duplica.
               En desktop la palabra completa, como pide
               identidad.md. En móvil el isotipo dentro de un
-              círculo: es la única forma de que la card entre en
-              una sola fila, y la propia identidad admite la V como
-              firma secundaria en avatar. */}
+              círculo de contorno fino, sin relleno: es la única
+              forma de que la card entre en una sola fila, y la
+              propia identidad admite la V como firma secundaria
+              en avatar. Va la V NEGRA, porque la card es clara. */}
           <img
             className="b0__logotipo"
             src="/assets/velocentum-logotipo-negro.png"
@@ -118,7 +119,7 @@ export function B0Nav() {
             height={743}
           />
           <span className="b0__isotipo" aria-hidden="true">
-            <img src="/assets/velocentum-isotipo-blanco.png" alt="" width={794} height={904} />
+            <img src="/assets/velocentum-isotipo-negro.png" alt="" width={794} height={904} />
           </span>
         </EnlaceConCortina>
 

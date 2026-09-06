@@ -6,19 +6,19 @@
    No se toca `/metodo`: acá va la versión corta.
 
    TARJETAS DE COLOR PLENO, CON EL OBJETO EN UN CONTENEDOR CLARO
-   Cada tarjeta lleva un acento en el orden normal —1, 2, 3, 4—
+   Cada tarjeta lleva un acento en el orden normal —1, 2, 3—
    con su `--texto-sobre-N`. Sin reordenar nada.
 
    El objeto va adentro de un círculo claro, del mismo crema que
    el fondo de la página. Eso es lo que resuelve el contraste, y
    es la razón por la que los acentos pueden ir en orden:
 
-   Los cuatro objetos tienen color propio —foco azul, barras
-   verde, conexión violeta, rayo amarillo— y sobre un campo de
-   color se pelean con él. Medido, el mejor reparto posible de
-   acentos deja un peor par de 2.27, porque estos acentos cambian
-   de tono pero no de claridad; y con el acento en orden, el foco
-   azul cae sobre el azul y directamente desaparece (1.00).
+   Los objetos tienen color propio —foco azul, barras verde, rayo
+   amarillo— y sobre un campo de color se pelean con él. Medido,
+   el mejor reparto posible de acentos deja un peor par de 2.27,
+   porque estos acentos cambian de tono pero no de claridad; y con
+   el acento en orden, el foco azul cae sobre el azul y
+   directamente desaparece (1.00).
 
    El contenedor saca el problema del medio: el objeto deja de
    apoyarse en el color de la tarjeta y vuelve al crema, que es
@@ -36,18 +36,16 @@
    | Conexión | Coordinar disciplinas  |
    | Rayo     | Activar una prioridad  |
 
-   Tres de los cuatro pasos tienen su objeto exacto:
-   Preguntamos → foco, Medimos → barras, Recomendamos → rayo
-   ("un plan con presupuesto y **prioridad**").
+   CON TRES PASOS, LOS TRES CIERRAN EXACTO
+   Analizamos → foco (entender, diagnosticar).
+   Proyectamos → barras (medir **y proyectar**).
+   Ejecutamos → rayo (activar una **prioridad**).
 
-   ⚠ EL TERCERO NO CIERRA, Y CONVIENE SABERLO
-   `Proyectamos` querría barras, porque el significado de barras
-   es "medir **y proyectar**": los pasos 02 y 03 se pelean el
-   mismo objeto. Repetirlo en una fila de cuatro se leería como
-   un error, así que al 03 le toca conexión, que es el que queda
-   y el que peor encaja: "coordinar disciplinas" no es proyectar.
-   Es la asignación menos mala, no una buena. Si aparece un
-   quinto objeto, o si se prefiere repetir barras, se cambia acá.
+   Con cuatro pasos esto no cerraba: `Medimos` y `Proyectamos` se
+   peleaban barras, y al que perdía le tocaba conexión, que no
+   significa proyectar. Al fusionarse en tres, cada objeto vuelve
+   a su significado y **conexión sale del bloque** — su lugar es
+   B2 y Contacto, según identidad.md.
 
    Los cuatro objetos son decorativos: el significado está en el
    número, el título y la bajada, que son texto. Por eso van
@@ -70,35 +68,27 @@ type Paso = {
 const PASOS: Paso[] = [
   {
     n: "01",
-    titulo: "Preguntamos",
-    bajada: "Qué vendés, a qué margen y con qué costos.",
+    titulo: "Analizamos",
+    bajada: "Qué vendés, a qué margen y dónde se frena el crecimiento.",
     objeto: "/assets/foco.png",
     acento: "var(--acento-1)",
     sobre: "var(--texto-sobre-1)",
   },
   {
     n: "02",
-    titulo: "Medimos",
-    bajada: "Dónde se frena el crecimiento.",
+    titulo: "Proyectamos",
+    bajada: "Qué pasa con tus números si se corrigen esas fugas.",
     objeto: "/assets/barras.png",
     acento: "var(--acento-2)",
     sobre: "var(--texto-sobre-2)",
   },
   {
     n: "03",
-    titulo: "Proyectamos",
-    bajada: "Qué pasa si se corrigen esas fugas.",
-    objeto: "/assets/conexion.png",
+    titulo: "Ejecutamos",
+    bajada: "Un plan con presupuesto y prioridad, y lo ejecutamos.",
+    objeto: "/assets/rayo.png",
     acento: "var(--acento-3)",
     sobre: "var(--texto-sobre-3)",
-  },
-  {
-    n: "04",
-    titulo: "Recomendamos",
-    bajada: "Un plan con presupuesto y prioridad. Escrito.",
-    objeto: "/assets/rayo.png",
-    acento: "var(--acento-4)",
-    sobre: "var(--texto-sobre-4)",
   },
 ];
 

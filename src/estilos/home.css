@@ -173,9 +173,10 @@
       display: none;
     }
 
-    /* Círculo oscuro con la V blanca: identidad.md pide negro
-       sobre claro y blanco sobre oscuro, y acá el contenedor es
-       el que da el campo oscuro sobre la card crema. */
+    /* Contorno fino sin relleno, con la V negra adentro. La card
+       ya es clara, así que la regla de identidad.md —negro sobre
+       claro— se cumple sin inventar un campo oscuro: el círculo
+       pasa a ser sólo el contorno. */
     .b0__isotipo {
       display: grid;
       place-items: center;
@@ -183,8 +184,9 @@
       width: 44px;
       height: 44px;
       border-radius: var(--r-pill);
-      background: var(--tinta);
-      padding: 9px;
+      background: transparent;
+      border: 1.5px solid var(--tinta);
+      padding: 8px;
     }
 
     .b0__isotipo img {
@@ -538,13 +540,24 @@
      ========================================================= */
 
   .b2 {
-    /* Un viewport exacto, no 108. El bloque tiene que darle
-       recorrido al pin del hero, y un viewport es justo el
-       recorrido que necesita la cobertura para ir de 0 a 1: con
-       más, sobra alto y queda hueco muerto debajo del párrafo.
-       `dvh` para que coincida con el alto del hero, que también
-       está en `dvh`. */
-    min-height: 100dvh;
+    /* 80dvh, y el número tiene fundamento.
+
+       Este alto ES el recorrido del pin del hero: la cobertura al
+       soltarse es exactamente `altoB2 / viewport`. Con 100dvh la
+       cobertura llegaba a 1 —el hero quedaba tapado del todo— pero
+       sobraban 200px de aire arriba del texto y 176 abajo, medidos.
+
+       El hundimiento del titular no necesita esa cobertura: la
+       opacidad llega a cero en 0.588, porque el multiplicador es
+       1.7. Con 80dvh el texto ya desapareció bastante antes de que
+       el hero se suelte, y lo único que cambia es que queda una
+       franja del campo del hero asomando arriba de la onda
+       mientras el par se va scrolleando — que se lee como el hero
+       yéndose detrás de la nube, no como un corte.
+
+       Abajo de ~60dvh esto SÍ se rompe: la cobertura no llegaría a
+       0.588 y el titular se soltaría todavía visible. */
+    min-height: 80dvh;
     display: grid;
     align-content: center;
   }
@@ -742,17 +755,21 @@
   /* El festón ya reserva su alto por debajo: la regla de
      `componentes.css` le pone `margin-bottom` a quien lo contiene.
      Acá sólo va el aire entre el festón y el texto del pie. */
+  /* Centrado bajo la card, no alineado a la izquierda. */
   .b3-trabajo__pie {
     display: grid;
+    justify-items: center;
+    text-align: center;
     gap: var(--space-2);
-    padding-top: var(--space-4);
+    padding-top: var(--space-5);
   }
 
   .b3-trabajo__nombre {
     font-family: var(--font-display);
     /* `Patagonia Vessels` son 17 caracteres, el más largo de los
-       dos, dentro del rango medido de 4–23. */
-    font-size: clamp(28px, 3.4vw, 44px);
+       cuatro, dentro del rango medido de 4–23. Subió con el pie:
+       el nombre es lo que identifica la pieza. */
+    font-size: clamp(32px, 4.2vw, 56px);
     line-height: 1;
     text-transform: uppercase;
     margin: 0;
@@ -958,7 +975,8 @@
     margin: 0;
   }
 
-  /* Cuatro columnas en desktop, 2×2 en tablet, una en móvil. */
+  /* Tres columnas en desktop, una abajo. No hay paso intermedio
+     de dos: con tres tarjetas, un 2+1 deja una huérfana. */
   .b6__pasos {
     list-style: none;
     margin: 0;
@@ -969,16 +987,9 @@
     grid-template-columns: 1fr;
   }
 
-  @media (min-width: 600px) {
+  @media (min-width: 810px) {
     .b6__pasos {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-
-  @media (min-width: 960px) {
-    .b6__pasos {
-      grid-template-columns: repeat(4, 1fr);
-      gap: var(--space-5);
+      grid-template-columns: repeat(3, 1fr);
     }
   }
 
@@ -992,7 +1003,10 @@
     background: var(--acento);
     color: var(--sobre);
     border-radius: var(--r-card);
-    padding: var(--space-5) var(--space-4) var(--space-6);
+    /* Más grandes que con cuatro: con tres columnas cada tarjeta
+       pasa de ~268px a ~373px sobre 1168 de contenido, y el aire
+       interno acompaña. */
+    padding: var(--space-6) var(--space-5) var(--space-7);
   }
 
   /* Hereda `--sobre`. Nada de `--texto-2`: es un gris calculado
@@ -1033,21 +1047,20 @@
 
   .b6-paso__titulo {
     font-family: var(--font-display);
-    /* `Recomendamos` son 12 caracteres, bajo el techo de 14. */
-    font-size: clamp(24px, 2.6vw, 32px);
+    /* `Proyectamos` son 11 caracteres, bajo el techo de 14. Subió
+       con la tarjeta. */
+    font-size: clamp(28px, 3.2vw, 40px);
     line-height: 1;
     text-transform: uppercase;
     margin: 0;
   }
 
+  /* Con tres columnas la tarjeta es más ancha, así que el techo
+     de caracteres sube: las tres bajadas nuevas miden 56, 50 y 52,
+     y entran en dos o tres renglones sin desalinear la fila. */
   .b6-paso__bajada {
-    /* Techo de 45 caracteres con cuatro columnas, para que no pase
-       de dos líneas. La más larga —`Un plan con presupuesto y
-       prioridad. Escrito.`— mide exactamente 45: está en el techo,
-       no debajo. Si el copy crece un carácter, se va a tres
-       líneas y desalinea la fila. */
-    max-width: 26ch;
-    font-size: 16px;
+    max-width: 30ch;
+    font-size: 17px;
     margin: 0;
   }
 
@@ -1059,7 +1072,7 @@
     }
 
     .b6-paso {
-      padding: var(--space-4) var(--space-4) var(--space-5);
+      padding: var(--space-5) var(--space-4) var(--space-6);
     }
   }
 
