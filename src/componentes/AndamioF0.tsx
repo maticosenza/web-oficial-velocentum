@@ -10,8 +10,11 @@
    construya B0 de verdad, este archivo se borra.
    =========================================================== */
 
+import { useRef } from "react";
 import { useRouterState } from "@tanstack/react-router";
+
 import { EnlaceConCortina } from "./RouteCurtain";
+import { useMedirNav } from "../lib/altoDeNav";
 
 const PAGINAS = [
   { ruta: "/", nombre: "Inicio", acento: "var(--acento-1)", sobre: "var(--texto-sobre-1)" },
@@ -28,8 +31,14 @@ const PAGINAS = [
 export function NavProvisional() {
   const rutaActual = useRouterState({ select: (s) => s.location.pathname });
 
+  /* El nav publica su alto real para que el apilado sticky no
+     tenga que adivinarlo. El nav definitivo (B0) hace lo mismo. */
+  const navRef = useRef<HTMLElement>(null);
+  useMedirNav(navRef);
+
   return (
     <nav
+      ref={navRef}
       aria-label="Principal"
       style={{
         display: "flex",

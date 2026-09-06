@@ -15,6 +15,7 @@ import { Route as ContactoRouteImport } from './routes/contacto'
 import { Route as MetodoRouteImport } from './routes/metodo'
 import { Route as PruebasRouteCurtainRouteImport } from './routes/pruebas/route-curtain'
 import { Route as PruebasSectionEdgeRouteImport } from './routes/pruebas/section-edge'
+import { Route as PruebasServiceStackRouteImport } from './routes/pruebas/service-stack'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +47,11 @@ const PruebasSectionEdgeRoute = PruebasSectionEdgeRouteImport.update({
   path: '/pruebas/section-edge',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PruebasServiceStackRoute = PruebasServiceStackRouteImport.update({
+  id: '/pruebas/service-stack',
+  path: '/pruebas/service-stack',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/metodo': typeof MetodoRoute
   '/pruebas/route-curtain': typeof PruebasRouteCurtainRoute
   '/pruebas/section-edge': typeof PruebasSectionEdgeRoute
+  '/pruebas/service-stack': typeof PruebasServiceStackRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/metodo': typeof MetodoRoute
   '/pruebas/route-curtain': typeof PruebasRouteCurtainRoute
   '/pruebas/section-edge': typeof PruebasSectionEdgeRoute
+  '/pruebas/service-stack': typeof PruebasServiceStackRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,6 +79,7 @@ export interface FileRoutesById {
   '/metodo': typeof MetodoRoute
   '/pruebas/route-curtain': typeof PruebasRouteCurtainRoute
   '/pruebas/section-edge': typeof PruebasSectionEdgeRoute
+  '/pruebas/service-stack': typeof PruebasServiceStackRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -81,6 +90,7 @@ export interface FileRouteTypes {
     | '/metodo'
     | '/pruebas/route-curtain'
     | '/pruebas/section-edge'
+    | '/pruebas/service-stack'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -89,6 +99,7 @@ export interface FileRouteTypes {
     | '/metodo'
     | '/pruebas/route-curtain'
     | '/pruebas/section-edge'
+    | '/pruebas/service-stack'
   id:
     | '__root__'
     | '/'
@@ -97,6 +108,7 @@ export interface FileRouteTypes {
     | '/metodo'
     | '/pruebas/route-curtain'
     | '/pruebas/section-edge'
+    | '/pruebas/service-stack'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -106,6 +118,7 @@ export interface RootRouteChildren {
   MetodoRoute: typeof MetodoRoute
   PruebasRouteCurtainRoute: typeof PruebasRouteCurtainRoute
   PruebasSectionEdgeRoute: typeof PruebasSectionEdgeRoute
+  PruebasServiceStackRoute: typeof PruebasServiceStackRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -152,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PruebasSectionEdgeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pruebas/service-stack': {
+      id: '/pruebas/service-stack'
+      path: '/pruebas/service-stack'
+      fullPath: '/pruebas/service-stack'
+      preLoaderRoute: typeof PruebasServiceStackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -162,6 +182,7 @@ const rootRouteChildren: RootRouteChildren = {
   MetodoRoute: MetodoRoute,
   PruebasRouteCurtainRoute: PruebasRouteCurtainRoute,
   PruebasSectionEdgeRoute: PruebasSectionEdgeRoute,
+  PruebasServiceStackRoute: PruebasServiceStackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -189,6 +189,73 @@
     transform: translateY(100%) scaleY(-1);
   }
 
+  /* --- ServiceStack ---
+     Apilado sticky puro. La reversibilidad sale gratis del
+     mecanismo: no hay estado ni animación disparada. */
+  .pila-sticky {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .pila-sticky__hueco {
+    position: sticky;
+    /* Nunca menos que el valor del plan, nunca por debajo del
+       nav real. `--alto-nav` lo publica el nav midiéndose. */
+    top: var(
+      --pila-offset,
+      max(var(--sticky-servicios), calc(var(--alto-nav, 0px) + var(--space-2)))
+    );
+    z-index: var(--capa, 0);
+  }
+
+  /* Rescate de teclado. Una tarjeta tapada sigue siendo
+     alcanzable con Tab: al enfocar algo adentro, el navegador la
+     trae a la ventana pero queda debajo de las siguientes, y el
+     usuario enfoca un control que no ve.
+     Al subirla al tope del apilado, el foco siempre queda a la
+     vista. El puntero no dispara `focus-within` en estos
+     enlaces, así que no cambia nada con mouse. */
+  .pila-sticky__hueco:focus-within {
+    z-index: calc(var(--capa, 0) + 100);
+  }
+
+  /* El giro va en su propia capa: un `transform` genera contexto
+     de apilado y pelearía con el z-index creciente del apilado. */
+  .pila-sticky__giro {
+    transform: rotate(calc((1 - var(--progreso, 1)) * var(--pila-angulo, 4deg)));
+    transform-origin: center top;
+    will-change: transform;
+  }
+
+  /* Bajo 810px el apilado se apaga: las tarjetas van en flujo
+     normal, sin superposición. */
+  @media (max-width: 809px) {
+    .pila-sticky__hueco {
+      position: relative;
+      top: auto;
+    }
+
+    .pila-sticky {
+      gap: var(--space-2);
+    }
+  }
+
+  /* Con movimiento reducido no alcanza con poner los tiempos en
+     cero: hay que apagar el sticky y el scroll-linked, y mostrar
+     el contenido completo. El giro ya queda en 0 porque el hook
+     fija --progreso en 1 y no se suscribe a nada. */
+  @media (prefers-reduced-motion: reduce) {
+    .pila-sticky__hueco {
+      position: relative;
+      top: auto;
+    }
+
+    .pila-sticky__giro {
+      transform: none;
+      will-change: auto;
+    }
+  }
+
   /* Sólo para lectores de pantalla. */
   .solo-lectores {
     position: absolute;
