@@ -1,0 +1,172 @@
+/* ===========================================================
+   B3 · TRABAJOS
+
+   Titular a la izquierda, botón a la derecha en la misma línea
+   de base, y dos piezas que entran inclinadas y salidas de
+   cuadro por los costados, se enderezan y se cierran hacia el
+   centro. Cada tarjeta con el pie festoneado.
+
+   ES UN VALOR CONTINUO, NO UN REVEAL
+   El plan es explícito: `translateX` + `rotate` + `scale`
+   interpolados contra el progreso de scroll. Reveal es otra
+   cosa —dispara una vez y se queda— y acá el movimiento tiene
+   que deshacerse si el usuario scrollea para arriba. Por eso va
+   `useProgresoDeScroll`, el mismo primitivo que usa el giro de
+   las tarjetas de B4.
+
+   EL FALLBACK DE `--progreso` ES 1, NO 0
+   `var(--progreso, 1)` en el CSS. Si el JS no corre —o antes de
+   hidratar— las tarjetas se quedan en su estado FINAL: derechas
+   y centradas. Nunca fuera de cuadro. El estado sin JS tiene que
+   ser el visible, nunca el escondido.
+
+   LA CAPA QUE SE MIDE NO ES LA QUE SE MUEVE
+   Dos capas, igual que el `hueco`/`giro` de ServiceStack. La de
+   afuera es la celda de la grilla: quieta, sin transformar, y es
+   la que mide el hook. La de adentro lleva la transformación.
+
+   Dos razones, con distinto grado de evidencia:
+
+   1. `[VERIFICADO]` `useProgresoDeScroll` decide con
+      `getBoundingClientRect()`, que en un elemento transformado
+      devuelve la caja YA rotada y escalada, no la de layout. Se
+      ve midiendo las tarjetas de B4, que sí tienen el giro en el
+      elemento medido: el marco de 279px de ancho se lee 304
+      mientras la tarjeta está rotada. Con `translateX` de 62% y
+      `scale` la desviación es mucho mayor, y la medición pasaría
+      a depender de su propio resultado.
+
+   2. `[PRECAUCIÓN, no observado]` A `--progreso: 0` la tarjeta
+      queda corrida 62% hacia afuera, fuera de `.b3`, que tiene
+      `overflow-x: clip`. El IntersectionObserver tiene en cuenta
+      el recorte de los ancestros, así que podría darla por no
+      visible y dejar de anotarla — y sin recalcular se quedaría
+      en 0 para siempre. No lo vi pasar; separar las capas lo
+      vuelve imposible, así que no hace falta averiguarlo.
+
+   Con la celda de afuera quieta, el observer siempre ve algo que
+   no se mueve ni se recorta, y la medición no se muerde la cola.
+
+   LAS TARJETAS NO SON ENLACES, Y POR ESO NO TIENEN HOVER
+   El plan pide "hover con estado propio", pero eso presupone que
+   la tarjeta lleva a algún lado. No hay subpáginas por caso: la
+   decisión 4 del plan —qué reemplaza al botón por caso— sigue
+   abierta. Un estado de hover sobre algo que no responde al
+   click promete una interacción que no existe. Cuando se cierre
+   esa decisión, la tarjeta pasa a ser enlace y ahí el hover
+   significa algo. Hasta entonces, el único control de la sección
+   es el botón a `/casos`.
+
+   EL FESTÓN CUELGA EN EL COLOR DEL CAMPO
+   `SectionEdge` con `borde="abajo"` es una franja de alto fijo
+   que cuelga por debajo, no una máscara sobre el medio. Con el
+   campo de color del placeholder queda exacto. **Cuando lleguen
+   los videos reales hay que mirar esto de nuevo:** si el video
+   llena el campo hasta el borde, se va a ver la juntura entre el
+   video y la franja plana. La salida es dejar que el campo
+   respire alrededor del video, para que la franja continúe un
+   color que ya está a la vista.
+   =========================================================== */
+
+import { useRef } from "react";
+
+import { SectionEdge } from "../componentes/SectionEdge";
+import { EnlaceConCortina } from "../componentes/RouteCurtain";
+import { Reveal } from "../componentes/Reveal";
+import { Flecha } from "../componentes/Flecha";
+import { useProgresoDeScroll } from "../lib/progresoDeScroll";
+
+/* PENDIENTE: la categoría por cliente no está confirmada. El
+   marcador mide 19 caracteres, dentro del rango medido de 13–20,
+   así el copy real entra sin mover el layout. */
+const CATEGORIA_PENDIENTE = "Categoría pendiente";
+
+type Pieza = {
+  nombre: string;
+  /** -1 entra por la izquierda, 1 por la derecha. */
+  direccion: number;
+};
+
+/* Dos piezas, como pide el plan. Los nombres salen de
+   `03_referencia` y `04_CASOS`, donde están medidos como reales.
+   El uso autorizado de cada cliente sigue sin confirmar: ver la
+   nota del bloque. */
+const PIEZAS: Pieza[] = [
+  { nombre: "Patagonia Vessels", direccion: -1 },
+  { nombre: "Comercial Pas", direccion: 1 },
+];
+
+export function B3Trabajos() {
+  return (
+    <section className="b3" aria-labelledby="b3-titulo">
+      <div className="b3__contenido contenido">
+        {/* Titular y botón comparten línea de base, como en la
+            referencia. No es `align-items: center`: el botón se
+            apoya en la base de las letras del titular. */}
+        <div className="b3__encabezado">
+          <Reveal as="h2" indice={0} id="b3-titulo" className="b3__titular">
+            Trabajos
+          </Reveal>
+
+          <Reveal indice={1} className="b3__accion">
+            <EnlaceConCortina to="/casos" className="boton boton--contorno">
+              Ver casos
+              <Flecha />
+            </EnlaceConCortina>
+          </Reveal>
+        </div>
+
+        <p className="etiqueta etiqueta--apagada b3__pendiente">
+          Pendiente · los videos y los posters no existen todavía, y el uso autorizado de cada
+          cliente está sin confirmar.
+        </p>
+
+        <div className="b3__piezas">
+          {PIEZAS.map((p) => (
+            <Trabajo key={p.nombre} pieza={p} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Trabajo({ pieza }: { pieza: Pieza }) {
+  /* El hook mide la capa de afuera, que no se mueve. Ver la nota
+     de arriba: medir la capa transformada traba el bloque. */
+  const ref = useRef<HTMLElement>(null);
+  useProgresoDeScroll(ref);
+
+  return (
+    <article ref={ref} className="b3-trabajo">
+      {/* Capa 2: la que se mueve. El medio, el festón y el pie van
+          adentro, así entran como una sola pieza. */}
+      <div
+        className="b3-trabajo__movil"
+        style={{ "--dir": pieza.direccion } as React.CSSProperties}
+      >
+        {/* PENDIENTE: el video en loop no existe. Va el campo con
+            la proporción y el nombre accesible diciendo de qué
+            pieza es, para que los dos no suenen iguales. */}
+        <div
+          className="b3-trabajo__medio"
+          role="img"
+          aria-label={`Marco reservado para el video de ${pieza.nombre}. El video real todavía no existe.`}
+        >
+          <p className="etiqueta b3-trabajo__medio-nota">Video pendiente</p>
+
+          {/* El pie festoneado: misma silueta de nube que cose toda
+              la página, en la variante de tarjeta. Cuelga por debajo
+              del campo y el CSS le reserva el alto solo. */}
+          <SectionEdge borde="abajo" color="var(--b3-campo)" />
+        </div>
+
+        {/* Categoría chica arriba, nombre grande abajo. */}
+        <div className="b3-trabajo__pie">
+          <p className="etiqueta etiqueta--apagada">{CATEGORIA_PENDIENTE}</p>
+          <h3 className="b3-trabajo__nombre">{pieza.nombre}</h3>
+        </div>
+      </div>
+    </article>
+  );
+}

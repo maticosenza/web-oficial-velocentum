@@ -125,7 +125,7 @@ criterio de cada componente, no una fase final.
 | 2 | "Inicio" u "Home" en el nav |
 | 3 | Panel izquierdo de Contacto: campo oscuro con objeto, o foto |
 | 4 | Qué reemplaza al botón por caso, al no haber subpáginas. Propuesta: chips de intervención |
-| 5 | Si `RouteCurtain` es viable en el stack real |
+| ~~5~~ | ~~Si `RouteCurtain` es viable en el stack real~~ — **SÍ.** Construido en `src/componentes/RouteCurtain.tsx` y en uso: B2 enlaza a `/metodo` con `EnlaceConCortina` |
 
 ---
 
@@ -144,6 +144,9 @@ caracteres, dentro del techo de 16 por línea.
 documento de copy: el eyebrow es `EQUIPO DE CRECIMIENTO`, no
 `PARA TIENDAS QUE YA VENDEN`.
 
-**Consecuencia registrada, no un error:** con este titular el hero ya no nombra
-al segmento e-commerce. Si se quiere que la home lo diga arriba de todo, hay que
-resolverlo en otro slot, no volviendo a abrir el titular.
+**El hero no nombra al segmento e-commerce, y es deliberado.** Registro amplio
+en la `.com`; la especificidad de e-commerce vive en `velocentum.agency`. Es el
+reparto entre los dos sitios, no un pendiente. No reabrir.
+
+La bajada también quedó decidida: `Estrategia, contenido, pauta y conversión. Un
+mismo equipo, un plan claro y decisiones con tus números.`

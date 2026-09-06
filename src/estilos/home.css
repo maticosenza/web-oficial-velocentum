@@ -290,6 +290,151 @@
   }
 
   /* =========================================================
+     B3 · TRABAJOS
+     ========================================================= */
+
+  .b3 {
+    /* Las tarjetas arrancan fuera de cuadro por los costados. Sin
+       esto, ese desplazamiento agranda el ancho scrolleable y
+       aparece una barra horizontal.
+       `clip` y no `hidden`: `hidden` crea un contenedor de scroll
+       y rompería cualquier `sticky` que se anide acá adentro más
+       adelante. `clip` recorta sin crearlo, y deja el eje vertical
+       en `visible`, que es lo que necesita el festón para colgar
+       por debajo del campo. */
+    overflow-x: clip;
+  }
+
+  .b3__contenido {
+    display: grid;
+    gap: var(--space-5);
+    padding-block: var(--space-section);
+  }
+
+  /* Titular y botón en la misma línea de base, como la referencia.
+     `baseline` y no `center`: con `center` el botón flota a media
+     altura de un titular de 96px y se despega de la línea. */
+  .b3__encabezado {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .b3__titular {
+    font-family: var(--font-display);
+    /* `Trabajos` son 8 caracteres contra un techo de 20: entra en
+       un renglón en todo el rango. */
+    font-size: clamp(40px, 7vw, 96px);
+    line-height: 1;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .b3__pendiente {
+    color: var(--texto-2);
+    max-width: var(--medida-parrafo);
+    margin: 0;
+  }
+
+  .b3__piezas {
+    display: grid;
+    gap: var(--space-6);
+    margin-top: var(--space-4);
+  }
+
+  @media (min-width: 810px) {
+    .b3__piezas {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-7);
+    }
+  }
+
+  /* --- La tarjeta y su entrada atada al scroll --- */
+
+  /* Capa 1: la celda. Quieta, sin transformar. Es la que mide el
+     hook y la que ve el IntersectionObserver.
+
+     NO PONERLE UN `transform` ACÁ. El hook decide con
+     `getBoundingClientRect()`, que en un elemento transformado
+     devuelve la caja ya movida: la medición pasaría a depender de
+     su propio resultado. Y a progreso 0 la tarjeta sale de `.b3`,
+     que tiene `overflow-x: clip`, con el riesgo de que el observer
+     la dé por invisible y no la recalcule más.
+     Ver la nota larga de `B3Trabajos.tsx`. */
+  .b3-trabajo {
+    /* El campo del placeholder y el color del festón son el mismo
+       token: la franja tiene que continuar el color del campo, no
+       parecerse. Un solo lugar para cambiarlo. */
+    --b3-campo: color-mix(in srgb, var(--cielo) 45%, var(--fondo));
+  }
+
+  /* Capa 2: la que se mueve.
+     Entrada continua, no un reveal: `--progreso` va de 0 a 1 y
+     vuelve si el usuario scrollea para arriba.
+
+     EL FALLBACK ES 1: sin JS, o antes de hidratar, la tarjeta está
+     derecha y centrada. Nunca fuera de cuadro. */
+  .b3-trabajo__movil {
+    transform: translateX(calc((1 - var(--progreso, 1)) * var(--dir, -1) * 62%))
+      rotate(calc((1 - var(--progreso, 1)) * var(--dir, -1) * 5deg))
+      scale(calc(1 - (1 - var(--progreso, 1)) * 0.08));
+    will-change: transform;
+  }
+
+  .b3-trabajo__medio {
+    position: relative;
+    display: grid;
+    place-items: center;
+    /* El plan no fija la proporción. Queda 4:3: con dos tarjetas
+       lado a lado a 1200px de contenido, cada campo mide unos
+       570px de ancho, y en vertical el par se iría a más de mil
+       píxeles de alto. Apaisado es la única proporción que deja
+       ver las dos piezas juntas, que es de lo que se trata el
+       bloque. */
+    aspect-ratio: 4 / 3;
+    background: var(--b3-campo);
+    /* Sólo las esquinas de arriba: abajo manda el festón. */
+    border-radius: var(--r-media) var(--r-media) 0 0;
+    border: 1.5px dashed var(--texto-2);
+    border-bottom: none;
+  }
+
+  .b3-trabajo__medio-nota {
+    color: var(--texto-2);
+  }
+
+  /* El festón ya reserva su alto por debajo: la regla de
+     `componentes.css` le pone `margin-bottom` a quien lo contiene.
+     Acá sólo va el aire entre el festón y el texto del pie. */
+  .b3-trabajo__pie {
+    display: grid;
+    gap: var(--space-2);
+    padding-top: var(--space-4);
+  }
+
+  .b3-trabajo__nombre {
+    font-family: var(--font-display);
+    /* `Patagonia Vessels` son 17 caracteres, el más largo de los
+       dos, dentro del rango medido de 4–23. */
+    font-size: clamp(28px, 3.4vw, 44px);
+    line-height: 1;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  /* Con movimiento reducido el hook ya deja `--progreso` en 1, así
+     que la transformación es la identidad. Se declara igual:
+     explícito gana a deducido, y es lo que hace ServiceStack. */
+  @media (prefers-reduced-motion: reduce) {
+    .b3-trabajo__movil {
+      transform: none;
+      will-change: auto;
+    }
+  }
+
+  /* =========================================================
      B4 · NUESTROS SERVICIOS
      El apilado lo hace ServiceStack. Acá va sólo la tarjeta.
      ========================================================= */

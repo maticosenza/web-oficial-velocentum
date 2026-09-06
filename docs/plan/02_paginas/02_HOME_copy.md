@@ -39,22 +39,21 @@ decidido es una quinta. Se borran del documento para que nadie las reabra.
 eyebrow con B, C o D, y que debía ser `PARA TIENDAS QUE YA VENDEN`. No aplica:
 hay eyebrow, y dice otra cosa.
 
-**Consecuencia registrada:** el hero ya no nombra al segmento e-commerce. Es una
-decisión, no un olvido. Si hace falta nombrarlo arriba de todo, se resuelve en
-otro slot.
+**El hero no nombra al segmento e-commerce, y así queda** `[DECIDIDO]`
 
-**Bajada** `[NUEVO — divergencia sin resolver]`
+Registro amplio en la `.com`. La especificidad de e-commerce vive en
+`velocentum.agency`. No es un pendiente ni un riesgo abierto: es el reparto
+entre los dos sitios. No reabrir.
 
-El documento tenía:
-> Estrategia, contenido, pauta y conversión en un solo equipo.
-> Primero medimos tu negocio. Después armamos el plan.
-
-Lo construido dice:
+**Bajada** `[DECIDIDO]`
 > Estrategia, contenido, pauta y conversión. Un mismo equipo, un plan claro y
 > decisiones con tus números.
 
-*(103 caracteres, bajo el techo de 120.)* **Las dos están sin aprobar.**
-Elegir una y borrar la otra.
+*(103 caracteres, bajo el techo de 120.)*
+
+**Se descartó** `Primero medimos tu negocio. Después armamos el plan.` porque
+repite la fórmula de Método. La home no tiene que adelantar el método: para eso
+está el botón de B2.
 
 **CTA** `[APROBADO]`
 > Reservá tu análisis ↗
@@ -122,6 +121,41 @@ Es una consecuencia del titular, no un recorte suelto.
 **Nota:** la línea aprobada *"Trabajo real, pensado para hacer crecer marcas"*
 no entra en este formato — el titular de la referencia es una o dos palabras en
 display condensado. Se puede recuperar como bajada, o dejarla para `/casos`.
+
+### Estado en obra `[CONSTRUIDO CON MARCADORES]`
+
+**Dos piezas,** `Patagonia Vessels` (17 car.) y `Comercial Pas` (13), dentro del
+rango medido de 4–23.
+
+**Tres cosas van como marcador explícito**, dichas una sola vez para todo el
+bloque en vez de repetirlas por tarjeta:
+
+1. Los videos en loop no existen. Va el campo con la proporción.
+2. Los posters tampoco.
+3. **El uso autorizado de cada cliente sigue sin confirmar.** Es lo único de los
+   tres que bloquea publicar, no sólo maquetar.
+
+La categoría por cliente tampoco está: marcador de 19 caracteres, dentro del
+rango medido de 13–20.
+
+**Proporción del campo: 4:3.** El plan no la fijaba. Es la única que deja ver
+las dos piezas juntas: con dos tarjetas lado a lado a 1200px de contenido cada
+campo mide unos 570px, y en vertical el par pasaría los mil píxeles de alto.
+Se cambia en `aspect-ratio` de `.b3-trabajo__medio`.
+
+**El festón del pie cuelga en el color del campo.** `SectionEdge` con
+`borde="abajo"` es una franja de alto fijo que cuelga por debajo, no una máscara
+sobre el medio. Con el campo plano del marcador queda exacto. **Cuando lleguen
+los videos reales hay que mirarlo de nuevo:** si el video llena el campo hasta
+el borde se va a ver la juntura con la franja plana.
+
+**Las tarjetas no tienen estado de hover, y es a propósito.** El plan pide
+"hover con estado propio", pero eso presupone que la tarjeta lleva a algún lado.
+No hay subpáginas por caso: **es la decisión 4 del `00_LEEME`, todavía
+abierta.** Un hover sobre algo que no responde al click promete una interacción
+que no existe. Cuando se cierre esa decisión la tarjeta pasa a ser enlace y ahí
+el hover significa algo. Por ahora el único control de la sección es el botón a
+`/casos`.
 
 ---
 
@@ -258,8 +292,7 @@ velocentum.agency. No se inventan.
 | # | Decisión | Bloquea |
 |---|---|---|
 | 1 | **Los 16 entregables** | B4 — el bloque principal |
-| ~~2~~ | ~~Titular del hero: A, B, C o D~~ **RESUELTO** — ver B1 | — |
-| 2b | Cuál de las dos bajadas de hero queda | B1 |
+| ~~2~~ | ~~Titular del hero y su bajada~~ **RESUELTO** — ver B1 | — |
 | 4 | "Inicio" o "Home" | B0 y B9 |
 | 5 | Destino del CTA de cierre | B8 y la publicación |
 | 6 | Mail y redes reales | B9 |
