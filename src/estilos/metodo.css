@@ -94,7 +94,32 @@
        ~6.95 veces el cuerpo para 16 caracteres, así que 17 pide un
        poco menos de cuerpo que el titular de la home. */
     font-size: clamp(38px, 10vw, 132px);
-    line-height: 0.98;
+    /* 1.14 Y NO 0.98, POR LA TILDE DE «DESPUÉS»
+
+       A 0.98 la tilde de la É del segundo renglón se metía dentro
+       de la O de «PRIMERO». No era un problema de ojo: sale de las
+       métricas de Anton, medidas en el propio archivo de la
+       fuente.
+
+         É  borde superior  +1.1006 em sobre su línea de base
+         O  borde inferior  -0.0078 em (desborda un pelo)
+
+       O sea que los dos renglones se tocan con cualquier
+       interlínea por debajo de 1.1084. A 0.98 el solapamiento era
+       de 0.1284 em — 17px con el titular en 132.
+
+       1.14 deja 0.0316 em de holgura, unos 4px a cuerpo máximo.
+       1.11 también evitaría el choque, pero con 0.2px de aire: se
+       leería como un error, no como una decisión.
+
+       ES PROPORCIONAL, ASÍ QUE VA EN LOS TRES BREAKPOINTS. La
+       interlínea está en em, y el choque también: pasa igual a
+       38px que a 132. Arreglarlo sólo en desktop lo dejaría roto
+       en móvil.
+
+       El titular de la home (B1) sigue en 0.95 y no se toca: sus
+       tres renglones no tienen una sola mayúscula acentuada. */
+    line-height: 1.14;
     text-transform: uppercase;
     color: var(--fondo);
     margin: 0;
