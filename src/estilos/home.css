@@ -1313,18 +1313,27 @@
 
   /* Borde de color, nunca relleno. Con un disco pintado, un logo
      oscuro adentro se pierde contra medio catálogo de acentos. */
+  /* CÍRCULO RELLENO, NO CONTORNO. Los doce logos son blancos con
+     alfa —hechos para fondo oscuro— y sobre el crema del fondo un
+     logo blanco no se ve. El acento pasa de ser el borde a ser el
+     campo. */
   .b7-cliente__anillo {
     display: grid;
     place-items: center;
     width: 120px;
     height: 120px;
     border-radius: var(--r-pill);
-    border: 2px solid var(--anillo);
-    background: var(--fondo);
+    background: var(--anillo);
   }
 
-  .b7-cliente__nota {
-    color: var(--texto-2);
+  /* El ancho sale de `data/casos.ts`, normalizado por área de
+     tinta y ya con los topes aplicados. Va como fracción del
+     contenedor, así que el mismo número sirve acá y en el círculo
+     más grande de Casos. */
+  .b7-cliente__logo {
+    display: block;
+    width: calc(var(--logo-ancho, 0.6) * 100%);
+    height: auto;
   }
 
   .b7-cliente__nombre {

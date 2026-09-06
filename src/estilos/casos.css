@@ -165,16 +165,28 @@
     gap: var(--space-2);
   }
 
-  /* PENDIENTE: el logo no existe. La caja va del tamaño real para
-     que el bloque quede medido y no se mueva cuando entre. */
+  /* El mismo círculo relleno de B7, más grande: acá el logo es la
+     identificación del caso y no una ranura de un marquee.
+
+     160 y no 120 porque el logo más chico en proporción
+     —`vinotique`, al 44.7% del diámetro— rinde 71px de ancho, o
+     sea 143 en pantalla 2x, contra los 191 que tiene el archivo.
+     Con 120 quedaba justo; con 160 sobra. */
   .cas-caso__logo {
     display: grid;
     place-items: center;
-    width: 88px;
+    width: 160px;
     aspect-ratio: 1;
-    border-radius: var(--r-media);
-    background: color-mix(in srgb, var(--acento) 18%, var(--fondo));
-    color: var(--texto-2);
+    border-radius: var(--r-pill);
+    background: var(--anillo);
+  }
+
+  /* El mismo `--logo-ancho` de B7: fracción del diámetro, ya
+     normalizada por área de tinta. Ver `data/casos.ts`. */
+  .cas-caso__logo img {
+    display: block;
+    width: calc(var(--logo-ancho, 0.6) * 100%);
+    height: auto;
   }
 
   .cas-caso__nombre {
@@ -316,6 +328,12 @@
        palabra se sale de la pantalla. */
     .cas2__pin-texto {
       font-size: min(30vw, 140px);
+    }
+
+    /* El círculo se achica con el bloque. Los logos lo siguen
+       solos: su ancho es una fracción del contenedor. */
+    .cas-caso__logo {
+      width: 120px;
     }
   }
 

@@ -98,19 +98,87 @@ export const CASOS: Caso[] = [
    justamente para que no puedan divergir. */
 export const CASOS_EN_LA_HOME = CASOS.slice(0, 4);
 
-/* PATAGONIA VESSELS NO ES UN CASO.
-   Estuvo en B3 mientras no había lista cerrada. Va únicamente
-   como logo en el marquee de B7: es cliente, no caso. */
-export const CLIENTE_SOLO_LOGO = "Patagonia Vessels";
+/* CLIENTES QUE TIENEN LOGO PERO NO SON CASOS.
+   Van en el marquee de B7 y no en `/casos`. */
+export const CLIENTES_SIN_CASO = ["Patagonia Vessels", "BuyNow", "Lámina", "Uprise"];
 
-/* Las ranuras del marquee de B7: los ocho casos, después
-   Patagonia Vessels, y tres marcadores hasta que Matías defina
-   los que faltan. Doce en total, que es el ancho de pista con el
-   que se probaron el loop y la máscara del Ticker. */
-export const MARCAS_DEL_MARQUEE: (string | null)[] = [
-  ...CASOS.map((c) => c.nombre),
-  CLIENTE_SOLO_LOGO,
-  null,
-  null,
-  null,
-];
+/* Las doce ranuras del marquee de B7: los ocho casos en su orden y
+   los cuatro clientes que sólo tienen logo. Ya no hay marcadores.
+
+   Doce era además el ancho de pista con el que se probaron el loop
+   y la máscara del Ticker, así que el bloque no cambia de forma al
+   entrar los logos reales.
+
+   Doce sobre un ciclo de TRES colores divide exacto, así que el
+   ciclo cierra en la costura del loop. Con los cinco acentos
+   quedaba cortado, y el plan lo tenía anotado como defecto
+   asumido: se arregló solo al sacar verde y amarillo. */
+export const MARCAS_DEL_MARQUEE: string[] = [...CASOS.map((c) => c.nombre), ...CLIENTES_SIN_CASO];
+
+/* ===========================================================
+   LOS DOCE LOGOS — tamaño normalizado por área de tinta.
+
+   Todos son BLANCOS CON ALFA, hechos para fondo oscuro. Por eso
+   el contenedor pasó de anillo de contorno sobre crema a círculo
+   RELLENO del acento: sobre crema un logo blanco no se ve.
+
+   POR QUÉ NO SE NORMALIZAN POR ANCHO NI POR ALTO
+   Las proporciones van de 8.2:1 —`glam`, 361×44 después de
+   recortar— a 2.3:1 —`snake`, 205×88—. Igualando el ancho,
+   Vinotique aplasta al resto; igualando el alto, lo hace Glam.
+   Lo que el ojo compara no es ninguna de las dos medidas sino
+   cuánta tinta hay, así que es eso lo que se iguala.
+
+   CÓMO SALE CADA NÚMERO
+   1. Cada PNG se recorta a su caja real de píxeles opacos. Varios
+      traían aire alrededor —Greenpac un 39%— y ese aire descalibra
+      cualquier medida que venga después.
+   2. Se cuentan los píxeles con alfa > 128: eso es la tinta.
+   3. Se escala cada logo para que todos muestren la MISMA tinta.
+      Como la tinta crece con el cuadrado de la escala, el factor
+      es `sqrt(T / tinta)` con `T = 0.032` en unidades de D², el
+      diámetro del círculo.
+   4. Topes: ningún logo pasa del 78% del ancho ni del 55% del
+      alto, ni de una diagonal que le deje menos del 12% de aire
+      contra la circunferencia.
+
+   `ancho` es la fracción del DIÁMETRO del contenedor, no un
+   tamaño en píxeles. Por eso los mismos números sirven en el
+   anillo de B7 y en el contenedor más grande de Casos: el logo
+   crece con el círculo y la composición no cambia.
+
+   ⚠ CINCO LLEGAN AL TOPE Y MUESTRAN MENOS TINTA QUE EL RESTO.
+   Son los muy apaisados: `glam` sólo alcanza a mostrar un tercio
+   de la tinta objetivo antes de tocar el 78% de ancho. Es
+   inevitable —una firma fina y larguísima no puede pesar lo mismo
+   sin salirse del círculo— y es exactamente lo que el tope está
+   para evitar.
+
+   ⚠ EL TOPE DE ALTO NO LLEGA A ACTUAR con estos doce. El más
+   alto en proporción es `snake` y se queda en 0.285 D contra el
+   0.55 permitido: el ancho es siempre el que manda primero. Se
+   deja declarado igual, porque un logo futuro más cuadrado sí lo
+   necesitaría.
+   =========================================================== */
+
+export type Logo = {
+  /** Ruta del archivo, ya recortado a su caja de tinta. */
+  archivo: string;
+  /** Ancho como fracción del diámetro del contenedor. */
+  ancho: number;
+};
+
+export const LOGOS: Record<string, Logo> = {
+  "Snake Store": { archivo: "/assets/logo-snake-store.webp", ancho: 0.549 },
+  Carácter: { archivo: "/assets/logo-caracter.webp", ancho: 0.634 },
+  "Glam Ragazza": { archivo: "/assets/logo-glam-ragazza.webp", ancho: 0.78 }, // al tope de ancho
+  Vinotique: { archivo: "/assets/logo-vinotique.webp", ancho: 0.447 },
+  Ilsapore: { archivo: "/assets/logo-ilsapore.webp", ancho: 0.706 },
+  Armbruster: { archivo: "/assets/logo-armbruster.webp", ancho: 0.78 }, // al tope de ancho
+  Greenpac: { archivo: "/assets/logo-greenpac.webp", ancho: 0.75 },
+  "Comercial Pas": { archivo: "/assets/logo-comercial-pas.webp", ancho: 0.78 }, // al tope de ancho
+  "Patagonia Vessels": { archivo: "/assets/logo-patagonia-vessels.webp", ancho: 0.651 },
+  BuyNow: { archivo: "/assets/logo-buynow.webp", ancho: 0.78 }, // al tope de ancho
+  Lámina: { archivo: "/assets/logo-lamina.webp", ancho: 0.62 },
+  Uprise: { archivo: "/assets/logo-uprise.webp", ancho: 0.78 }, // al tope de ancho
+};

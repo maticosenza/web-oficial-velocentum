@@ -46,12 +46,7 @@ import type { CSSProperties } from "react";
 
 import { Ticker } from "../componentes/Ticker";
 import { Reveal } from "../componentes/Reveal";
-import { MARCAS_DEL_MARQUEE } from "../data/casos";
-
-/* PENDIENTE: 17 caracteres, contra un techo de 18 para el nombre
-   bajo el logo. Queda al filo a propósito, así el nombre real
-   entra después sin mover el anillo. */
-const CLIENTE_PENDIENTE = "Cliente pendiente";
+import { LOGOS, MARCAS_DEL_MARQUEE } from "../data/casos";
 
 /* El marquee arranca con los ocho casos en su orden, sigue con
    `Patagonia Vessels` —que es cliente pero no caso, así que acá
@@ -62,18 +57,19 @@ const CLIENTE_PENDIENTE = "Cliente pendiente";
    como un mismo conjunto y no como dos listas distintas, y la
    única forma de garantizarlo es que sean la misma lista. */
 
-const ACENTOS = [
-  "var(--acento-1)",
-  "var(--acento-2)",
-  "var(--acento-3)",
-  "var(--acento-4)",
-  "var(--acento-5)",
-];
+/* ⚠ EL CICLO PERDIÓ EL VERDE Y EL AMARILLO, Y NO ES ESTÉTICA.
+   Los doce logos son blancos, así que el mínimo aplicable es el de
+   objeto gráfico —3:1, no 4.5— y ahí sólo pasan tres acentos:
 
-/* Doce ranuras: nueve con nombre y tres todavía vacías. Se
-   construye con las doce, y no con las nueve que ya tienen
-   nombre, para que el loop y la máscara del Ticker queden
-   probados con el ancho de pista real. */
+     azul 4.56 · violeta 5.00 · bermellón 3.65 · verde 2.20 · amarillo 1.61
+
+   Es la misma corrección que hubo que hacer en las píldoras de B5,
+   con el otro umbral. Y de paso arregla algo que el plan tenía
+   anotado como defecto asumido: doce anillos sobre cinco acentos
+   dejaban el ciclo cortado en la costura del loop; sobre tres
+   divide exacto. */
+const ACENTOS = ["var(--acento-1)", "var(--acento-2)", "var(--acento-4)"];
+
 const RANURAS = MARCAS_DEL_MARQUEE;
 
 export function B7Clientes() {
@@ -88,19 +84,28 @@ export function B7Clientes() {
 
         <Ticker etiqueta="Marcas que confían en Velocentum" className="b7__ticker">
           {RANURAS.map((marca, i) => (
-            <div key={marca ?? `ranura-${i}`} className="b7-cliente">
-              {/* El anillo es decorativo mientras no haya logo: lo
-                que nombra a la ranura es el texto de abajo. Sin
-                esto el lector leería doce veces la misma
-                descripción de un marco vacío. */}
+            <div key={marca} className="b7-cliente">
+              {/* El círculo y el logo son decorativos: el nombre va
+                  debajo en texto, así que un `alt` acá haría que el
+                  lector dijera dos veces lo mismo. */}
               <div
                 className="b7-cliente__anillo"
                 aria-hidden="true"
-                style={{ "--anillo": ACENTOS[i % ACENTOS.length] } as CSSProperties}
+                style={
+                  {
+                    "--anillo": ACENTOS[i % ACENTOS.length],
+                    "--logo-ancho": LOGOS[marca]?.ancho ?? 0.6,
+                  } as CSSProperties
+                }
               >
-                <span className="etiqueta b7-cliente__nota">Logo</span>
+                <img
+                  className="b7-cliente__logo"
+                  src={LOGOS[marca]?.archivo}
+                  alt=""
+                  loading="lazy"
+                />
               </div>
-              <p className="etiqueta b7-cliente__nombre">{marca ?? CLIENTE_PENDIENTE}</p>
+              <p className="etiqueta b7-cliente__nombre">{marca}</p>
             </div>
           ))}
         </Ticker>
