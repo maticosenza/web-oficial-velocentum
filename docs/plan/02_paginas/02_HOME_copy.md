@@ -738,34 +738,51 @@ cuando lo sean. La más larga, `Optimización de ficha`, mide
 21 contra un techo de 20 — se pasa por uno y entra igual, así que la banda queda
 probada al filo del presupuesto.
 
-### Texto blanco en todas, y por eso el ciclo son dos colores
+### Fondo pastel y texto en tinta, y por eso entran los cinco
 
-La banda va con texto blanco en todas las píldoras. Eso no se consigue
-escribiendo blanco: se consigue usando **sólo los acentos cuyo
-`--texto-sobre-N` ya es blanco**. Así el par se sigue respetando y el resultado
-es blanco parejo.
+La banda ya **no** va con texto blanco sobre el acento pleno. Va con el acento
+**rebajado al 40% sobre `--fondo`** y el texto en tinta, que es la lógica de la
+referencia.
 
-Medido, blanco contra el mínimo de 4.5:1:
+El cambio no es estético: es lo que devuelve **los cinco acentos** al ciclo. Con
+el acento pleno la tinta no llega en dos —azul **4.08** y violeta **3.72**
+contra el mínimo de 4.5—, y por esa restricción el ciclo se había quedado en
+dos colores. Rebajados, los cinco pasan con muchísimo aire:
 
-| Acento | Blanco | ¿Pasa? |
-|---|---|---|
-| acento-1 azul | 4.56 | sí |
-| acento-4 violeta | 5.00 | sí |
-| acento-2 bermellón | 3.65 | **NO** |
-| acento-3 verde | 2.20 | **NO** |
-| acento-5 amarillo | 1.61 | **NO** |
+| Acento | Pleno | Pastel 40% | Tinta encima |
+|---|---|---|---|
+| acento-1 azul | `#1F6BFF` | `#A4C2FC` | 10.36 |
+| acento-2 bermellón | `#F5451F` | `#FAB3A2` | 10.66 |
+| acento-3 verde | `#00C878` | `#98E7C6` | 12.91 |
+| acento-4 violeta | `#8A3FFC` | `#CFB0FB` | 9.97 |
+| acento-5 amarillo | `#FFC300` | `#FEE596` | 14.93 |
 
-⚠ **Bermellón también quedó afuera, no sólo amarillo y verde.** Se pidió dejar
-azul, bermellón y violeta. Bermellón con blanco da **3.65:1** y no llega: es
-exactamente el mismo motivo por el que salieron los otros dos. El ciclo queda en
-azul y violeta.
+Va como `color-mix(in srgb, var(--acento-N) 40%, var(--fondo))` y **no** como
+cinco hex escritos a mano: si algún día se ajusta un acento en `tokens.css`, la
+píldora lo sigue sola. Los hex de la tabla son el resultado de hoy, no la
+fuente. Verificado en el DOM: los cinco `color-mix` computan exactamente esos
+valores.
 
-Con texto oscuro bermellón da 5.09:1 y entra sin problema — es sólo el blanco lo
-que no soporta. Si se lo quiere de vuelta, la salida es texto oscuro en esa
-píldora, no bajar el techo.
+⚠ **El par `--texto-sobre-N` no aplica acá, y no es un descuido.** Ese par
+existe para el acento PLENO: dice qué color de texto sobrevive encima de él. El
+fondo de la píldora ya no es el acento, así que su par tampoco es el que
+corresponde — el que corresponde es la tinta, y por eso va escrito.
 
-El ciclo queda cortado —once sobre dos— y no se fuerza a que cierre: manda la
-lista de capacidades, no la paleta.
+⚠ **Y esto no alcanza a los anillos de B7, ni hay que unificarlos.** Acá lo que
+va encima es **texto oscuro**, y el pastel es lo que le da contraste. Allá lo
+que va encima es un **logo**, y su regla la decide el color del archivo. Son dos
+superficies con dos problemas distintos: la regla de cada una sale de lo que se
+le apoya, no de que las dos sean redondas y de color. Unificar en pastel haría
+desaparecer cualquier logo claro; unificar en pleno devolvería el problema de
+contraste que esta regla resuelve.
+
+**Tipografía más liviana.** Bajó de 700 a **500**: sobre pastel, la negrita se
+veía pesada al lado de la referencia. Se comparó contra 400, que queda demasiado
+fino para el cuerpo de la píldora.
+
+**Once sobre cinco.** El ciclo queda cortado en la costura del loop. Acá no
+importa como en B7: las píldoras no son un set cerrado que el ojo cuente, son
+una banda que pasa.
 
 ---
 

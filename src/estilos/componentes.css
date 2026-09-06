@@ -352,15 +352,51 @@
      14px de recorrido total sobre 1,8s. Subió desde 6px y 3,2s:
      el flotar anterior era casi imperceptible. Sigue sin ser un
      rebote — el recorrido es menor que el alto de la píldora. */
+  /* ⚠ EL FONDO ES EL ACENTO REBAJADO, NO EL ACENTO.
+     40% de acento sobre `--fondo`. El porcentaje no es de gusto:
+     es lo que hace que los CINCO acentos entren en el ciclo.
+
+     Con el acento pleno, la tinta no llega en dos de los cinco
+     —azul 4.08 y violeta 3.72, contra el mínimo de 4.5— y ésa es
+     la misma restricción que ya obligó a sacar colores del ciclo
+     dos veces. Mezclado al 40% pasan todos con muchísimo aire:
+
+     | acento    | pastel  | tinta encima |
+     |-----------|---------|--------------|
+     | azul      | #A4C2FC | 10.36        |
+     | bermellón | #FAB3A2 | 10.66        |
+     | verde     | #98E7C6 | 12.91        |
+     | violeta   | #CFB0FB |  9.97        |
+     | amarillo  | #FEE596 | 14.93        |
+
+     Va como `color-mix` y no como cinco hex escritos a mano: si
+     algún día se ajusta un acento en `tokens.css`, la píldora lo
+     sigue sola. Los hex de la tabla son el resultado de hoy, no la
+     fuente.
+
+     ⚠ ESTO NO ALCANZA A LOS ANILLOS DE B7, Y NO HAY QUE
+     UNIFICARLOS. Acá lo que va encima es TEXTO OSCURO, y el pastel
+     es lo que le da contraste. Allá lo que va encima es un LOGO, y
+     su regla la decide el color del archivo — que además cambió de
+     blanco a negro en el camino. Son dos superficies con dos
+     problemas distintos: la regla de cada una sale de lo que se le
+     apoya, no de que las dos sean redondas y de color.
+
+     Unificar en pastel haría desaparecer cualquier logo claro;
+     unificar en pleno devolvería el problema de contraste que esta
+     regla resuelve. Ver `.b7-cliente__anillo` en `home.css` para la
+     regla vigente de allá. */
   .pildora {
     display: inline-flex;
     align-items: center;
     white-space: nowrap;
     padding: var(--space-2) var(--space-4);
     border-radius: var(--r-pill);
-    background: var(--acento);
+    background: color-mix(in srgb, var(--acento) 40%, var(--fondo));
     color: var(--sobre);
-    font-weight: 700;
+    /* Bajó de 700. Sobre pastel, la negrita se veía pesada al lado
+       de la referencia, que las lleva mucho más finas. */
+    font-weight: 500;
     animation: pildora-flotar 1.8s var(--motion-ease) infinite;
     animation-delay: calc(var(--i, 0) * -150ms);
   }
