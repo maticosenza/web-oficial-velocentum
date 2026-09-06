@@ -24,7 +24,11 @@ andamio porque Casos y Contacto todavía lo usan.
   **capa aparte de la foto**, para poder ajustarlo sin tocar la imagen. Bajó de
   70% para que la foto se vea; el contraste del titular lo resuelve un scrim
   aparte, ver más abajo.
-- Titular blanco en dos líneas de 17 caracteres.
+- Titular blanco en dos líneas de 17 caracteres, con `line-height: 1.14`. No es
+  una interlínea a ojo: en Anton la É llega a +1.1006 em sobre su línea de base
+  y la O baja a −0.0078, así que por debajo de 1.1084 los dos renglones se
+  tocan y la tilde de «DESPUÉS» se mete dentro de la O de «PRIMERO». A 0.98 el
+  solapamiento era de 17px a cuerpo máximo.
 - CTA azul con el mismo marcador de agenda que la home: `aria-disabled` y el
   aviso como descripción accesible.
 - **No lleva borde de nube**, y es lo que lo define: el hero de la home entra en
@@ -200,12 +204,31 @@ en el repo para rehacer la pieza, no para servirla. Va como `<img>` con
 la página y el escáner de precarga encuentra un `src` en el HTML enseguida,
 mientras que un fondo en CSS recién se descubre después de bajar la hoja.
 
-⚠ **PENDIENTE — el recorte en móvil.** La imagen es 1.82:1 y el hero es
-`100dvh`: en un teléfono, `cover` recorta tanto que sólo entra la columna
-central oscura y no se ve ni un objeto. El contraste ahí da 17:1 justamente
-porque está todo oscuro. Se resuelve con un recorte propio para móvil —un
-segundo archivo más vertical, o `object-position` corrido— y es una decisión de
-arte, no de código.
+**El recorte en móvil, resuelto.** La imagen es 1.82:1 y el hero es `100dvh`:
+con `cover`, en un teléfono sólo entraba la columna central oscura y no se veía
+un solo objeto. Y no hay recorte vertical que lo salve, porque los dos grupos de
+objetos están pegados a los bordes laterales: verlos a los dos exige el ancho
+completo, y con el ancho completo el alto es el que es.
+
+Así que abajo de 810px la imagen entra **entera**, a lo ancho y apoyada al pie,
+y el resto del hero se pinta de `#1A2341` — el navy muestreado del propio
+archivo, no un color de la paleta. Como ese fondo es liso, la escena parece
+continuar hacia arriba en vez de terminar en una banda. Si se reemplaza la foto
+hay que volver a muestrearlo.
+
+El borde superior de la franja lleva un desvanecido de 72px: el 11% de la fila
+de arriba del archivo tiene objeto encima —la esfera coral y el objeto violeta
+llegan cortados—, y con una costura dura esos dos quedaban rebanados en plano
+contra el navy.
+
+Ahí el velo y el scrim se apagan: el titular ya no está sobre la foto sino sobre
+navy plano, donde el blanco da **15.05:1**. Dejarlos puestos sólo apagaría la
+imagen.
+
+*Detalle menor, medido:* en los dos teléfonos más bajos —360×640 y 375×667— el
+CTA se mete 11px y 6px en la franja, dentro del desvanecido, donde la foto está
+al 16% y al 9%. No afecta a nadie: el botón tiene fondo sólido, así que su
+contraste no depende de lo que haya detrás.
 
 **Sobre la estética de nubes que pediste:** acá conviene **no** meter el borde
 festoneado. El hero de esta página es foto a sangre de borde a borde, y ese es

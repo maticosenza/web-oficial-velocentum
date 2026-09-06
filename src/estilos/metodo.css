@@ -228,10 +228,11 @@
     .met1 {
       /* El navy del archivo, para que la costura no exista. */
       background: #1a2341;
-      /* El contenido deja de centrarse en la pantalla: va arriba,
-         donde no hay foto. Centrado, el titular caería justo
-         sobre los objetos. */
-      align-content: start;
+      /* El contenido SIGUE centrado en la pantalla, como en
+         desktop. Con la foto convertida en franja al pie, el
+         centro del hero es navy limpio: ahí no hay objetos con
+         los que competir, así que el titular puede quedarse
+         donde tiene que estar. */
     }
 
     /* La foto deja de ocupar el hero entero y pasa a apoyarse
@@ -270,9 +271,12 @@
     }
 
     .met1__contenido {
-      /* El CTA no puede quedar pegado a la foto: se le reserva el
-         aire de una banda de sección. */
-      padding-bottom: var(--space-section);
+      /* Sube el bloque de texto la mitad de este valor —está
+         centrado—, y ese corrimiento es justo lo que le da aire
+         contra la franja de la foto. Con `--space-section` el
+         empuje era demasiado y en pantallas cortas el titular
+         se despegaba del centro. */
+      padding-bottom: var(--space-6);
       gap: var(--space-5);
     }
   }
