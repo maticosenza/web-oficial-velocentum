@@ -165,8 +165,8 @@
     gap: var(--space-2);
   }
 
-  /* El mismo círculo relleno de B7, más grande: acá el logo es la
-     identificación del caso y no una ranura de un marquee.
+  /* El mismo anillo de contorno de B7, más grande: acá el logo es
+     la identificación del caso y no una ranura de un marquee.
 
      120 y no 160: acá el logo compite con el nombre del cliente en
      display justo debajo, y un círculo grande con el logo adentro
@@ -180,7 +180,8 @@
     width: 120px;
     aspect-ratio: 1;
     border-radius: var(--r-pill);
-    background: var(--anillo);
+    background: var(--fondo);
+    border: 3px solid var(--anillo);
   }
 
   /* El mismo `--logo-ancho` de B7: fracción del diámetro, ya
@@ -188,14 +189,17 @@
   .cas-caso__logo img {
     display: block;
     width: calc(var(--logo-ancho, 0.6) * 100%);
+    max-width: 84%;
+    max-height: 52%;
     height: auto;
+    object-fit: contain;
   }
 
   .cas-caso__nombre {
     font-family: var(--font-display);
     /* El nombre más largo de los ocho es `Comercial Pas`, 13
        caracteres, holgado dentro del rango medido de 4–23. */
-    font-size: clamp(24px, 2.6vw, 34px);
+    font-size: clamp(21px, 2.2vw, 30px);
     line-height: 1.05;
     text-transform: uppercase;
     margin: 0;

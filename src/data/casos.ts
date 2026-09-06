@@ -168,73 +168,28 @@ export const CLIENTES_SIN_CASO = ["Patagonia Vessels", "BuyNow", "Lámina", "Upr
    y la máscara del Ticker, así que el bloque no cambia de forma al
    entrar los logos reales.
 
-   Doce sobre un ciclo de TRES colores divide exacto, así que el
-   ciclo cierra en la costura del loop. Con los cinco acentos
-   quedaba cortado, y el plan lo tenía anotado como defecto
-   asumido: se arregló solo al sacar verde y amarillo. */
+   El ticker duplica la pista completa, así que el ciclo visual
+   sigue cerrando aunque los cinco acentos no dividan doce. */
 export const MARCAS_DEL_MARQUEE: string[] = [...CASOS.map((c) => c.nombre), ...CLIENTES_SIN_CASO];
 
 /* ===========================================================
-   LOS DOCE LOGOS — tamaño normalizado por área de tinta.
+   LOS DOCE LOGOS — versiones negras vectorizadas.
 
-   Todos son BLANCOS CON ALFA, hechos para fondo oscuro. Por eso
-   el contenedor pasó de anillo de contorno sobre crema a círculo
-   RELLENO del acento: sobre crema un logo blanco no se ve.
-
-   POR QUÉ NO SE NORMALIZAN POR ANCHO NI POR ALTO
-   Las proporciones van de 8.2:1 —`glam`, 361×44 después de
-   recortar— a 2.3:1 —`snake`, 205×88—. Igualando el ancho,
-   Vinotique aplasta al resto; igualando el alto, lo hace Glam.
-   Lo que el ojo compara no es ninguna de las dos medidas sino
-   cuánta tinta hay, así que es eso lo que se iguala.
-
-   CÓMO SALE CADA NÚMERO
-   1. Cada PNG se recorta a su caja real de píxeles opacos. Varios
-      traían aire alrededor —Greenpac un 39%— y ese aire descalibra
-      cualquier medida que venga después.
-   2. Se cuentan los píxeles con alfa > 128: eso es la tinta.
-   3. Se escala cada logo para que todos muestren la MISMA tinta.
-      Como la tinta crece con el cuadrado de la escala, el factor
-      es `sqrt(T / tinta)` con `T = 0.032` en unidades de D², el
-      diámetro del círculo.
-   4. Topes y suelo. Ningún logo pasa del **86%** del ancho ni del
-      55% del alto, ni deja menos del **12%** de aire contra la
-      circunferencia. Y ninguno deja **más del 30%**: al que le
-      sobra, se lo agranda hasta ahí.
-
-   EL 12% ES UN PISO, NO UN OBJETIVO. La primera versión de esto
-   dejaba el aire entre 20.5% y 51.5%, y así el círculo se lee como
-   el protagonista y el logo como un detalle adentro. El objetivo
-   es el LLENADO: `T` se ajusta hasta que el aire medio queda en
-   **20%**, con el techo del 30% levantando a los que la
-   normalización por área achicaba de más.
+   Los originales eran PNG blancos y pequeños. Las versiones de
+   `public/assets/logos-clientes` conservan la silueta de cada
+   wordmark, eliminan el color de origen y permiten volver al
+   anillo de contorno sobre el fondo blanco.
 
    `ancho` es la fracción del DIÁMETRO del contenedor, no un
    tamaño en píxeles. Por eso los mismos números sirven en el
    anillo de B7 y en el contenedor más grande de Casos: el logo
    crece con el círculo y la composición no cambia.
 
-   ⚠ CINCO LLEGAN AL TOPE DE ANCHO y muestran menos tinta que el
-   resto: son los muy apaisados. Es inevitable —una firma fina y
-   larguísima no puede pesar lo mismo sin salirse del círculo— y es
-   exactamente lo que el tope está para evitar.
-
-   ⚠ Y DOS LLEGAN AL TECHO DE AIRE, `snake` y `vinotique`: son los
-   más compactos, así que igualar tinta los achicaba de más. Con el
-   techo puesto, el multiplicador a mano de Vinotique dejó de
-   mandar —el techo lo levanta más— pero se deja declarado: si
-   alguna vez baja el objetivo de llenado, vuelve a hacer falta.
-
    ⚠ EL SUBTÍTULO DE `patagonia` —«VESSELS S.A.»— casi no se lee a
    120px. Es del archivo, que trae dos líneas de peso muy distinto,
    no del cálculo: agrandar el logo entero para rescatarlo lo
    dejaría fuera de escala contra los otros once.
 
-   ⚠ EL TOPE DE ALTO NO LLEGA A ACTUAR con estos doce. El más
-   alto en proporción es `snake` y se queda en 0.285 D contra el
-   0.55 permitido: el ancho es siempre el que manda primero. Se
-   deja declarado igual, porque un logo futuro más cuadrado sí lo
-   necesitaría.
    =========================================================== */
 
 export type Logo = {
@@ -245,9 +200,15 @@ export type Logo = {
 };
 
 export const LOGOS: Record<string, Logo> = {
-  "Snake Store": { archivo: "/assets/logo-snake-store.webp", ancho: 0.643 }, // al techo de aire
-  Carácter: { archivo: "/assets/logo-caracter.webp", ancho: 0.702 },
-  "Glam Ragazza": { archivo: "/assets/logo-glam-ragazza.webp", ancho: 0.86 }, // al tope de ancho
+  "Snake Store": {
+    archivo: "/assets/logos-clientes/logo-snake-store-negro-hd.svg",
+    ancho: 0.72,
+  },
+  Carácter: { archivo: "/assets/logos-clientes/logo-caracter-negro-hd.svg", ancho: 0.76 },
+  "Glam Ragazza": {
+    archivo: "/assets/logos-clientes/logo-glam-ragazza-negro-hd.svg",
+    ancho: 0.82,
+  },
   /* ⚠ 1.25 A MANO SOBRE EL 0.447 QUE DA LA FÓRMULA.
      Es la debilidad conocida de normalizar por área: Vinotique es
      el logo más denso del set —0.38 de tinta por píxel de caja,
@@ -256,13 +217,19 @@ export const LOGOS: Record<string, Logo> = {
      No toca ningún tope: queda en 0.559 × 0.236 y le sobra un 39%
      de aire contra la circunferencia. La medición acerca, el ojo
      cierra. */
-  Vinotique: { archivo: "/assets/logo-vinotique.webp", ancho: 0.644 }, // al techo de aire
-  Ilsapore: { archivo: "/assets/logo-ilsapore.webp", ancho: 0.78 },
-  Armbruster: { archivo: "/assets/logo-armbruster.webp", ancho: 0.86 }, // al tope de ancho
-  Greenpac: { archivo: "/assets/logo-greenpac.webp", ancho: 0.83 },
-  "Comercial Pas": { archivo: "/assets/logo-comercial-pas.webp", ancho: 0.86 }, // al tope de ancho
-  "Patagonia Vessels": { archivo: "/assets/logo-patagonia-vessels.webp", ancho: 0.72 },
-  BuyNow: { archivo: "/assets/logo-buynow.webp", ancho: 0.86 }, // al tope de ancho
-  Lámina: { archivo: "/assets/logo-lamina.webp", ancho: 0.686 },
-  Uprise: { archivo: "/assets/logo-uprise.webp", ancho: 0.86 }, // al tope de ancho
+  Vinotique: { archivo: "/assets/logos-clientes/logo-vinotique-negro-hd.svg", ancho: 0.68 },
+  Ilsapore: { archivo: "/assets/logos-clientes/logo-ilsapore-negro-hd.svg", ancho: 0.72 },
+  Armbruster: { archivo: "/assets/logos-clientes/logo-armbruster-negro-hd.svg", ancho: 0.82 },
+  Greenpac: { archivo: "/assets/logos-clientes/logo-greenpac-negro-hd.svg", ancho: 0.82 },
+  "Comercial Pas": {
+    archivo: "/assets/logos-clientes/logo-comercial-pas-negro-hd.svg",
+    ancho: 0.82,
+  },
+  "Patagonia Vessels": {
+    archivo: "/assets/logos-clientes/logo-patagonia-vessels-negro-hd.svg",
+    ancho: 0.74,
+  },
+  BuyNow: { archivo: "/assets/logos-clientes/logo-buynow-negro-hd.svg", ancho: 0.8 },
+  Lámina: { archivo: "/assets/logos-clientes/logo-lamina-negro-hd.svg", ancho: 0.7 },
+  Uprise: { archivo: "/assets/logos-clientes/logo-uprise-negro-hd.svg", ancho: 0.82 },
 };

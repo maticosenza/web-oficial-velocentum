@@ -1409,19 +1409,16 @@
     margin-inline: var(--space-4);
   }
 
-  /* Borde de color, nunca relleno. Con un disco pintado, un logo
-     oscuro adentro se pierde contra medio catálogo de acentos. */
-  /* CÍRCULO RELLENO, NO CONTORNO. Los doce logos son blancos con
-     alfa —hechos para fondo oscuro— y sobre el crema del fondo un
-     logo blanco no se ve. El acento pasa de ser el borde a ser el
-     campo. */
+  /* El logo negro vive sobre blanco; el acento queda en el borde,
+     como en el lenguaje visual de la referencia. */
   .b7-cliente__anillo {
     display: grid;
     place-items: center;
     width: 120px;
     height: 120px;
     border-radius: var(--r-pill);
-    background: var(--anillo);
+    background: var(--fondo);
+    border: 2px solid var(--anillo);
   }
 
   /* El ancho sale de `data/casos.ts`, normalizado por área de
@@ -1431,7 +1428,10 @@
   .b7-cliente__logo {
     display: block;
     width: calc(var(--logo-ancho, 0.6) * 100%);
+    max-width: 84%;
+    max-height: 52%;
     height: auto;
+    object-fit: contain;
   }
 
   .b7-cliente__nombre {
@@ -1440,6 +1440,17 @@
   }
 
   @media (max-width: 809px) {
+    .b7__fila {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-4);
+      padding-inline: var(--page-gutter);
+    }
+
+    .b7__ticker {
+      width: calc(100% + 2 * var(--page-gutter));
+      margin-left: calc(-1 * var(--page-gutter));
+    }
+
     .b7-cliente {
       width: 128px;
       margin-inline: var(--space-3);

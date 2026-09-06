@@ -42,14 +42,15 @@ import { MedioDeCaso } from "../componentes/MedioDeCaso";
 import { ScrollMedia } from "../componentes/ScrollMedia";
 import { CASOS, LOGOS, type Caso } from "../data/casos";
 
-/* Mismo criterio que el anillo de B7: círculo relleno del acento
-   con el logo blanco adentro, y el mismo ciclo de tres colores.
-
-   ⚠ EL CICLO NO USA EL ACENTO DE ESTA PÁGINA. Casos es verde, y el
-   verde es justamente el que no pasa: blanco sobre él da 2.20:1
-   contra el mínimo de 3 para objeto gráfico. El contenedor no
-   puede llevar el color de su propia página. */
-const ACENTOS = ["var(--acento-1)", "var(--acento-2)", "var(--acento-4)"];
+/* Mismo criterio que B7: logo negro sobre blanco y el acento sólo
+   en el contorno. Los cinco colores pasan a estar disponibles. */
+const ACENTOS = [
+  "var(--acento-1)",
+  "var(--acento-2)",
+  "var(--acento-3)",
+  "var(--acento-4)",
+  "var(--acento-5)",
+];
 
 function Identificacion({ caso, indice }: { caso: Caso; indice: number }) {
   const logo = LOGOS[caso.nombre];
