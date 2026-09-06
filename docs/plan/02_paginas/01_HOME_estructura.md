@@ -197,8 +197,12 @@ escritas y le dicen al visitante qué compra.
 
 **Copy**
 - Titular grande centrado.
-- **Cuatro** tarjetas: número arriba, objeto grande al centro, título y una
+- **Cuatro** tarjetas **de color pleno con esquinas redondeadas**: número
+  arriba, objeto grande al centro dentro de un contenedor claro, título y una
   bajada de dos líneas abajo.
+- Un acento por tarjeta en orden 1→4, con su `--texto-sobre-N`. **El objeto va
+  sobre el contenedor claro, no sobre el color:** es lo que evita que el foco
+  azul desaparezca sobre la tarjeta azul. Ver copy.
 
 **Grilla:** 4 columnas iguales en desktop · 2×2 en tablet · 1 columna en mobile.
 Con 4 en vez de 3, cada tarjeta baja de ~393px a ~292px sobre 1200px de

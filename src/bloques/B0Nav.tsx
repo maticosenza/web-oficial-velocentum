@@ -59,9 +59,16 @@
    nav están en Framer y no se pudieron medir. Así que acá no se
    copia nada. Bajo 810px sigue siendo una card flotante, más
    chica y con aire a los costados para que se vea el fondo
-   alrededor: no se convierte en una barra de borde a borde. Se
-   parte en dos filas —logotipo arriba, los cuatro links abajo—
-   porque en una sola no entra a ningún ancho de teléfono.
+   alrededor: no se convierte en una barra de borde a borde.
+
+   Y entra en UNA SOLA FILA, horizontal y fina, porque cambia la
+   marca: en vez del logotipo completo va el isotipo dentro de un
+   círculo. Con la palabra entera no entraba a ningún ancho de
+   teléfono —a 390px quedan 334px útiles y al logotipo le
+   sobrarían 90 contra los 135–155 que pide identidad.md—, así que
+   la salida no era achicar la palabra sino cambiar de marca.
+   `identidad.md` ya admite la V como firma secundaria en avatar,
+   y quedó anotado ahí que el rango de 135–155 es de desktop.
 
    Lo que NO se toca es el alto mínimo de 48px de cada link: es
    el área táctil, y achicarla para ganar unos píxeles sería
@@ -94,12 +101,25 @@ export function B0Nav() {
             Va la versión NEGRA con canal alfa, porque la card es
             blanca. */}
         <EnlaceConCortina to="/" className="b0__marca">
+          {/* Dos marcas, una sola visible por breakpoint. La que
+              está en `display: none` sale del árbol accesible, así
+              que el nombre del enlace lo da siempre la visible y
+              no se duplica.
+              En desktop la palabra completa, como pide
+              identidad.md. En móvil el isotipo dentro de un
+              círculo: es la única forma de que la card entre en
+              una sola fila, y la propia identidad admite la V como
+              firma secundaria en avatar. */}
           <img
+            className="b0__logotipo"
             src="/assets/velocentum-logotipo-negro.png"
             alt="Velocentum"
             width={2117}
             height={743}
           />
+          <span className="b0__isotipo" aria-hidden="true">
+            <img src="/assets/velocentum-isotipo-blanco.png" alt="" width={794} height={904} />
+          </span>
         </EnlaceConCortina>
 
         <ul className="b0__links" role="list">

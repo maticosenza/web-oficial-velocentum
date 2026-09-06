@@ -12,15 +12,24 @@
 
 ## Uso del logo
 
-**Palabra completa en el nav.** V como firma secundaria en favicon, avatar y
-footer. El círculo del footer es un contenedor opcional, no parte de la V.
+**Palabra completa en el nav de desktop.** V como firma secundaria en favicon,
+avatar, footer **y nav móvil**. El círculo es un contenedor opcional, no parte
+de la V.
 
 No rotar ni estirar el logo. Las rotaciones pertenecen a los objetos.
 Sin sombras, degradados ni textura añadidos. Negro sobre claro, blanco sobre
 oscuro.
 
 **Zona libre:** un cuarto del alto del símbolo alrededor.
-**Wordmark en nav:** ancho óptico ~160–190px desktop, ~135–155px móvil.
+**Wordmark en nav:** ancho óptico ~160–190px. **Sólo desktop.**
+
+**En el nav móvil va el isotipo, no el wordmark.** La V dentro de un círculo de
+44px, blanca sobre campo oscuro. No es una preferencia: con la palabra completa
+la card no entra en una sola fila a ningún ancho de teléfono. Medido, a 390px
+quedan 334px útiles y al wordmark le sobrarían 90px contra los 160–190 del
+rango; achicarlo hasta ahí sería romper la identidad para salvar el layout.
+Esta hoja ya admite la V como firma secundaria en avatar, y el nav móvil entra
+en ese uso.
 **V:** probar silueta a 16, 24, 32 y 48px antes de aprobar.
 
 ## ⚠ BLOQUEANTE: los archivos entregados no son usables como están

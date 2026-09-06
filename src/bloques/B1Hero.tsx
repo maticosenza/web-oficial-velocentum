@@ -27,8 +27,8 @@ export function B1Hero() {
       <div className="b1__atmosfera" aria-hidden="true" />
 
       <div className="b1__contenido contenido">
-        <p className="etiqueta b1__eyebrow">Equipo de crecimiento</p>
-
+        {/* Sin eyebrow. Estaba `EQUIPO DE CRECIMIENTO` y se sacó:
+            el titular abre el hero solo y gana aire. */}
         <div className="b1__titular">
           {/* Los objetos flanquean el renglón 2. Son decorativos:
               el significado está en el texto, no en ellos. */}

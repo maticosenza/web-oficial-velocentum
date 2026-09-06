@@ -7,8 +7,14 @@
    bloque tenga recorrido. Con menos, el hero se despega antes de
    terminar de taparse. Lo verifiqué fallando en F0.
 
-   Un objeto como máximo, y la foto de backstage todavía no
-   existe: va un marco con la proporción correcta y dicho.
+   SIN IMAGEN, A PROPÓSITO
+   Tenía un marco reservado para una foto de backstage. Se sacó
+   entero: de acá para abajo la página ya es tarjetas, marcos y
+   anillos, y este bloque rinde más siendo aire y texto. Es el
+   párrafo que abre el contenido después del hero.
+
+   Con eso desaparece también, para este bloque, el pendiente de
+   la foto de backstage.
    =========================================================== */
 
 import { SeccionConBorde } from "../componentes/SectionEdge";
@@ -25,11 +31,10 @@ export function B2QuienesSomos() {
       className="b2"
       aria-labelledby="b2-titulo"
     >
-      {/* Dos columnas de verdad: TODO el texto a la izquierda y la
-          imagen a la derecha. Antes el titular cruzaba el ancho
-          completo y la imagen arrancaba recién a la altura del
-          párrafo, así que quedaba flotando contra el bloque.
-          Ahora las dos columnas empiezan a la misma altura. */}
+      {/* Una sola columna de texto, ancha. La imagen se sacó: más
+          abajo hay tarjetas y marcos por todos lados, y este
+          bloque rinde más siendo aire y texto —el párrafo que abre
+          el contenido después del hero—. */}
       <div className="b2__contenido contenido">
         <div className="b2__texto">
           <Reveal indice={0}>
@@ -56,28 +61,6 @@ export function B2QuienesSomos() {
             </p>
           </Reveal>
         </div>
-
-        <Reveal indice={4} className="b2__medio">
-          {/* PENDIENTE: la foto de backstage no existe. Marco con
-              la proporción correcta, dicho en el nombre accesible
-              para que no se confunda con una pieza real. */}
-          <div
-            className="b2__placeholder"
-            role="img"
-            aria-label="Marco reservado para una foto de backstage. La imagen real todavía no existe."
-          >
-            <img
-              className="b2__objeto"
-              src="/assets/conexion.png"
-              alt=""
-              aria-hidden="true"
-              width={1254}
-              height={1254}
-              loading="lazy"
-            />
-            <p className="etiqueta b2__placeholder-nota">Foto pendiente · backstage</p>
-          </div>
-        </Reveal>
       </div>
     </SeccionConBorde>
   );

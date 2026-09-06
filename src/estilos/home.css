@@ -59,9 +59,14 @@
 
   /* Ancho óptico del wordmark según identidad.md: 160–190px en
      desktop, 135–155px en móvil. */
-  .b0__marca img {
+  .b0__logotipo {
     width: 172px;
     height: auto;
+  }
+
+  /* El isotipo es la marca de móvil. En desktop no se muestra. */
+  .b0__isotipo {
+    display: none;
   }
 
   .b0__links {
@@ -142,29 +147,50 @@
       padding: var(--space-2) var(--page-gutter);
     }
 
-    /* Lo más compacta que da sin romper nada. Los cuatro links no
-       entran en la misma fila que el logotipo a ningún ancho de
-       teléfono, y está medido: a 390px quedan 334px útiles, los
-       cuatro links ocupan 236px en el tamaño más chico que sigue
-       siendo legible, y al logotipo le sobrarían 90px contra los
-       135–155 que pide identidad.md. Achicarlo hasta ahí sería
-       romper la identidad para ganar 48px de alto.
-       Así que siguen las dos filas, apretadas: 135px de logotipo
-       —el mínimo del rango— y el aire justo. */
+    /* UNA SOLA FILA, gracias a cambiar de marca.
+       Con el logotipo completo no entraba a ningún ancho de
+       teléfono: a 390px quedan 334px útiles y a la palabra le
+       sobrarían 90px contra los 135–155 del rango. La salida no
+       era achicar la palabra —eso rompe la identidad— sino usar
+       el isotipo, que identidad.md ya admite como firma
+       secundaria en avatar. Con el círculo de 44px la card queda
+       horizontal y fina. */
     .b0__card {
-      flex-direction: column;
-      align-items: center;
-      gap: var(--space-1);
-      border-radius: var(--r-card);
+      gap: var(--space-2);
+      border-radius: var(--r-pill);
       padding: var(--space-2);
     }
 
     .b0__marca {
       padding-inline: 0;
+      /* El área táctil del enlace al inicio, igual que la de los
+         links: el círculo es más chico, el blanco alrededor no. */
+      min-height: var(--control-min-height);
+      align-items: center;
     }
 
-    .b0__marca img {
-      width: 135px;
+    .b0__logotipo {
+      display: none;
+    }
+
+    /* Círculo oscuro con la V blanca: identidad.md pide negro
+       sobre claro y blanco sobre oscuro, y acá el contenedor es
+       el que da el campo oscuro sobre la card crema. */
+    .b0__isotipo {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: 44px;
+      height: 44px;
+      border-radius: var(--r-pill);
+      background: var(--tinta);
+      padding: 9px;
+    }
+
+    .b0__isotipo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
     /* `wrap` es una red, no el plan: con el padding de abajo los
@@ -178,7 +204,7 @@
 
     .b0__link {
       padding-inline: var(--space-2);
-      font-size: 14px;
+      font-size: 13px;
     }
   }
 
@@ -223,12 +249,16 @@
       linear-gradient(180deg, #8ec5ff 0%, var(--cielo) 55%, #dceeff 100%);
   }
 
+  /* Sin eyebrow: el titular abre el hero. El hueco baja a
+     `--space-4` para que el CTA no quede suelto abajo — con el
+     titular ocupando tres renglones grandes, 32px de hueco lo
+     empujaban demasiado lejos. */
   .b1__contenido {
     position: relative;
     display: grid;
     justify-items: center;
     text-align: center;
-    gap: var(--space-5);
+    gap: var(--space-4);
     width: 100%;
     padding-block: var(--space-7);
     /* EL HERO RESERVA EL ALTO DEL NAV.
@@ -241,16 +271,6 @@
        holgura: no hay número que mantener a mano, y si el nav
        crece —móvil, zoom, dos renglones— el hero se corre solo. */
     padding-top: calc(var(--alto-nav, 96px) + var(--space-6));
-  }
-
-  /* Sin `opacity`. Derivar un color de texto de una opacidad da
-     un contraste que depende del fondo y falla en silencio: sobre
-     el azul del tope del degradado, tinta al 65% daba 4.50:1,
-     justo en el límite de WCAG y sin margen. A opacidad plena da
-     10.25:1. Si más adelante se quiere un eyebrow apagado, se
-     define como token con su contraste verificado, no con alfa. */
-  .b1__eyebrow {
-    color: var(--tinta);
   }
 
   .b1__titular {
@@ -476,19 +496,6 @@
     padding-block: var(--space-section) var(--space-7);
   }
 
-  /* Texto a la izquierda, imagen a la derecha, arrancando las dos
-     a la misma altura. `align-items` queda en `stretch`, que es lo
-     que hace que el marco tome el alto de la columna de texto: su
-     borde de arriba queda contra el eyebrow y el de abajo contra
-     la base del CTA. */
-  @media (min-width: 810px) {
-    .b2__contenido {
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-7);
-      align-items: stretch;
-    }
-  }
-
   .b2__texto {
     display: grid;
     align-content: start;
@@ -515,49 +522,6 @@
 
   .b2__accion {
     margin: var(--space-2) 0 0;
-  }
-
-  .b2__medio {
-    display: grid;
-  }
-
-  .b2__placeholder {
-    position: relative;
-    display: grid;
-    place-items: center;
-    /* En una columna el alto lo manda el texto de al lado, así que
-       la proporción es emergente y no se declara: si se fijara,
-       una de las dos cosas —la alineación o la proporción— tendría
-       que ceder, y lo que se pidió es la alineación.
-       Cuando exista la foto real entra con `object-fit: cover` y
-       la proporción deja de importar. */
-    height: 100%;
-    min-height: 320px;
-    border-radius: var(--r-media);
-    background: color-mix(in srgb, var(--cielo) 55%, var(--fondo));
-    border: 1.5px dashed var(--texto-2);
-  }
-
-  /* Apilado: texto arriba, imagen abajo. Acá sí hay que declarar
-     una proporción, porque ya no hay columna de al lado que le dé
-     el alto. */
-  @media (max-width: 809px) {
-    .b2__placeholder {
-      height: auto;
-      min-height: 0;
-      aspect-ratio: 4 / 3;
-    }
-  }
-
-  .b2__objeto {
-    width: clamp(96px, 22%, 168px);
-    height: auto;
-  }
-
-  .b2__placeholder-nota {
-    position: absolute;
-    bottom: var(--space-3);
-    color: var(--texto-2);
   }
 
   /* =========================================================
@@ -924,28 +888,47 @@
     }
   }
 
+  /* Campo de color pleno con su par de texto. */
   .b6-paso {
     display: grid;
     justify-items: center;
     text-align: center;
     gap: var(--space-3);
     align-content: start;
+    background: var(--acento);
+    color: var(--sobre);
+    border-radius: var(--r-card);
+    padding: var(--space-5) var(--space-4) var(--space-6);
   }
 
+  /* Hereda `--sobre`. Nada de `--texto-2`: es un gris calculado
+     contra el fondo crema y sobre un acento pierde contraste sin
+     avisar. Misma lección que el eyebrow del hero y que B8. */
   .b6-paso__n {
-    color: var(--texto-2);
+    color: inherit;
     margin: 0;
   }
 
-  /* El contenedor es de 150×150 y el objeto entra adentro, no al
+  /* EL CONTENEDOR CLARO ES LO QUE RESUELVE EL CONTRASTE.
+     Los cuatro objetos tienen color propio y sobre un campo de
+     color se pelean con él: con los acentos en orden, el foco
+     azul cae sobre azul y desaparece. Acá el objeto se apoya en
+     el mismo crema del fondo de página, que es donde ya se veía
+     bien antes de que las tarjetas tuvieran color. Por eso los
+     acentos pueden ir 1→4 sin reordenar nada.
+
+     El contenedor es de 150×150 y el objeto entra adentro, no al
      revés: los cuatro PNG no tienen el mismo margen interno, y
-     atarlos a un contenedor fijo es lo que hace que los cuatro se
-     vean del mismo tamaño en la fila. */
+     atarlos a una caja fija es lo que hace que los cuatro se vean
+     del mismo tamaño en la fila. */
   .b6-paso__objeto {
     display: grid;
     place-items: center;
     width: 150px;
     height: 150px;
+    background: var(--fondo);
+    border-radius: var(--r-pill);
+    padding: var(--space-4);
   }
 
   .b6-paso__objeto img {
@@ -978,6 +961,11 @@
     .b6-paso__objeto {
       width: 100px;
       height: 100px;
+      padding: var(--space-3);
+    }
+
+    .b6-paso {
+      padding: var(--space-4) var(--space-4) var(--space-5);
     }
   }
 
@@ -1249,6 +1237,23 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-3);
+  }
+
+  /* Las tres entran en una línea. Antes se partían en dos filas a
+     ancho de teléfono. Se achican el cuerpo y el padding —no el
+     texto, que sigue completo— y `nowrap` deja explícito que la
+     fila no se parte: si algún día no entraran, se vería
+     desbordar en vez de reacomodarse en silencio. */
+  @media (max-width: 809px) {
+    .b9__redes {
+      flex-wrap: nowrap;
+      gap: var(--space-2);
+    }
+
+    .b9__redes .boton {
+      padding-inline: var(--space-2);
+      font-size: 13px;
+    }
   }
 
   /* --- Los cuatro rectángulos de página --- */

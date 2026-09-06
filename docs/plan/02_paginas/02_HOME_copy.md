@@ -125,8 +125,9 @@ tres rutas provisionales ahora usan B0, el nav de verdad.
 
 Titular en tres líneas, la tercera en color de marca.
 
-**Eyebrow** `[DECIDIDO]`
-> EQUIPO DE CRECIMIENTO
+**Eyebrow** — ~~`EQUIPO DE CRECIMIENTO`~~ **SE SACÓ.** El titular abre el hero
+solo y gana aire. Con él afuera, el hueco entre elementos baja a `--space-4`
+para que el CTA no quede suelto abajo.
 
 **Titular** `[DECIDIDO]`
 > ESTAMOS EN EL / NEGOCIO DE HACER / **CRECER NEGOCIOS**
@@ -137,8 +138,8 @@ Titular en tres líneas, la tercera en color de marca.
 decidido es una quinta. Se borran del documento para que nadie las reabra.
 
 **Cae con ellas la regla del eyebrow condicional.** Decía que sólo hacía falta
-eyebrow con B, C o D, y que debía ser `PARA TIENDAS QUE YA VENDEN`. No aplica:
-hay eyebrow, y dice otra cosa.
+eyebrow con B, C o D, y que debía ser `PARA TIENDAS QUE YA VENDEN`. Quedó doblemente
+sin efecto: primero porque el eyebrow decía otra cosa, y ahora porque no hay eyebrow.
 
 **El hero no nombra al segmento e-commerce, y así queda** `[DECIDIDO]`
 
@@ -191,20 +192,15 @@ acortarse el titular: el techo del slot es ahora **25**.
 **La regla que queda:** no achicar el cuerpo para meterlo en un renglón.
 Envuelve en dos, y así está construido.
 
-### Recompuesto en dos columnas de verdad
+### Sin imagen: una sola columna de texto, ancha
 
-Eyebrow, titular, párrafo y CTA van **todos en la columna izquierda**, y la
-imagen en la derecha. Antes el titular cruzaba el ancho completo y la imagen
-arrancaba recién a la altura del párrafo, así que quedaba flotando.
+**Se sacó el marco de la foto de backstage,** y con él el pendiente de esa foto
+para este bloque. De acá para abajo la página ya es tarjetas, marcos y anillos:
+B2 rinde más siendo aire y texto, el párrafo que abre el contenido después del
+hero.
 
-Las dos columnas empiezan a la misma altura: **medido, el borde superior de la
-imagen queda a 0px del eyebrow y el inferior a 0px de la base del CTA.**
-
-Por eso el marco **no declara proporción en desktop**: el alto se lo da la
-columna de texto. Si se fijara una proporción, tendría que ceder la alineación o
-la proporción, y lo que se pidió es la alineación. Cuando exista la foto real
-entra con `object-fit: cover`. Apilado, bajo 810px, sí lleva 4:3, porque ya no
-hay columna al lado que le dé el alto.
+Antes había pasado por dos columnas con la imagen a la derecha. Queda registrado
+por si alguien busca esa versión: no está.
 
 **Párrafo**
 > Coordinamos estrategia, contenido, pauta y conversión para que cada decisión
@@ -461,10 +457,36 @@ cómodo, pero **la bajada tiene que quedar en dos líneas**: ver presupuesto.
 
 ### Estado en obra `[CONSTRUIDO]`
 
-Sin marcadores: el copy corto ya estaba. Objeto en contenedor de 150×150, que
-baja a 100×100 bajo 810px. El contenedor es fijo y el objeto entra adentro con
-`object-fit: contain`, porque los cuatro PNG no traen el mismo margen interno y
-sin contenedor se verían de tamaños distintos en la misma fila.
+Sin marcadores: el copy corto ya estaba. **Cada tarjeta es un campo de color
+pleno** con su `--texto-sobre-N`, y los acentos van en el orden normal 1→4, sin
+reordenar. Objeto en contenedor de 150×150, que baja a 100×100 bajo 810px. El
+contenedor es fijo y el objeto entra adentro con `object-fit: contain`, porque
+los cuatro PNG no traen el mismo margen interno y sin él se verían de tamaños
+distintos en la misma fila.
+
+### El contenedor claro es lo que hace posible el orden 1→4
+
+Los cuatro objetos tienen color propio —foco azul, barras verde, conexión
+violeta, rayo amarillo— y sobre un campo de color se pelean con él. Medido:
+
+| | acento-1 | acento-2 | acento-3 | acento-4 | acento-5 |
+|---|---|---|---|---|---|
+| foco (azul) | — | 1.25 | 2.07 | 1.10 | 2.84 |
+| barras (verde) | 2.07 | 1.66 | — | 2.27 | 1.37 |
+| conexión (violeta) | 1.10 | 1.37 | 2.27 | — | 3.11 |
+| rayo (amarillo) | 2.84 | 2.27 | 1.37 | 3.11 | — |
+
+Con los acentos en orden, el foco azul cae sobre azul y **desaparece (1.00)**. Y
+reordenar los acentos tampoco alcanzaba: el mejor reparto posible deja un peor
+par de **2.27**, porque estos acentos cambian de tono pero no de claridad.
+
+**El contenedor saca el problema del medio.** El objeto deja de apoyarse en el
+color de la tarjeta y vuelve al crema, que es donde ya se veía bien antes de que
+las tarjetas tuvieran fondo. Por eso los acentos pueden ir 1→4 y el significado
+de cada objeto queda intacto, sin reordenar nada.
+
+No agrega nada al plan: la spec de B6 ya pedía un contenedor de 150×150, y sólo
+faltaba que tuviera color.
 
 **Ojo con la bajada de `Recomendamos`:** `Un plan con presupuesto y prioridad.
 Escrito.` mide **exactamente 45**, que es el techo con cuatro columnas. Está en
