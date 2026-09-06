@@ -160,6 +160,99 @@
   }
 
   /* =========================================================
+     Ticker — loop horizontal con máscara
+     ========================================================= */
+
+  .ticker {
+    display: grid;
+    gap: var(--space-3);
+    justify-items: center;
+  }
+
+  /* La máscara difumina el 10% de cada lado: los bordes se
+     desvanecen en vez de cortarse. El porcentaje es el medido en
+     la referencia. */
+  .ticker__ventana {
+    width: 100%;
+    overflow: hidden;
+    padding-block: var(--space-4);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+    mask-mode: alpha;
+  }
+
+  .ticker__pista {
+    display: flex;
+    width: max-content;
+  }
+
+  .ticker__grupo {
+    display: flex;
+    gap: var(--space-2);
+    padding-right: var(--space-2);
+  }
+
+  /* Se desplaza media pista: como la lista va dos veces, al
+     llegar al 50% el cuadro es idéntico al inicial y el corte no
+     se ve. La duración la calcula el componente desde el ancho
+     real, para que la velocidad no dependa del contenido. */
+  .ticker__pista[data-animando="sí"] {
+    animation: ticker-correr var(--ticker-duracion, 30s) linear infinite;
+  }
+
+  @keyframes ticker-correr {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .ticker__pausa {
+    /* Alcanzable siempre, no sólo al pasar el mouse: un control
+       que aparece con hover no existe para teclado ni para touch. */
+    font-size: 15px;
+    min-height: var(--control-min-height);
+  }
+
+  /* Con movimiento reducido no alcanza con detener la animación:
+     hay que mostrar el contenido completo. La pista deja de ser
+     una tira y pasa a envolverse, y la copia visual se oculta
+     para no repetir todo dos veces. */
+  @media (prefers-reduced-motion: reduce) {
+    .ticker__ventana {
+      overflow: visible;
+      mask-image: none;
+    }
+
+    .ticker__pista {
+      width: auto;
+      flex-wrap: wrap;
+      animation: none;
+    }
+
+    .ticker__grupo[aria-hidden="true"] {
+      display: none;
+    }
+
+    .ticker__grupo {
+      flex-wrap: wrap;
+      row-gap: var(--space-2);
+    }
+  }
+
+  .pildora {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--r-pill);
+    background: var(--acento);
+    color: var(--sobre);
+    font-weight: 700;
+  }
+
+  /* =========================================================
      RouteCurtain
      ========================================================= */
 
