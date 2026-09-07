@@ -41,12 +41,31 @@
    paso en curso. Montarlos y desmontarlos perdería lo escrito al
    volver atrás y obligaría a levantar el estado a otro lado.
 
-   NO HAY AUTOAVANCE AL ELEGIR
-   Un grupo de radios se recorre con las flechas: al elegir la
-   primera opción para escuchar las demás, autoavanzar dejaría a
-   quien navega con teclado sin poder llegar nunca a la tercera. Y
-   con lector de pantalla la página se movería sola bajo el foco.
-   El avance es siempre explícito, con el botón.
+   AUTOAVANCE AL ELEGIR, PERO SÓLO POR PUNTERO
+   Con mouse o con el dedo, elegir una opción avanza solo. Con
+   teclado NO, y la excepción no es un capricho: un grupo de radios
+   se recorre con las flechas, así que avanzar al cambiar dejaría a
+   quien navega con teclado sin poder llegar nunca a la tercera
+   opción — la primera flecha ya lo habría sacado del paso. Y con
+   lector de pantalla la página se movería sola bajo el foco.
+
+   La modalidad se lee de la interacción, no del dispositivo: un
+   `pointerdown` sobre la tarjeta marca puntero, un `keydown` marca
+   teclado, y el `change` que viene después mira esa marca. Es la
+   misma distinción que hace `:focus-visible`, hecha a mano porque
+   acá no alcanza con un selector.
+
+   EL RETARDO DE 250ms NO ES DECORACIÓN. Sin él, la tarjeta se
+   marca y el paso cambia en el mismo cuadro: nadie llega a
+   confirmar qué eligió, y con cinco opciones parecidas eso importa.
+   No es una animación —es una pausa de lectura—, así que con
+   movimiento reducido se mantiene: lo que ahí no va es una
+   transición, y no hay ninguna.
+
+   EL BOTÓN «SIGUIENTE» SE QUEDA. Es el único camino para teclado, y
+   además la salida cuando el autoavance no dispara — un `change`
+   sin `pointerdown` previo, por ejemplo, porque alguien llegó al
+   radio con un lector de pantalla en modo formulario.
 
    AL CAMBIAR DE PASO EL FOCO VA AL TITULAR DEL PASO NUEVO
    Con `tabIndex={-1}` para poder recibirlo y su propio anillo. Sin
@@ -54,13 +73,25 @@
    avance ya no es el mismo botón, y quien no ve la pantalla no se
    entera de que cambió de pregunta.
 
+   ⚠ Y CON EL AUTOAVANCE ESTO HACE MÁS FALTA, NO MENOS. Al avanzar
+   por puntero, el elemento que tenía el foco es el radio que se
+   acaba de elegir — y ese radio queda dentro de un paso que pasa a
+   `hidden`. Un elemento enfocado que desaparece deja el foco en
+   `<body>`, así que el siguiente Tab volvería al principio de la
+   página, saltándose el paso nuevo entero. Moverlo al titular lo
+   evita.
+
+   No se ve un anillo por eso: el navegador no hace coincidir
+   `:focus-visible` cuando la última interacción fue de puntero, así
+   que quien hace clic no ve nada y quien llegó con teclado sí.
+
    ⚠ Y NO EN EL PRIMER RENDER. Mover el foco al cargar la página le
    roba el control a quien recién llega y se saltea el nav entero.
    Por eso el efecto mira una bandera que sólo se enciende cuando
    el cambio de paso lo pidió alguien.
    =========================================================== */
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 
 import { Reveal } from "../componentes/Reveal";
 import { Flecha } from "../componentes/Flecha";
@@ -76,6 +107,10 @@ import {
 
 const TOTAL_DE_PASOS = 4;
 
+/* Lo que se espera entre elegir y avanzar. Suficiente para ver la
+   tarjeta marcada, corto como para no leerse como una demora. */
+const ESPERA_DEL_AUTOAVANCE = 250;
+
 export function CON1Flujo() {
   const [paso, setPaso] = useState(1);
   const [estado, setEstado] = useState<EstadoDelFlujo>(ESTADO_INICIAL);
@@ -88,20 +123,48 @@ export function CON1Flujo() {
   const tituloRef = useRef<HTMLHeadingElement>(null);
   const campoRefs = useRef<Partial<Record<CampoId, HTMLInputElement | null>>>({});
 
+  /* De dónde vino la última interacción sobre un radio. Lo escribe
+     el `pointerdown` o el `keydown` de la tarjeta y lo lee el
+     `change`, que llega después de los dos. */
+  const modalidad = useRef<"puntero" | "teclado">("teclado");
+  const temporizador = useRef<number | null>(null);
+
+  const cancelarAutoavance = useCallback(() => {
+    if (temporizador.current === null) return;
+    window.clearTimeout(temporizador.current);
+    temporizador.current = null;
+  }, []);
+
+  /* Si el componente se va con un avance pendiente, el temporizador
+     dispararía sobre un componente desmontado. */
+  useEffect(() => cancelarAutoavance, [cancelarAutoavance]);
+
   useEffect(() => {
     if (!movido.current) return;
     tituloRef.current?.focus();
   }, [paso]);
 
-  const irA = (siguiente: number) => {
-    movido.current = true;
-    setFaltaElegir(false);
-    setPaso(Math.min(TOTAL_DE_PASOS, Math.max(1, siguiente)));
-  };
+  const irA = useCallback(
+    (siguiente: number) => {
+      cancelarAutoavance();
+      movido.current = true;
+      setFaltaElegir(false);
+      setPaso(Math.min(TOTAL_DE_PASOS, Math.max(1, siguiente)));
+    },
+    [cancelarAutoavance],
+  );
 
-  const elegir = (pasoId: "rubro" | "objetivo", opcionId: string) => {
+  const elegir = (pasoId: "rubro" | "objetivo", opcionId: string, siguiente: number) => {
     setFaltaElegir(false);
     setEstado((e) => ({ ...e, elecciones: { ...e.elecciones, [pasoId]: opcionId } }));
+
+    /* Sólo por puntero. Con teclado el avance lo pide el botón. */
+    if (modalidad.current !== "puntero") return;
+    cancelarAutoavance();
+    temporizador.current = window.setTimeout(() => {
+      temporizador.current = null;
+      irA(siguiente);
+    }, ESPERA_DEL_AUTOAVANCE);
   };
 
   const escribir = (campo: CampoId, valor: string) => {
@@ -195,13 +258,22 @@ export function CON1Flujo() {
                        TÁCTIL. Con el label al lado del radio, lo
                        tocable sería un círculo de 16px; envolviendo
                        la tarjeta entera, se toca la tarjeta. */
-                    <label key={opcion.id} className="con1-opcion">
+                    <label
+                      key={opcion.id}
+                      className="con1-opcion"
+                      /* La modalidad se marca en la TARJETA y no en el
+                         radio: el `pointerdown` de un clic sobre el
+                         label no siempre llega al `input`, pero el
+                         `change` que dispara sí. */
+                      onPointerDown={() => (modalidad.current = "puntero")}
+                      onKeyDown={() => (modalidad.current = "teclado")}
+                    >
                       <input
                         type="radio"
                         name={definicion.id}
                         value={opcion.id}
                         checked={estado.elecciones[definicion.id] === opcion.id}
-                        onChange={() => elegir(definicion.id, opcion.id)}
+                        onChange={() => elegir(definicion.id, opcion.id, numero + 1)}
                       />
                       <span className="con1-opcion__texto">
                         <span className="con1-opcion__nombre">{opcion.nombre}</span>
