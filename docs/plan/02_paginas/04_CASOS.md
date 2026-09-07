@@ -326,6 +326,12 @@ Componentes nuevos respecto de Home y Método:
 
 El cierre y el footer son los mismos de la home.
 
+**El cierre lleva bajada, como los otros dos.** Titular propio —«Contanos qué
+está pasando con tu negocio.»— y debajo `Una llamada de 45 minutos, sin costo.
+Miramos tus números y te decimos qué haríamos.` La primera oración es la misma
+en las tres páginas; el cierre conecta con lo que se acaba de ver, que acá son
+ocho casos. Ver la tabla de las tres bajadas en `03_METODO.md`, MET-4.
+
 ## Decisiones abiertas
 
 1. ~~¿Qué va en la columna derecha en lugar de `More Detail`?~~ **RESUELTO: chips de intervención, de las 11 capacidades.**

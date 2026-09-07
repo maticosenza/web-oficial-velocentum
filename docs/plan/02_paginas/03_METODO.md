@@ -97,9 +97,27 @@ solos en una página que explica cómo trabajás va en contra del tono.
 
 **Es el componente B8 con otro copy.** Se le agregaron props `titulo`, `eyebrow`
 y `bajada`, con los valores de la home por defecto: el llamado de la home no
-cambió —verificado— y Método pasa el suyo. `eyebrow` y `bajada` se apagan con
-cadena vacía, porque la spec de MET-4 pide sólo titular y CTA. Se encienden
-pasando el texto.
+cambió —verificado— y Método pasa el suyo. Se apagan con cadena vacía y se
+encienden pasando el texto.
+
+**⚠ DEROGADO: «la spec de MET-4 pide sólo titular y CTA».** Los **tres**
+cierres llevan bajada. El titular dice a qué se entra y el CTA qué hacer, pero
+entre los dos faltaba lo único que responde «¿y esto qué me cuesta?»: que la
+llamada dura 45 minutos y no se paga. Sin esa línea el botón pide un paso sin
+decir de qué tamaño es, y eso lo hace más caro de dar.
+
+**Cada página lo dice desde su propio ángulo**, con la misma primera oración
+—`Una llamada de 45 minutos, sin costo.`— y un cierre distinto:
+
+| Página | Bajada | Desde dónde lo dice |
+|---|---|---|
+| Home | …Salís con un diagnóstico y una proyección, actives o no con nosotros. | El visitante no conoce nada todavía: se explica qué se lleva y que no hay compromiso. |
+| Casos | …Miramos tus números y te decimos qué haríamos. | Viene de ver ocho casos: conecta con eso, la llamada mira números como los de arriba. |
+| Método | …Primero el diagnóstico, después la propuesta. | Retoma el titular de su propio hero —«Primero entender. Después proponer.»— y lo baja a la llamada. |
+
+`eyebrow` sí sigue apagado en Casos y en Método: la home lo usa para abrir el
+bloque —«Empecemos»— y en las otras dos el titular ya llega precedido por toda
+la página.
 
 ## Copy: se usó el tuyo, no el recortado
 

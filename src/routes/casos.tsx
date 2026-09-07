@@ -40,9 +40,16 @@ function Casos() {
       <CAS1Hero />
       <CAS2Lista />
 
-      {/* El mismo componente que B8, con otro copy. El eyebrow y la
-          bajada se apagan pasando texto vacío, igual que en MET-4. */}
-      <B8Cierre titulo="Contanos qué está pasando con tu negocio." eyebrow="" bajada="" centrado />
+      {/* El mismo componente que B8, con otro copy. El eyebrow se
+          apaga pasando texto vacío; la bajada NO — los tres cierres
+          llevan la suya. Ésta conecta con los casos que se acaban
+          de ver: la llamada mira números, como los de arriba. */}
+      <B8Cierre
+        titulo="Contanos qué está pasando con tu negocio."
+        eyebrow=""
+        bajada="Una llamada de 45 minutos, sin costo. Miramos tus números y te decimos qué haríamos."
+        centrado
+      />
 
       <B9Footer />
     </>
