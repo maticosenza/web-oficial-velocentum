@@ -43,26 +43,37 @@
      plan, con la medición de por qué es ese valor y no el de la
      referencia. Su par de texto sigue siendo `--fondo`: 15.25
      sobre el navy. */
+  /* ⚠ APAISADO EN MÓVIL, Y APAISADO ES QUE LO DEFINA EL TEXTO.
+     La primera versión lo ataba a `min-height: 34vh`, y eso hizo
+     justo lo que se quería evitar: el panel reservaba 244px, el
+     titular ocupaba 78 y quedaban 166 de campo vacío abajo con el
+     texto arrinconado arriba. Un alto reservado no es un panel
+     apaisado, es un panel cuadrado con aire adentro.
+
+     Ahora el alto lo da el titular más su padding. El panel mide lo
+     que el texto necesita y ni un píxel más, que es lo que lo hace
+     una franja. */
   .con1__panel {
     background: var(--navy);
     color: var(--fondo);
     border-radius: var(--r-card);
-    padding: var(--space-6) var(--space-5);
+    padding: var(--space-5);
     display: grid;
     align-content: center;
-    /* ⚠ APAISADO EN MÓVIL, NO CUADRADO. Un panel cuadrado en un
-       teléfono se come media pantalla antes de que se vea la
-       primera pregunta, y la primera pregunta es de lo que se
-       trata la página. Con el alto atado al viewport ocupa lo que
-       tiene que ocupar y deja ver que abajo sigue algo. */
-    min-height: 34vh;
   }
 
+  /* El titular usa el ANCHO del panel, que en móvil es lo que
+     sobra. A 8vw daba 31px y caía al piso de 38, dos renglones
+     cortos contra un panel de 358 de ancho: el texto se leía
+     chico y arrinconado. A 12vw toma 47px a 390 y los dos
+     renglones cruzan el panel de lado a lado, que es lo que hace
+     que se lea como un titular y no como una etiqueta.
+     El techo de 84 no cambia, así que en escritorio queda igual. */
   .con1__titular {
     font-family: var(--font-display);
     /* `Hablemos de tu negocio.` son 22 caracteres. Entra en dos
        renglones en todo el rango. */
-    font-size: clamp(38px, 8vw, 84px);
+    font-size: clamp(38px, 12vw, 84px);
     line-height: 1.02;
     text-transform: uppercase;
     margin: 0;
