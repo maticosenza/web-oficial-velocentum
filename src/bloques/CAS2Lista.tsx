@@ -42,18 +42,19 @@ import { MedioDeCaso } from "../componentes/MedioDeCaso";
 import { ScrollMedia } from "../componentes/ScrollMedia";
 import { CASOS, LOGOS, type Caso } from "../data/casos";
 
-/* Mismo criterio que B7: logo a color sobre el fondo de la página
-   y el acento sólo en el contorno. Los cinco colores están
-   disponibles. */
-const ACENTOS = [
-  "var(--acento-1)",
-  "var(--acento-2)",
-  "var(--acento-3)",
-  "var(--acento-4)",
-  "var(--acento-5)",
-];
+/* ⚠ ACÁ NO HAY CICLO DE ACENTOS, Y NO ES UN OLVIDO. B7 lo tiene
+   porque son trece ranuras pasando en una banda y el color las
+   convierte en una serie con ritmo; acá hay un logo por pantalla,
+   sin serie que marcar, y el contorno del que colgaba el acento se
+   fue. La lista de los cinco colores y la variable `--anillo`
+   salieron con él: quedarse con un dato que ya no dibuja nada es
+   la forma más barata de que dentro de un mes alguien lo vuelva a
+   conectar sin saber por qué estaba.
 
-function Identificacion({ caso, indice }: { caso: Caso; indice: number }) {
+   `--acento-3` sigue siendo el acento de la página y lo declara
+   `.cas2` en el CSS: lo usa el campo del medio. Eso no cambia. */
+
+function Identificacion({ caso }: { caso: Caso }) {
   const logo = LOGOS[caso.nombre];
   return (
     <div className="cas-caso__id">
@@ -62,18 +63,13 @@ function Identificacion({ caso, indice }: { caso: Caso; indice: number }) {
       <div
         className="cas-caso__logo"
         aria-hidden="true"
-        style={
-          {
-            "--anillo": ACENTOS[indice % ACENTOS.length],
-            "--logo-ancho": logo?.ancho ?? 0.6,
-          } as CSSProperties
-        }
+        style={{ "--logo-ancho": logo?.ancho ?? 0.6 } as CSSProperties}
       >
         <img src={logo?.archivo} alt="" loading="lazy" />
       </div>
 
       <p className="cas-caso__nombre">{caso.nombre}</p>
-      <p className="etiqueta cas-caso__rubro">{caso.rubro}</p>
+      <p className="cas-caso__rubro">{caso.rubro}</p>
     </div>
   );
 }
@@ -84,11 +80,6 @@ export function CAS2Lista() {
       <h2 id="cas2-titulo" className="solo-lectores">
         Los {CASOS.length} casos
       </h2>
-
-      <p className="etiqueta etiqueta--apagada cas2__pendiente contenido">
-        Pendiente · las ocho frases están sin aprobar y el uso autorizado de cada cliente está sin
-        confirmar.
-      </p>
 
       <div className="cas2__lista">
         {/* El titular decorativo. El encabezado real de la página
@@ -107,7 +98,8 @@ export function CAS2Lista() {
             <li key={caso.nombre} className="cas-caso">
               <ScrollMedia
                 className="cas-caso__cuerpo"
-                izquierda={<Identificacion caso={caso} indice={i} />}
+                recorrido={1.15}
+                izquierda={<Identificacion caso={caso} />}
                 medio={
                   <MedioDeCaso
                     className="cas-caso__medio"
@@ -115,12 +107,7 @@ export function CAS2Lista() {
                     prioritario={i === 0}
                   />
                 }
-                texto={
-                  <p className="cas-caso__frase">
-                    {caso.frase}
-                    {caso.revisar ? <span className="solo-lectores"> {caso.revisar}</span> : null}
-                  </p>
-                }
+                texto={<p className="cas-caso__frase">{caso.frase}</p>}
               />
             </li>
           ))}

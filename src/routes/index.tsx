@@ -66,8 +66,14 @@ function Inicio() {
       {/* B7 y B8 van cosidos, igual que B1 y B2: B7 queda fijado
           mientras el cierre azul sube encima. El offset sale del
           token del sistema, con el piso del nav real, así una
-          tarjeta fijada nunca queda por debajo del nav. */}
+          tarjeta fijada nunca queda por debajo del nav.
+
+          La clase identifica ESTA pareja y nada más. La espera
+          antes de que asome la onda azul se le agrega desde
+          `home.css` colgada de ella, para no tocar `HeroSticky`
+          —que también cose B1 con B2, donde esa espera no va—. */}
       <HeroSticky
+        className="home-clientes-cierre"
         offset="max(var(--sticky-clientes), calc(var(--alto-nav, 0px) + var(--space-2)))"
         hero={<B7Clientes />}
         siguiente={<B8Cierre />}

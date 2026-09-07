@@ -880,12 +880,13 @@
     margin: 0;
   }
 
-  .b3__pendiente {
-    color: var(--texto-2);
-    max-width: var(--medida-parrafo);
-    margin: 0;
-  }
-
+  /* El `margin-top` sube de 24 a 40 al irse el aviso de pendiente.
+     Antes el encabezado y las piezas no se tocaban: entre medio iba
+     el párrafo, con los 32 del `gap` de `.b3__contenido` a cada
+     lado. Sacándolo quedaban 56px entre un titular de 96 y la
+     primera fila, y el titular se caía encima de las piezas. Con
+     72 la sección respira como antes sin recuperar los 115 que
+     ocupaba el aviso. */
   .b3__piezas {
     display: grid;
     /* Columna única sólo en teléfonos angostos. Con cuatro piezas
@@ -893,7 +894,7 @@
        aire se recorta: son tres huecos, y cada uno que sobra son
        16px más de scroll. */
     gap: var(--space-5);
-    margin-top: var(--space-4);
+    margin-top: var(--space-6);
   }
 
   /* En columna única no hay «dos que se cierran hacia el centro»
@@ -916,9 +917,21 @@
     }
   }
 
+  /* ⚠ EL HUECO HORIZONTAL Y EL VERTICAL DEJAN DE SER EL MISMO.
+     Eran los dos 64. El de las filas se queda ahí —son cuatro
+     piezas grandes, una encima de otra, y pegarlas las convierte
+     en una tira—; el de las columnas baja a `--grid-gap-trabajos`,
+     que son los 20px medidos en la referencia y estaban en
+     `tokens.css` sin usar desde el principio.
+
+     No es sólo densidad: la entrada del bloque es «dos que se
+     cierran hacia el centro», y con 64px en el medio las dos
+     piezas terminaban lejos. A 20 se encuentran, que es el final
+     que el gesto promete. */
   @media (min-width: 810px) {
     .b3__piezas {
-      gap: var(--space-7);
+      column-gap: var(--grid-gap-trabajos);
+      row-gap: var(--space-7);
     }
   }
 
@@ -1021,7 +1034,52 @@
     mask-composite: add;
   }
 
+  /* ⚠ EN ESCRITORIO EL ANCHO DEJA DE SALIR DEL ALTO DEL VIEWPORT.
+     La regla de arriba —`min(100%, (88vh - 150px) * 0.75)`— existía
+     para que la fila entera entrara en la pantalla, y en monitores
+     bajos eso dejaba las piezas mucho más angostas que su columna:
+     a 784px de alto daban 481 contra los 590 disponibles. La
+     promesa del bloque no es que la fila entre entera, es que las
+     dos piezas se lean juntas cerrándose hacia el centro; para eso
+     alcanza con que se vean las dos, y para eso el ancho tiene que
+     ser el de la columna.
+
+     Se queda tal cual entre 600 y 809: ahí las dos columnas ya son
+     angostas y la regla del viewport no llega a activarse.
+
+     LA PROPORCIÓN PASA DE 3:4 A 5:6, Y NO A 1:1. Los archivos
+     están recortados a 3:4 vertical, así que cualquier proporción
+     más ancha recorta otra vez por arriba y por abajo. 1:1 se
+     comía el 25% del alto —12,5 de cada lado— y eso vuelve a
+     descabezar a Glam Ragazza y a cortar las botellas de
+     Vinotique, que son exactamente los dos recortes que
+     `data/casos.ts` documenta haber tenido que anclar a mano. 5:6
+     saca el 10%, cinco por lado, y los cuatro encuadres aguantan.
+     Verificado mirando los cuatro a tamaño real. */
+  @media (min-width: 810px) {
+    .b3-trabajo__medio {
+      width: 100%;
+      aspect-ratio: 5 / 6;
+    }
+  }
+
+  /* ⚠ VA ABSOLUTA, Y NO ES UN CAPRICHO DE APILADO.
+     Con `height: 100%` en flujo, el porcentaje se mide contra un
+     padre cuya altura sale de `aspect-ratio`, y eso no cuenta como
+     altura definida: resuelve a `auto`, el medio se dibuja en su
+     proporción natural de 3:4 y ESTIRA al contenedor. Medido: con
+     el padre en 5/6 y 574px de ancho, la caja terminaba en 765 de
+     alto en vez de 689 — o sea que la proporción nueva no se
+     aplicaba y no se veía ni un recorte.
+
+     Sacándola del flujo contra el `position: relative` que el
+     medio ya tenía, la caja manda: el `<video>` o el `<img>` llena
+     los cuatro lados y `object-fit: cover` hace el recorte. Da
+     igual en móvil, donde la proporción del contenedor y la del
+     archivo coinciden y no hay nada que recortar. */
   .b3-trabajo__pieza {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
     height: 100%;
@@ -1203,9 +1261,9 @@
          altas que el viewport. Con el slot en 1:1 el techo aprieta
          menos que con 3:4 —un cuadrado de 300px mide 300 de alto y
          no 400— pero se deja igual: lo que limita es la tarjeta. */
-      grid-template-columns: 1fr clamp(200px, 26%, 300px);
-      gap: var(--space-7);
-      min-height: 480px;
+      grid-template-columns: minmax(0, 1fr) clamp(300px, 36%, 420px);
+      gap: clamp(var(--space-5), 4vw, var(--space-7));
+      min-height: 520px;
       align-content: center;
     }
   }
@@ -1216,12 +1274,39 @@
   @media (max-width: 809px) {
     .b4-tarjeta {
       padding: var(--space-5);
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-5);
+    }
+
+    .b4-tarjeta__texto {
+      min-width: 0;
+    }
+
+    .b4-tarjeta__nombre {
+      font-size: clamp(30px, 9vw, 42px);
+    }
+
+    .b4-tarjeta__bajada {
+      font-size: 16px;
+    }
+
+    .b4-tarjeta__entregables {
+      margin-top: var(--space-4);
+    }
+
+    .b4-tarjeta__entregable {
+      gap: var(--space-2);
+      padding-block: var(--space-2);
+    }
+
+    .b4-tarjeta__entregable-texto {
+      font-size: 14px;
     }
 
     .b4-tarjeta__medio {
       width: 100%;
-      max-width: 240px;
-      justify-self: start;
+      max-width: 340px;
+      justify-self: center;
     }
   }
 
@@ -1377,15 +1462,74 @@
      B7 · CONFÍAN EN NOSOTROS
      ========================================================= */
 
+  /* El aire vertical baja de 48 a 32. La banda de marcas es una
+     prueba social, no un bloque de contenido: cuanto menos
+     respiración propia tiene, más se lee como una tira y menos
+     como una sección más de la página. */
   .b7 {
     display: grid;
     align-content: center;
     background: var(--fondo);
-    padding-block: var(--space-6);
+    padding-block: var(--space-5);
     /* Aire entre la banda y la onda azul de B8. Sin esto la onda
        sube pegada a los nombres: la reserva cubre justo el alto
-       del borde y no sobra nada. */
+       del borde y no sobra nada.
+
+       ⚠ ESTO NO ES PADDING DE LA SECCIÓN. `--aire-onda` se lo suma
+       `componentes.css` a la reserva que el bloque fijado le hace
+       a la onda del que sube: mueve el CONTENIDO centrado hacia
+       arriba dentro del hero, no engorda la banda. Por eso la
+       composición de Marcas —círculos, logos y nombres— sigue tan
+       compacta como quedó, y el aire aparece debajo de esa unidad,
+       que es donde se lo necesita. */
     --aire-onda: var(--space-7);
+  }
+
+  /* En escritorio el aire crece con la ventana. 64px dejaban la
+     cresta pegada a los nombres; con el clamp quedan entre 140 y
+     200px medidos desde la base de los nombres hasta el punto más
+     alto de la onda cuando recién asoma. En móvil se queda en los
+     64, que ahí alcanzan: el bloque no está fijado y la onda no se
+     le viene encima. */
+  @media (min-width: 810px) {
+    .b7 {
+      --aire-onda: clamp(96px, 13vh, 144px);
+    }
+  }
+
+  /* ---------------------------------------------------------
+     LA ESPERA ENTRE MARCAS Y EL CIERRE AZUL
+     --------------------------------------------------------- */
+
+  /* Un recorrido transparente antes de B8, y sólo en esta pareja.
+     El problema no era el aire —eso lo arregla `--aire-onda`—
+     sino el TIEMPO: la onda empezaba a subir apenas Marcas
+     terminaba de aparecer, así que la banda se veía completa
+     durante un suspiro.
+
+     El padding va en el envoltorio y no en B8: el envoltorio no
+     tiene color, así que lo que pasa por encima de Marcas mientras
+     se consume es transparente y la banda se sigue viendo entera.
+     Y como suma al alto del contenedor común, suma recorrido al
+     `sticky`: Marcas queda fijada MÁS tiempo en vez de soltarse
+     antes.
+
+     ⚠ VA COLGADO DE `.home-clientes-cierre`, NO DE
+     `.hero-sticky__siguiente` A SECAS. La misma clase la usa la
+     pareja B1 + B2, donde una espera de 200px antes de que el
+     bloque de quiénes somos empiece a subir sería un hueco muerto.
+
+     ⚠ Y CORRE `--cobertura`. HeroSticky la mide sobre el
+     envoltorio, así que ahora empieza a contar cuando arranca el
+     padding y no cuando asoma la onda. Nadie la lee en esta
+     pareja —el único consumidor es el hundimiento del titular de
+     B1—, así que no hay nada que compensar. Si algún día algo de
+     B7 la necesitara, hay que medir un espaciador aparte y no
+     mover esto. */
+  @media (min-width: 810px) {
+    .home-clientes-cierre > .hero-sticky__siguiente {
+      padding-top: clamp(120px, 18vh, 220px);
+    }
   }
 
   /* Título a la izquierda y banda a la derecha, en la misma
@@ -1423,15 +1567,33 @@
 
   /* --- El anillo --- */
 
+  /* LA RANURA SE COMPACTA: 176 → 128, y el margen de 24 a 8.
+     La densidad de la banda la fija el PASO —ranura más márgenes—,
+     que baja de 224 a 144px: casi el doble de marcas en el mismo
+     ancho, que es lo que la vuelve una tira de prueba social en
+     vez de un carrusel de tarjetas.
+
+     El ancho lo fija la ranura, no el nombre: si un nombre largo
+     estirara su columna, el loop cambiaría de velocidad aparente
+     de un anillo al otro.
+
+     ⚠ A 128px, `PATAGONIA VESSELS` ya no entra en un renglón y se
+     parte en dos. No es un defecto: `.ticker__grupo` es flex, así
+     que las ranuras estiran al alto de la más alta y los círculos
+     quedan alineados igual. El nombre se sigue leyendo entero,
+     que es lo que importa.
+
+     La velocidad NO hay que compensarla. `Ticker` calcula la
+     duración desde el ancho real de la pista contra una velocidad
+     en píxeles por segundo, así que al achicarse la pista la
+     duración baja sola y el paso aparente no cambia. Verificado
+     midiendo `--ticker-duracion` antes y después. */
   .b7-cliente {
     display: grid;
     justify-items: center;
-    gap: var(--space-3);
-    /* El ancho lo fija la ranura, no el nombre: si un nombre
-       largo estirara su columna, el loop cambiaría de velocidad
-       aparente de un anillo al otro. */
-    width: 176px;
-    margin-inline: var(--space-4);
+    gap: var(--space-2);
+    width: 128px;
+    margin-inline: var(--space-2);
   }
 
   /* ANILLO DE CONTORNO, CAMPO TRANSPARENTE. El disco pastel se
@@ -1451,7 +1613,7 @@
      que con el borde de 2px sería el 100% de la caja interna y ya
      no del diámetro. */
   .b7-cliente__anillo {
-    --d: 132px;
+    --d: 96px;
     display: grid;
     place-items: center;
     width: var(--d);
@@ -1475,10 +1637,17 @@
      defecto: son PNG de 132px que casi siempre se dibujan un poco
      más chicos, y ahí el suavizado del navegador es exactamente lo
      que queremos. Cualquier otro valor los dejaría dentados. */
+  /* `object-fit: contain` no hace nada mientras el alto sea `auto`
+     —con una sola medida declarada la proporción ya es la del
+     archivo— y va escrito igual, por lo mismo que en Casos: es el
+     seguro de que si algún día alguien le fija el alto a la
+     ranura, el logo se ajuste adentro en vez de estirarse. Los dos
+     lugares donde vive un logo de cliente lo declaran igual. */
   .b7-cliente__logo {
     display: block;
     width: calc(var(--logo-ancho, 0.6) * var(--d));
     height: auto;
+    object-fit: contain;
     image-rendering: auto;
   }
 
@@ -1500,13 +1669,13 @@
     }
 
     .b7-cliente {
-      width: 144px;
-      margin-inline: var(--space-3);
+      width: 112px;
+      margin-inline: var(--space-2);
     }
 
     /* El logo lo sigue solo: su ancho es una fracción de `--d`. */
     .b7-cliente__anillo {
-      --d: 104px;
+      --d: 80px;
     }
   }
 
@@ -1578,6 +1747,18 @@
 
   .b8__pendiente {
     color: inherit;
+  }
+
+  @media (min-width: 810px) {
+    .b8--centrado > .seccion-con-borde__contenido {
+      min-height: 108vh;
+      display: grid;
+      align-items: center;
+    }
+
+    .b8--centrado .b8__contenido {
+      transform: translateY(var(--space-6));
+    }
   }
 
   @media (max-width: 809px) {

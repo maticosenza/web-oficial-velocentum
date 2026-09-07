@@ -15,52 +15,20 @@
    Si alguien vuelve a la ficha vieja, esto NO es un dato a
    corregir: es la corrección.
 
-   LAS OCHO FRASES ESTÁN SIN APROBAR
-   Son condensaciones del texto que ya está escrito en cada ficha.
-   Condensar copy aprobado no es inventarlo, pero tampoco es
-   aprobarlo: ninguna se publica sin que Matías la confirme. No
-   llevan ninguna cifra, período ni resultado que no esté en la
-   ficha — y de hecho no llevan ninguno, porque los porcentajes
-   del sitio actual (140%, 200%…) quedaron descartados: no dicen
-   de qué son ni contra qué base.
-
-   `frase` de Carácter está aparte, ver `revisar`.
+   LAS OCHO DESCRIPCIONES SON COPY FINAL
+   Amplían el resumen de cada trabajo sin agregar cifras, períodos
+   ni resultados que no estén documentados.
    =========================================================== */
 
-/* EL MEDIO DE CADA CASO, YA RECORTADO A 4:3.
+/* MEDIOS DE LOS CASOS
 
-   Los originales iban de 0.56 a 1.78 de proporción, y con eso la
-   columna del medio cambiaba de alto en cada fila y los bloques de
-   80vh dejaban de encuadrar igual. Los ocho se recortaron al mismo
-   4:3, que es además el de B3.
+   Las tarjetas se presentan en proporción vertical 3:4 mediante
+   CSS. Snake Store y Vinotique usan versiones 1080×1440 sin audio,
+   generadas desde sus originales y con pósters de igual tamaño.
+   Vinotique conserva el corte útil de cinco segundos.
 
-   El recorte es centrado salvo donde descabeza el motivo:
-
-   | Caso | Anclaje | Por qué |
-   |---|---|---|
-   | Greenpac | abajo | Centrado deja cielo vacío y corta la cosechadora a la altura de la cabina. |
-   | Vinotique | arriba | Centrado corta las botellas por el hombro. |
-   | Glam Ragazza | arriba | Centrado le corta la cabeza. La foto trae orientación EXIF 6, así que es VERTICAL 3024×4032 y no apaisada como dice el nombre del archivo. |
-
-   Los tres videos van sin audio, y dos se recortaron en el tiempo.
-
-   Vinotique baja de 7.8s a 5.0: a partir de 5.2 el plano se vacía
-   —las botellas salen de cuadro— y termina con un rótulo quemado.
-
-   Ilsapore baja de 42.8s a 3.2, tomando 17.3→20.5. Es más corto
-   que los 6-8s que se buscaban, y es lo que hay: el clip corta a
-   la presentadora cada dos o tres segundos. Medido cuadro a cuadro
-   sobre los 42.8s, el tramo más largo sin ella dura 5.0s —de 10.25
-   a 15.25— pero arrastra el rótulo «CHOCOOREO» y una placa de
-   comillas. El de 17.3 es el único que está limpio de las dos
-   cosas, y encima es una toma continua: el loop no tiene cortes
-   adentro. Un texto quemado en un fondo envejece mal, y una
-   presentadora hablando sin audio, peor.
-
-   ⚠ EL MÁS FLOJO DE RESOLUCIÓN ES COMERCIAL PAS: el original son
-   530×354 y recortado quedan 472. La columna del medio renderiza
-   cerca de 600px CSS, así que en pantalla 2x se va a ver blando.
-   No se agranda: escalar no agrega información. */
+   Comercial PAS usa un lienzo 3:4 que mantiene completa la foto
+   original y extiende únicamente cielo y pavimento. */
 export type Medio =
   { tipo: "imagen"; archivo: string } | { tipo: "video"; archivo: string; poster: string };
 
@@ -84,7 +52,8 @@ export const CASOS: Caso[] = [
   {
     nombre: "Snake Store",
     rubro: "Moda",
-    frase: "Meta Ads y contenido para pauta, con foco en escalar ventas.",
+    frase:
+      "Gestionamos Meta Ads y producimos contenido pensado para pauta, con una estrategia orientada a ampliar el alcance, mejorar el rendimiento y acompañar el crecimiento de las ventas.",
     medio: {
       tipo: "video",
       archivo: "/assets/caso-snake-store.mp4",
@@ -94,28 +63,22 @@ export const CASOS: Caso[] = [
   {
     nombre: "Carácter",
     rubro: "Productora",
-    frase: "Diseño web y campañas de performance.",
-    /* La única de las ocho que NO sale de una descripción del
-       trabajo. Su ficha describe al CLIENTE —«productora de
-       eventos con experiencia en diseño y producción de
-       experiencias de marca»— y en ningún momento dice qué
-       hicimos nosotros. Esta frase sale de sus dos categorías del
-       índice, Diseño Web y Publicidad de Performance, así que no
-       inventa nada, pero tampoco cuenta el trabajo. Hay que
-       reescribirla antes de publicar, no sólo aprobarla. */
-    revisar: "Sale de dos etiquetas del índice, no de una descripción del trabajo.",
+    frase:
+      "Desarrollamos su sitio web y campañas de performance para presentar sus servicios con claridad, fortalecer su presencia digital y generar nuevas oportunidades comerciales.",
     medio: { tipo: "imagen", archivo: "/assets/caso-caracter.webp" },
   },
   {
     nombre: "Glam Ragazza",
     rubro: "Indumentaria",
-    frase: "Paid Media y un sistema de contenido para sostener el crecimiento.",
+    frase:
+      "Articulamos Paid Media con un sistema continuo de contenidos para sostener el crecimiento, ordenar la comunicación y construir una experiencia de marca consistente.",
     medio: { tipo: "imagen", archivo: "/assets/caso-glam-ragazza.webp" },
   },
   {
     nombre: "Vinotique",
     rubro: "Gastronomía",
-    frase: "Estrategia de marca y una web nueva, con foco en claridad y confianza.",
+    frase:
+      "Redefinimos la estrategia de marca y desarrollamos una nueva web para comunicar su propuesta con claridad, transmitir confianza y acompañar cada etapa de la experiencia digital.",
     medio: {
       tipo: "video",
       archivo: "/assets/caso-vinotique.mp4",
@@ -125,7 +88,8 @@ export const CASOS: Caso[] = [
   {
     nombre: "Ilsapore",
     rubro: "Gastronomía",
-    frase: "Contenido y redes para posicionar la marca, con pauta para pedidos mayoristas.",
+    frase:
+      "Creamos contenido y gestionamos sus redes para posicionar la marca, combinando comunicación orgánica y pauta orientada a generar nuevos pedidos mayoristas.",
     medio: {
       tipo: "video",
       archivo: "/assets/caso-ilsapore.mp4",
@@ -135,19 +99,22 @@ export const CASOS: Caso[] = [
   {
     nombre: "Armbruster",
     rubro: "Real Estate",
-    frase: "Estrategia, contenido y campañas de performance para captar leads.",
+    frase:
+      "Diseñamos una estrategia integral de contenidos y campañas de performance para fortalecer su presencia digital y captar nuevas oportunidades comerciales.",
     medio: { tipo: "imagen", archivo: "/assets/caso-armbruster.webp" },
   },
   {
     nombre: "Greenpac",
     rubro: "Agricultura",
-    frase: "Web de producto y campañas segmentadas por zona y perfil del agro.",
+    frase:
+      "Desarrollamos una web centrada en su propuesta de producto y campañas segmentadas por zona y perfil de productor para conectar con audiencias del sector agropecuario.",
     medio: { tipo: "imagen", archivo: "/assets/caso-greenpac.webp" },
   },
   {
     nombre: "Comercial Pas",
     rubro: "Seguros",
-    frase: "Web, tracking y campañas de performance enfocadas en conversiones.",
+    frase:
+      "Integramos sitio web, medición y campañas de performance para ordenar el recorrido digital, optimizar la captación y convertir el interés en consultas comerciales.",
     medio: { tipo: "imagen", archivo: "/assets/caso-comercial-pas.webp" },
   },
 ];
@@ -230,16 +197,33 @@ export const MARCAS_DEL_MARQUEE: string[] = [...CASOS.map((c) => c.nombre), ...C
    normalización a medias: los topes ya están aplicados acá, sobre
    la tinta, que es lo que se ve.
 
-   ⚠ CUATRO NO LLEGAN AL 55% Y NO ES UN ERROR DE CÁLCULO: es el
-   techo del raster. Los archivos miden 132px de ancho y el círculo
-   más grande del sitio —Casos en desktop— mide 136, así que
-   `ancho` no puede pasar de 132/136 = 0.971 sin dibujar un PNG por
-   encima de sus píxeles. `armbruster` (tinta al 41%), `greenpac`
-   (43%), `glam-ragazza` (50%) y `buynow` (18% de ancho, aunque 35%
-   de alto, que es su medida real: es la única marca vertical) están
-   contra ese techo. Para que entren en la banda hacen falta
-   archivos con la tinta más grande dentro del lienzo, o los mismos
-   a más resolución — no un número más alto acá, que sólo los
+   ⚠ TRES ARCHIVOS SE REHICIERON, Y SUS NÚMEROS NO SE HEREDAN.
+   `greenpac`, `buynow` y `uprise` llegaron de nuevo con la tinta
+   mucho más grande dentro del mismo lienzo de 132, y eso invalida
+   el multiplicador anterior: el número es una fracción del ANCHO
+   DEL ARCHIVO, y lo que cambió es cuánto de ese archivo es tinta.
+   Arrastrar el valor viejo los habría dibujado enormes. Se
+   recalcularon los tres contra su caja de tinta nueva:
+
+   | marca    | tinta vieja | tinta nueva | ancho viejo | ancho nuevo |
+   |---|---|---|---|---|
+   | greenpac | 58×56       | 78×75       | 0.971       | 0.94 |
+   | buynow   | 24×48       | 38×78       | 0.971       | 0.92 |
+   | uprise   | 104×26      | 88×90       | 0.888       | 0.80 |
+
+   Los tres salieron del techo del raster: con la tinta más grande
+   ya no hace falta estirar el archivo para que se vea. `buynow`
+   se dimensiona por ALTO —es la única marca vertical— y llega al
+   54.4% de alto contra un 26.5% de ancho, que es su forma.
+
+   ⚠ DOS SIGUEN CONTRA EL TECHO DEL RASTER, y no es un error de
+   cálculo. Los archivos miden 132px de ancho y el círculo más
+   grande del sitio —Casos en desktop— mide 136, así que `ancho`
+   no puede pasar de 132/136 = 0.971 sin dibujar un PNG por encima
+   de sus píxeles. `armbruster` (tinta al 41%) y `glam-ragazza`
+   (50%) están ahí. Para que entren en la banda hacen falta
+   archivos con la tinta más grande dentro del lienzo, igual que
+   los tres de arriba — no un número más alto acá, que sólo los
    agrandaría borrosos.
 
    ⚠ CINCO LLEGAN AL TOPE DE ANCHO: son las firmas apaisadas
@@ -276,7 +260,7 @@ export const LOGOS: Record<string, Logo> = {
   Vinotique: { archivo: "/assets/logos-clientes-color/logo-vinotique-color.png", ancho: 0.971 }, // tinta 0.662 — ⚠ techo del raster
   Ilsapore: { archivo: "/assets/logos-clientes-color/logo-ilsapore-color.png", ancho: 0.864 }, // tinta 0.550 — suelo
   Armbruster: { archivo: "/assets/logos-clientes-color/logo-armbruster-color.png", ancho: 0.971 }, // tinta 0.412 — ⚠ techo del raster
-  Greenpac: { archivo: "/assets/logos-clientes-color/logo-greenpac-color.png", ancho: 0.971 }, // tinta 0.427 — ⚠ techo del raster
+  Greenpac: { archivo: "/assets/logos-clientes-color/logo-greenpac-color.png", ancho: 0.8 }, // tinta 0.674 de ancho y 0.682 de alto en el PNG HD
   "Comercial Pas": {
     archivo: "/assets/logos-clientes-color/logo-comercial-pas-color.png",
     ancho: 0.849,
@@ -285,9 +269,9 @@ export const LOGOS: Record<string, Logo> = {
     archivo: "/assets/logos-clientes-color/logo-patagonia-vessels-color.png",
     ancho: 0.783,
   }, // tinta 0.700 — tope de ancho
-  BuyNow: { archivo: "/assets/logos-clientes-color/logo-buynow-color.png", ancho: 0.971 }, // tinta 0.177 de ancho y 0.353 de alto — ⚠ techo del raster
+  BuyNow: { archivo: "/assets/logos-clientes-color/logo-buynow-color.png", ancho: 0.92 }, // tinta 0.265 de ancho y 0.544 de alto — manda el alto
   Lámina: { archivo: "/assets/logos-clientes-color/logo-lamina-color.png", ancho: 0.77 }, // tinta 0.700 — tope de ancho
-  Uprise: { archivo: "/assets/logos-clientes-color/logo-uprise-color.png", ancho: 0.888 }, // tinta 0.700 — tope de ancho
+  Uprise: { archivo: "/assets/logos-clientes-color/logo-uprise-color.png", ancho: 0.8 }, // tinta 0.533 de ancho y 0.545 de alto
   Imaginarios: {
     archivo: "/assets/logos-clientes-color/logo-imaginarios-color.png",
     ancho: 0.734,

@@ -15,7 +15,27 @@
    cinco segundos junto a otro contenido necesita un mecanismo
    para detenerlo. Acá el mecanismo es uno: la banda es una
    parada de tabulación con nombre accesible y se detiene al
-   recibir el foco.
+   recibir el foco DE TECLADO.
+
+   ⚠ «DE TECLADO» ES LA PALABRA IMPORTANTE, Y ANTES NO SE CUMPLÍA.
+   La pausa colgaba de `onFocus`/`onBlur`, y un elemento con
+   `tabIndex` también recibe foco al hacerle clic o al tocarlo:
+   cualquiera que apoyara el dedo o clickeara al pasar frenaba la
+   banda sin haberlo pedido, y no tenía forma de darse cuenta de
+   por qué se había detenido.
+
+   Ahora la pausa la resuelve `:focus-visible` en CSS. Es
+   exactamente la distinción que hace falta: el navegador la hace
+   coincidir con el foco que llega por teclado y NO con el que
+   llega por puntero sobre un elemento que no es un campo de
+   texto. Sin estado, sin `onFocus`, sin `onBlur` y sin un
+   listener más por ticker.
+
+   Y DE PASO SE ARREGLA EL SALTO. La pausa vieja sacaba la
+   animación entera —`data-animando="no"` quita la declaración—,
+   así que al soltar el foco la pista volvía al principio de un
+   tirón. `animation-play-state: paused` la congela donde está y
+   la reanuda donde quedó.
 
    NO se detiene al pasar el mouse. Se probó y se sacó: la banda
    ocupa media pantalla, así que frenaba cada vez que el puntero
@@ -60,7 +80,6 @@ export function Ticker({
   className?: string;
 }) {
   const pistaRef = useRef<HTMLDivElement>(null);
-  const [foco, setFoco] = useState(false);
   const [reducido, setReducido] = useState(false);
 
   /* La duración sale del ancho real: media pista a `velocidad`
@@ -92,8 +111,6 @@ export function Ticker({
     return () => mq.removeEventListener("change", leer);
   }, []);
 
-  const enMovimiento = !reducido && !foco;
-
   return (
     <section
       className={["ticker", className].filter(Boolean).join(" ")}
@@ -102,14 +119,19 @@ export function Ticker({
          forma de frenar la banda. Si no hay movimiento tampoco
          hay nada que frenar, así que deja de ser parada: un stop
          que no hace nada es ruido en el recorrido.
-         `onFocus`/`onBlur` en React burbujean, así que también
-         atrapan el foco de cualquier cosa enfocable de adentro. */
+
+         Quién frena y quién no lo decide `:focus-visible` en el
+         CSS, no este componente: acá sólo se declara que el lugar
+         existe y que se puede llegar con Tab. */
       tabIndex={reducido ? undefined : 0}
-      onFocus={() => setFoco(true)}
-      onBlur={() => setFoco(false)}
     >
       <div className="ticker__ventana">
-        <div ref={pistaRef} className="ticker__pista" data-animando={enMovimiento ? "sí" : "no"}>
+        {/* `data-animando` dice si la pista TIENE animación, no si
+            está corriendo: con movimiento reducido no hay ninguna,
+            y con el foco de teclado la hay pero congelada. Son dos
+            estados distintos y se resuelven en dos lugares
+            distintos. */}
+        <div ref={pistaRef} className="ticker__pista" data-animando={reducido ? "no" : "sí"}>
           <div className="ticker__grupo">{children}</div>
           {/* Copia visual. Fuera del árbol accesible y del orden
               de tabulación: el contenido ya se anunció una vez. */}

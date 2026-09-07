@@ -143,10 +143,6 @@ export function B3Trabajos() {
           </Reveal>
         </div>
 
-        <p className="etiqueta etiqueta--apagada b3__pendiente">
-          Pendiente · el uso autorizado de cada cliente está sin confirmar.
-        </p>
-
         <div className="b3__piezas">
           {PIEZAS.map((caso, i) => (
             <Trabajo
@@ -178,9 +174,25 @@ function Trabajo({
   prioritario: boolean;
 }) {
   /* El hook mide la capa de afuera, que no se mueve. Ver la nota
-     de arriba: medir la capa transformada traba el bloque. */
+     de arriba: medir la capa transformada traba el bloque.
+
+     ⚠ `recorrido: 1` Y NO EL 0.6 POR DEFECTO. El recorrido es la
+     porción de ventana que la tarjeta sube mientras el progreso va
+     de 0 a 1: con 0.6 la entrada se consumía en unos 470px de
+     scroll y las piezas ya estaban derechas antes de terminar de
+     aparecer. Con 1 la apertura pide una ventana entera —784px
+     medidos— y el recorrido se ve.
+
+     No es un número redondo elegido por gusto: con `recorrido: 1`
+     el progreso llega a 1 justo cuando el borde superior de la
+     tarjeta toca el tope de la ventana. Más que eso —1.1— deja el
+     último tramo de la animación ocurriendo con la pieza ya
+     saliendo por arriba, que es peor que rápido.
+
+     Se cambia acá y no en el hook: el valor por defecto lo
+     comparten B4 y B1, y esto es una decisión de ESTE bloque. */
   const ref = useRef<HTMLElement>(null);
-  useProgresoDeScroll(ref);
+  useProgresoDeScroll(ref, { recorrido: 1 });
 
   return (
     <article ref={ref} className="b3-trabajo">

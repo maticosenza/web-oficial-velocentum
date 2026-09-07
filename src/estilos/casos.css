@@ -50,8 +50,23 @@
      CAS-2 · LA LISTA
      ========================================================= */
 
+  /* ⚠ EL RECORTE ES UN ARREGLO, NO UNA DECORACIÓN. Sin él la
+     página tiene scroll horizontal entre ~810 y ~1250px de ancho,
+     y no es de este cambio: viene del desplazamiento de entrada de
+     `ScrollMedia`, que a `--progreso: 0` corre las dos columnas
+     laterales 47px hacia afuera. Arriba de 1250 no se nota porque
+     el contenedor tope de 1200 deja margen a los costados; en el
+     medio, la columna derecha termina justo en el borde y los 47
+     se van afuera. Medido a 1100: 1116 de ancho scrolleable contra
+     1085 de ventana, con el gap viejo y con el nuevo por igual.
+
+     `clip` y no `hidden`, por lo mismo que en `.b3`: `hidden`
+     crearía un contenedor de scroll y rompería los dos `sticky`
+     que viven acá adentro. Verificado que con `clip` el titular
+     fijado y los degradados siguen pegándose al tope. */
   .cas2 {
     position: relative;
+    overflow-x: clip;
     background: var(--fondo);
     color: var(--tinta);
     /* El acento de la página. Los marcadores de logo e imagen lo
@@ -60,8 +75,13 @@
     --sobre: var(--texto-sobre-3);
   }
 
-  .cas2__pendiente {
-    padding-bottom: var(--space-5);
+  /* El aire que dejaba el aviso de pendiente, ahora sin el aviso.
+     Va en la sección y no en `.cas2__lista`: esa caja es el
+     contenedor del titular fijado, y meterle padding le corre el
+     punto donde el `sticky` empieza a pegarse. Acá el efecto
+     geométrico es el mismo y la mecánica no se entera. */
+  .cas2 {
+    padding-top: var(--space-5);
   }
 
   /* LAS TRES CAPAS, EN UNA SOLA CELDA DE GRILLA.
@@ -119,7 +139,15 @@
     font-size: min(22vw, 260px);
     line-height: 0.85;
     text-transform: uppercase;
-    color: var(--acento-3);
+    /* TINTA, NO EL VERDE DE LA PÁGINA. La palabra es el fondo sobre
+       el que pasa todo lo demás, y en verde competía con los casos
+       en vez de sostenerlos: es la pieza más grande de la pantalla
+       y el acento la volvía lo primero que se mira. En tinta hace
+       lo que hace «ALL WORKS» en la referencia — está, se lee, y no
+       pide turno.
+       El verde de la página no se toca: `--acento-3` sigue siendo
+       el acento de `/casos` y lo usan el medio y el nav. */
+    color: var(--tinta);
     margin: 0;
   }
 
@@ -144,13 +172,15 @@
      intercambio correcto: la mecánica es decorativa, poder leer no
      lo es. */
   .cas-caso {
-    min-height: var(--alto-caso);
+    min-height: max(var(--alto-caso), 105dvh);
     display: grid;
     align-content: center;
     padding-inline: var(--page-gutter);
   }
 
   .cas-caso__cuerpo {
+    --scroll-media-contraccion: 0.48;
+    --scroll-media-zoom-extra: 0.2;
     width: 100%;
     max-width: var(--max-contenido);
     margin-inline: auto;
@@ -158,6 +188,16 @@
 
   /* --- La columna de identificación --- */
 
+  /* CENTRADA EN LOS DOS BREAKPOINTS. Antes en escritorio se
+     alineaba a la izquierda para acompañar al borde del medio; con
+     el círculo puesto eso funcionaba, porque el círculo daba un
+     borde izquierdo recto contra el que apoyar el nombre. Sin
+     círculo, el logo es una silueta irregular y distinta en cada
+     caso: alineando a la izquierda, el nombre se apoya contra la
+     nada y cada caso queda desalineado de una manera distinta.
+     Centrado, el eje es el del propio logo y los ocho se leen
+     igual. Por eso ya no hay un bloque de `min-width: 810px` que
+     lo vuelva a alinear a la izquierda. */
   .cas-caso__id {
     display: grid;
     justify-items: center;
@@ -165,55 +205,110 @@
     gap: var(--space-2);
   }
 
-  /* El mismo anillo de contorno de B7, apenas más grande: acá el
-     logo es la identificación del caso y no una ranura de un
-     marquee. El campo va transparente y el acento vive sólo en el
-     borde — ver la nota larga en `.b7-cliente__anillo`.
+  /* ACÁ NO HAY ANILLO, Y ES LO ÚNICO QUE DISTINGUE A CASOS DE B7.
+     En la home el contorno de color hace un trabajo: son trece
+     ranuras iguales pasando en una banda, y el círculo las
+     convierte en una serie con ritmo. Acá hay un logo solo por
+     pantalla, con su nombre y su rubro debajo: no hay serie que
+     marcar, y el círculo se vuelve un adorno que compite con el
+     logo y le roba tamaño. El logo se apoya directo sobre el fondo
+     claro de la página.
 
-     136 y no 160: el logo compite con el nombre del cliente en
-     display justo debajo, y un círculo grande convertía al círculo
-     en el protagonista de la columna. */
+     LA CAJA SE QUEDA AUNQUE EL CÍRCULO SE VAYA. Mide siempre
+     `--d` × `--d`, sin importar la proporción del logo que le
+     toque: es lo que evita que la columna cambie de alto entre un
+     caso apaisado y uno cuadrado —y de paso, que salte mientras el
+     PNG carga—. Es una caja de reserva, no un contenedor visible:
+     no lleva fondo, borde, radio, sombra ni degradado.
+
+     136 no es un número elegido por estética: es lo que mide el
+     `<img>` más alto de los ocho. Los PNG son cuadrados de 132 y
+     `vinotique` pide 0.971 de `--d`, o sea 132,1px de alto. Con una
+     caja más chica ese caso la desbordaría y el alto de la columna
+     volvería a depender del logo, que es justo lo que la reserva
+     evita.
+
+     ⚠ EL LOGO SE APOYA ABAJO, NO EN EL CENTRO. Con el círculo, el
+     contorno era el objeto y el logo flotaba adentro. Sin círculo
+     lo único que se ve es el logo, y centrado en 136px dejaba
+     ~50px de aire muerto contra el nombre: el `gap` de 8 de la
+     columna quedaba de adorno y el bloque no se leía como una
+     unidad. Apoyado abajo, ese gap es el que se ve. El aire de
+     arriba sobra sin costo — la fila entera está centrada
+     verticalmente en su bloque de 80vh. */
   .cas-caso__logo {
     --d: 136px;
     display: grid;
-    place-items: center;
+    justify-items: center;
+    align-items: end;
     width: var(--d);
+    height: var(--d);
     aspect-ratio: 1 / 1;
-    border-radius: var(--r-pill);
-    background: transparent;
-    border: 2px solid var(--anillo);
   }
 
-  /* El mismo `--logo-ancho` de B7: fracción del diámetro, ya
-     normalizada por área de tinta y con sus topes aplicados. Sin
-     `max-width` acá, por lo mismo que allá.
+  /* El mismo `--logo-ancho` de B7: fracción de `--d`, ya
+     normalizada por área de tinta y con sus topes aplicados. Sacar
+     el círculo no cambia un solo número — la normalización es
+     entre logos, no contra el contenedor. Sin `max-width` acá, por
+     lo mismo que allá.
 
-     ⚠ ÉSTE ES EL CÍRCULO MÁS GRANDE DEL SITIO, y por eso es el que
+     ⚠ ÉSTA ES LA CAJA MÁS GRANDE DEL SITIO, y por eso es la que
      fija el techo de la normalización: los PNG miden 132px de
      ancho natural, así que ningún `--logo-ancho` puede pasar de
      132/136 = 0,971 sin agrandar un raster por encima de sus
-     píxeles. Ver `LOGOS` en `data/casos.ts`. */
+     píxeles. Ver `LOGOS` en `data/casos.ts`.
+
+     `object-fit: contain` no hace nada mientras el alto sea `auto`
+     —con una sola medida declarada la proporción ya es la del
+     archivo— y va escrito igual: es el seguro de que si algún día
+     alguien le fija el alto a la caja, el logo se ajuste adentro
+     en vez de estirarse. */
   .cas-caso__logo img {
     display: block;
     width: calc(var(--logo-ancho, 0.6) * var(--d));
     height: auto;
+    object-fit: contain;
     image-rendering: auto;
   }
 
+  /* SALE LA DISPLAY. Anton es una condensada muy pesada, pensada
+     para titulares de 40px para arriba; a 30px y con el logo justo
+     encima, el nombre pesaba más que la marca que estaba
+     identificando. Con la de texto a 500 la jerarquía se mantiene
+     —sigue siendo lo más marcado de la columna— sin gritar.
+
+     Las mayúsculas se quedan: es lo que hace que el nombre y el
+     rubro se lean como un bloque de identificación y no como dos
+     párrafos sueltos.
+
+     El nombre más largo de los ocho es `Comercial Pas`, 13
+     caracteres, holgado dentro del rango medido de 4–23. */
   .cas-caso__nombre {
-    font-family: var(--font-display);
-    /* El nombre más largo de los ocho es `Comercial Pas`, 13
-       caracteres, holgado dentro del rango medido de 4–23. */
-    font-size: clamp(21px, 2.2vw, 30px);
-    line-height: 1.05;
+    font-family: var(--font-texto);
+    font-weight: 650;
+    font-size: clamp(20px, 1.9vw, 25px);
+    line-height: 1.2;
+    letter-spacing: 0.01em;
     text-transform: uppercase;
     margin: 0;
   }
 
   /* El rubro en gris, debajo del nombre. Lo definió Matías: no
      sale del campo «Industria» de las fichas viejas, que en varios
-     casos trae el canal. Ver `data/casos.ts`. */
+     casos trae el canal. Ver `data/casos.ts`.
+
+     ⚠ YA NO LLEVA LA CLASE `.etiqueta`, a propósito: ésa es la
+     mono del sistema, y acá el rubro tiene que leerse como el pie
+     del nombre —misma familia, un escalón más abajo— y no como una
+     etiqueta de otra especie. Se queda con lo que sí compartían,
+     las mayúsculas y el `letter-spacing`. */
   .cas-caso__rubro {
+    font-family: var(--font-texto);
+    font-weight: 550;
+    font-size: 14px;
+    line-height: 1.3;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     color: var(--texto-2);
     margin: 0;
   }
@@ -262,8 +357,10 @@
   /* Una frase y nada más. Sin chips y sin párrafo largo: el plan
      los tenía y quedaron derogados. */
   .cas-caso__frase {
-    font-size: clamp(17px, 1.6vw, 20px);
-    line-height: 1.45;
+    font-family: var(--font-texto);
+    font-weight: 500;
+    font-size: clamp(17px, 1.55vw, 20px);
+    line-height: 1.4;
     margin: 0;
   }
 
@@ -319,10 +416,12 @@
   @media (max-width: 809px) {
     .cas-caso {
       min-height: 0;
-      padding-block: var(--space-6);
+      padding-block: clamp(72px, 12vh, 112px);
     }
 
     .cas-caso__cuerpo {
+      --scroll-media-contraccion: 0.42;
+      --scroll-media-zoom-extra: 0.16;
       gap: var(--space-4);
     }
 
@@ -351,15 +450,35 @@
       order: 3;
     }
 
-    /* Apilado, el bloque se lee centrado: la identificación deja
-       de alinearse a la izquierda de su columna. */
-    .cas-caso__id {
-      justify-items: center;
-      text-align: center;
+    /* En el último caso, la frase lleva consigo un campo blanco
+       que tapa el titular sticky desde que empieza el texto hasta
+       el final de la lista. `:last-child` mantiene el corte ligado
+       al último cliente aunque la colección cambie. */
+    .cas-caso:last-child .scroll-medio__texto {
+      position: relative;
+      isolation: isolate;
     }
 
+    .cas-caso:last-child .scroll-medio__texto::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      top: calc(-1 * var(--space-4));
+      bottom: calc(-1 * clamp(72px, 12vh, 112px));
+      left: 50%;
+      width: 100vw;
+      transform: translateX(-50%);
+      background: var(--fondo);
+      pointer-events: none;
+    }
+
+    /* La frase se centra y se acorta. 34ch entra sobrada en los
+       358px útiles de un teléfono de 390 y no genera desborde: es
+       una medida de línea, no un ancho de caja. */
     .cas-caso__frase {
       text-align: center;
+      max-width: 34ch;
+      margin-inline: auto;
     }
 
     /* Apilado manda el ancho, no el alto: un marco vertical a 62vh
@@ -384,12 +503,52 @@
     }
   }
 
-  /* En escritorio la identificación y la frase se alinean con el
-     medio, no al centro de su columna. */
+  /* ---------------------------------------------------------
+     LA COMPOSICIÓN DE ESCRITORIO
+     --------------------------------------------------------- */
+
   @media (min-width: 810px) {
-    .cas-caso__id {
-      justify-items: start;
-      text-align: start;
+    /* MÁS AIRE ENTRE EL MEDIO Y LAS DOS COLUMNAS LATERALES.
+       `.scroll-medio` reparte 32 en las dos direcciones; acá sólo
+       se pisa el eje horizontal, así que el hueco vertical del
+       apilado no se entera. Se abre a los dos lados y no sólo al
+       de la frase: la fila es simétrica —identificación · medio ·
+       frase— y agrandar un solo hueco la descentraría.
+
+       ⚠ VA EN `clamp` Y NO EN 64 FIJO. La columna del medio mide
+       lo que mide el medio —353px— y no se achica con la ventana,
+       así que a 810 los 64 salen enteros de las dos laterales:
+       medido, la frase caía a 141px de ancho, unos 18 caracteres
+       por renglón. Con `5vw` el hueco entra a 40 en el arranque
+       del escritorio y llega a 64 recién a 1280, que es donde
+       sobra lugar para pagarlo.
+
+       ⚠ ESTO GANA POR ORDEN, NO POR ESPECIFICIDAD.
+       `.cas-caso__cuerpo` y `.scroll-medio` valen lo mismo y viven
+       en la misma capa; lo que decide es que `casos.css` se importa
+       después de `componentes.css` en `styles.css`. Si algún día se
+       cambia ese orden, esta regla deja de aplicarse en silencio. */
+    .cas-caso__cuerpo {
+      column-gap: clamp(var(--space-5), 5vw, var(--space-7));
+    }
+
+    /* La frase, más a la derecha y más angosta. `justify-self` y no
+       `transform`: `ScrollMedia` ya usa el `transform` de este
+       mismo elemento para el desplazamiento de entrada, y una
+       segunda declaración lo pisaría entero.
+
+       360px son unos 45 caracteres de línea contra los ~58 que daba
+       la columna completa. Es una frase corta por caso, así que
+       parte en dos o tres renglones y se lee como un pie, que es lo
+       que la referencia hace. Centrado, porque colgado del borde
+       izquierdo de una columna angosta el bloque se ve suelto. */
+    .cas-caso__cuerpo > .scroll-medio__texto {
+      justify-self: end;
+    }
+
+    .cas-caso__frase {
+      max-width: 360px;
+      text-align: center;
     }
   }
 }
