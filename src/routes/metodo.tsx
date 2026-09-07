@@ -46,7 +46,7 @@ function Metodo() {
       {/* MET-4 es el mismo componente que B8, con otro copy. El
           eyebrow y la bajada se apagan: la spec de MET-4 pide sólo
           titular y CTA. Se encienden pasando el texto. */}
-      <B8Cierre titulo="Empecemos por entender tu negocio." eyebrow="" bajada="" />
+      <B8Cierre titulo="Empecemos por entender tu negocio." eyebrow="" bajada="" centrado />
 
       {/* MET-5 es idéntico al footer de la home, con Método en su
           color. Eso sale solo de `lib/paginas.ts`. */}

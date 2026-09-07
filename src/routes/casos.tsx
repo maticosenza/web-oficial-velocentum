@@ -8,7 +8,7 @@ import { B9Footer } from "../bloques/B9Footer";
 import { CursorPropio } from "../componentes/CursorPropio";
 
 const DESCRIPCION =
-  "Ocho clientes y qué hicimos con cada uno: moda, gastronomía, real estate, agro y seguros.";
+  "Una selección de trabajos con identidad y resultados: estrategia, creatividad y performance para marcas de distintas industrias.";
 
 export const Route = createFileRoute("/casos")({
   head: () => ({
@@ -42,7 +42,7 @@ function Casos() {
 
       {/* El mismo componente que B8, con otro copy. El eyebrow y la
           bajada se apagan pasando texto vacío, igual que en MET-4. */}
-      <B8Cierre titulo="Contanos qué está pasando con tu negocio." eyebrow="" bajada="" />
+      <B8Cierre titulo="Contanos qué está pasando con tu negocio." eyebrow="" bajada="" centrado />
 
       <B9Footer />
     </>

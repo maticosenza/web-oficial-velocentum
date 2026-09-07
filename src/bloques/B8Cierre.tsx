@@ -50,6 +50,7 @@ export function B8Cierre({
   titulo = "Hagamos crecer tu negocio.",
   eyebrow = "Empecemos",
   bajada = "Una llamada de 45 minutos, sin costo. Salís con un diagnóstico y una proyección, actives o no con nosotros.",
+  centrado = false,
 }: {
   /** El titular dentro de la mancha. */
   titulo?: string;
@@ -57,13 +58,15 @@ export function B8Cierre({
   eyebrow?: string;
   /** Ídem. Método lo omite: su spec sólo pide titular y CTA. */
   bajada?: string;
+  /** Centra el bloque completo en la altura azul de cierres independientes. */
+  centrado?: boolean;
 } = {}) {
   return (
     <SeccionConBorde
       color="var(--acento-1)"
       sobre="var(--texto-sobre-1)"
       borde="arriba"
-      className="b8"
+      className={["b8", centrado && "b8--centrado"].filter(Boolean).join(" ")}
       aria-labelledby="b8-titulo"
     >
       <div className="b8__contenido contenido">

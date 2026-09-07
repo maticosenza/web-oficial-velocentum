@@ -34,11 +34,13 @@ export function CAS1Hero() {
         </Reveal>
 
         <Reveal as="h1" indice={1} id="cas1-titulo" className="cas1__titular">
-          Trabajos con nombre y apellido
+          Identidad y resultados
         </Reveal>
 
         <Reveal indice={2}>
-          <p className="cas1__bajada">Ocho clientes, y qué hicimos con cada uno.</p>
+          <p className="cas1__bajada">
+            Una selección de proyectos donde estrategia, creatividad y performance trabajan juntas.
+          </p>
         </Reveal>
       </div>
     </section>

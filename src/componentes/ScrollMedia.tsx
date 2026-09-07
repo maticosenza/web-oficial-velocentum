@@ -74,6 +74,7 @@ export function ScrollMedia({
   texto,
   izquierda,
   className,
+  recorrido = 0.75,
 }: {
   /** La imagen o el video. Va dentro del marco que se abre. */
   medio: ReactNode;
@@ -85,9 +86,11 @@ export function ScrollMedia({
    */
   izquierda?: ReactNode;
   className?: string;
+  /** Fracción de viewport durante la que progresa la apertura. */
+  recorrido?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  useProgresoDeScroll(ref, { recorrido: 0.75 });
+  useProgresoDeScroll(ref, { recorrido });
 
   return (
     <div
