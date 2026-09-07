@@ -988,43 +988,4 @@
   .etiqueta--apagada {
     color: var(--texto-2);
   }
-
-  /* =========================================================
-     ANDAMIO F0 — PROVISIONAL, SE BORRA EN F1
-     ========================================================= */
-
-  .pagina-provisional__banda {
-    min-height: 70vh;
-    background: var(--acento);
-    color: var(--sobre);
-    display: grid;
-    place-content: center;
-    justify-items: center;
-    text-align: center;
-    gap: var(--space-3);
-    padding: var(--space-7) var(--page-gutter);
-  }
-
-  /* Va en su propia regla y después del `padding` de arriba: el
-     shorthand reescribe los cuatro lados, así que declarado antes
-     lo pisaba y la banda quedaba con 64px en vez de dejarle su
-     lugar al nav. */
-  .pagina-provisional__banda {
-    padding-top: calc(var(--alto-nav, 96px) + var(--space-5));
-  }
-
-  .pagina-provisional__titulo {
-    font-family: var(--font-display);
-    font-size: clamp(56px, 12vw, 144px);
-    line-height: 0.95;
-    text-transform: uppercase;
-    margin: 0;
-  }
-
-  .pagina-provisional__relleno {
-    min-height: 120vh;
-    padding: var(--space-7) var(--page-gutter);
-    display: grid;
-    align-content: space-between;
-  }
 }

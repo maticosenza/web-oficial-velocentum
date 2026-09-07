@@ -1,56 +1,43 @@
 /* ===========================================================
-   ANDAMIO DE F0 — PROVISIONAL, SE BORRA EN F1
+   ANDAMIO DE F0 — LO QUE QUEDA
 
    El nav provisional YA NO ESTÁ: lo reemplazó B0, que es el
-   definitivo, y estas páginas lo usan tal cual.
+   definitivo, y las páginas de prueba lo usan tal cual.
 
-   Lo que queda acá es sólo lo que todavía no tiene reemplazo:
-   `parDeColor`, que usan las páginas de prueba de F0, y
-   `PaginaProvisional`, que ya sólo sostiene Casos y Contacto —
-   Método se construyó y dejó de usarla. Cuando existan las dos
-   que quedan, este archivo se borra.
+   `PaginaProvisional` TAMPOCO ESTÁ. Sostuvo Método, después Casos
+   y por último Contacto; con Contacto construido en F4 se quedó
+   sin una sola página que sostener y se borró, junto con sus dos
+   reglas de `componentes.css`. **Las cuatro páginas del sitio son
+   ahora páginas de verdad.**
+
+   Lo único que sobrevive es `parDeColor`, que usan las cuatro
+   páginas de prueba de F0 en `routes/pruebas/` —`reveal`,
+   `route-curtain`, `section-edge` y `service-stack`—, más el
+   reexport de `PAGINAS`, que esas mismas páginas consumen.
+
+   ⚠ ESTE ARCHIVO YA NO ES ANDAMIO DE PÁGINA, Y EL NOMBRE MIENTE.
+   Es un ayudante de dos líneas con nombre de andamio, que es peor
+   que un andamio: el nombre sugiere que se puede borrar cuando en
+   realidad algo depende de él.
+
+   PARA BORRARLO HACE FALTA UNA DE DOS COSAS:
+   - retirar las cuatro páginas de prueba de F0, o
+   - mover `parDeColor` a `lib/tokens.ts`, donde viven los otros
+     ayudantes de sistema, y hacer que las pruebas importen
+     `PAGINAS` directo de `lib/paginas.ts`.
+
+   Lo segundo son diez minutos. Lo primero es una decisión sobre si
+   las páginas de prueba siguen sirviendo ahora que las cuatro
+   páginas reales existen — y esa decisión no es de F4.
    =========================================================== */
 
 import { type CSSProperties } from "react";
 
-import { B0Nav } from "../bloques/B0Nav";
 import { PAGINAS } from "../lib/paginas";
 
 /** El par acento + texto-sobre-acento, como datos para el CSS. */
 export function parDeColor(acento: string, sobre: string): CSSProperties {
   return { "--acento": acento, "--sobre": sobre } as CSSProperties;
-}
-
-export function PaginaProvisional({
-  nombre,
-  acento,
-  sobre,
-}: {
-  nombre: string;
-  acento: string;
-  sobre: string;
-}) {
-  return (
-    <>
-      <B0Nav />
-      <section className="pagina-provisional__banda" style={parDeColor(acento, sobre)}>
-        <p className="etiqueta">Andamio F0 · provisional</p>
-        <h1 className="pagina-provisional__titulo">{nombre}</h1>
-      </section>
-
-      {/* Alto extra para poder verificar la restauración de scroll:
-          si se scrollea acá y se navega, la página nueva tiene que
-          arrancar arriba, y el atrás tiene que volver a esta altura. */}
-      <section className="pagina-provisional__relleno contenido">
-        <p className="prueba__nota">
-          Bloque alto, sólo para tener scroll durante las pruebas. Scrolleá hasta el fondo, navegá a
-          otra página y volvé con el botón atrás del navegador: la página nueva tiene que abrir
-          arriba de todo, y el atrás tiene que devolverte a esta altura.
-        </p>
-        <p className="etiqueta etiqueta--apagada">FIN DE {nombre.toUpperCase()}</p>
-      </section>
-    </>
-  );
 }
 
 export { PAGINAS };

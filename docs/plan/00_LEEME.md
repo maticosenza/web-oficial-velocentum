@@ -125,9 +125,34 @@ criterio de cada componente, no una fase final.
 
    **Con esto el sitio se queda sin un solo marcador de pendiente a la vista.**
 
-   ⚠ `/contacto` es todavía la `PaginaProvisional` del andamio, así que hasta
-   que se construya F4 los CTA llevan a una página vacía. Es el orden correcto
-   —primero el destino, después la página— pero queda anotado.
+   ~~⚠ `/contacto` es todavía la `PaginaProvisional` del andamio~~ **YA NO**:
+   F4 se construyó en su fase 1 y `/contacto` es una página de verdad —panel,
+   flujo de calificación de cuatro pasos y contacto directo—. Con eso se borró
+   la `PaginaProvisional` del andamio de F0, que se quedó sin una sola página
+   que sostener: **las cuatro páginas del sitio son páginas construidas.**
+
+   Lo que sigue abierto de Contacto es la **fase 2**: el calendario del paso 4
+   —hoy un marcador a la vista—, Calendly y la persistencia en Supabase. El
+   contrato de lo que se va a guardar ya está escrito en
+   `src/data/contacto.ts`.
+
+   ⚠ **`AndamioF0.tsx` NO se borró entero, y falta poco.** Con la
+   `PaginaProvisional` afuera, lo único que queda adentro es `parDeColor()`, un
+   ayudante de dos líneas que arma el par acento + texto-sobre-acento como dato
+   para el CSS. Lo usan las cuatro páginas de prueba de F0:
+   `routes/pruebas/reveal.tsx`, `route-curtain.tsx`, `section-edge.tsx` y
+   `service-stack.tsx` — más el reexport de `PAGINAS`, que esas mismas páginas
+   consumen.
+
+   **Para poder borrarlo hace falta una de dos cosas:** retirar esas cuatro
+   páginas de prueba, o mover `parDeColor` a `lib/tokens.ts`, que es donde
+   viven los otros ayudantes de sistema, y hacer que las pruebas importen
+   `PAGINAS` directo de `lib/paginas.ts`. Lo segundo son diez minutos; lo
+   primero es una decisión sobre si las páginas de prueba de F0 siguen
+   sirviendo ahora que las cuatro páginas reales existen. **No es una tarea de
+   F4 y por eso quedó sin hacer**, pero el archivo ya no es andamio de página:
+   es un ayudante con nombre de andamio, que es peor, porque el nombre miente
+   sobre cuándo se puede borrar.
 4. ~~Mail y redes reales~~ **RESUELTOS** y construidos en B9:
    `marketing@velocentum.com`, LinkedIn, Instagram y Facebook.
    **No se enlaza a `velocentum.agency`:** decisión explícita.

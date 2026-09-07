@@ -47,8 +47,7 @@ import { SeccionConBorde } from "../componentes/SectionEdge";
 import { EnlaceConCortina } from "../componentes/RouteCurtain";
 import { Flecha } from "../componentes/Flecha";
 import { PAGINAS } from "../lib/paginas";
-
-const MAIL = "marketing@velocentum.com";
+import { MAIL } from "../data/contacto";
 
 const REDES = [
   { nombre: "LinkedIn", url: "https://www.linkedin.com/company/velocentum/" },

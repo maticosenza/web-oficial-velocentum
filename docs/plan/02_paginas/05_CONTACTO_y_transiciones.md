@@ -8,98 +8,208 @@ Referencia: página `contact` de LoftyLab. Código del mirror + página en vivo.
 
 # PARTE 1 — CONTACTO
 
-## La página entera es UN bloque
+> **⚠ ESTA PARTE ESTÁ REESCRITA (F4, fase 1).** Lo que había era la lectura de
+> la página `contact` de LoftyLab: una tarjeta partida en dos con datos de
+> oficina, redes y un formulario de tres campos con el botón al costado. Se
+> derogó entera. Lo que se construyó no es esa página, y conviene que se sepa
+> por qué antes de que alguien vuelva a la referencia a buscar una medida.
+>
+> **La Parte 2 —la transición entre páginas— sigue vigente y no se tocó.**
 
-`[VERIFICADO]` — no hay secciones apiladas. Es un hero a pantalla completa con
-una sola tarjeta grande adentro, partida en dos mitades.
+## Qué se derogó, y por qué
 
-| Elemento | Valor |
+| Lo que decía | Qué pasó |
 |---|---|
-| `Hero` | `height: 100vh` · `flex-flow: column` · `place-content: center` · `gap: 16px` |
-| `Contact` (la tarjeta) | `border-radius: 24px` · `flex-flow: row` · `gap: 16px` · `width: 90%` · `max-width: 1200px` · `min-height: 550px` · `max-height: 800px` |
-| Mitad izquierda `Heading` | `background: #030f2e` (tinta) · `border-radius: 24px` · `flex: 1 0 0` |
-| Mitad derecha `Information` | `background: #fff` · `border-radius: 24px` · `flex: 1 0 0` |
+| «La página entera es UN bloque»: un hero de `100vh` con una sola tarjeta adentro | **Derogado.** Son tres bloques: CON-1, CON-3 y el footer. La página dejó de ser un formulario de contacto y pasó a ser un flujo de calificación, que no entra en una pantalla. |
+| Las dos mitades como tarjetas independientes con `gap` de 16px sobre el color de la página | **Derogado.** El panel es una tarjeta y el flujo va sobre el fondo de la página, sin caja propia: meter cuatro pasos y después un calendario dentro de una tarjeta con `max-height: 800px` obliga a hacer scroll adentro de un scroll. |
+| Bloque de datos con oficina, teléfono, email e íconos en círculo | **Derogado.** No hay dirección, y el mail y el teléfono se movieron a CON-3, después del flujo. Quien llega a esta página viene a reservar una llamada; escribir es la salida alternativa, no lo primero. |
+| Formulario de Nombre + Email en fila, mensaje abierto y botón en columna vertical al costado | **Derogado.** Son cinco campos en columna y el botón debajo. La pregunta abierta que proponía el documento —«¿Qué le estás pidiendo hoy a tu agencia?»— la reemplazan los pasos 1 y 2, que preguntan lo mismo de forma cerrada y por eso se puede agrupar en la base. |
+| «⚠ BLOQUEANTE: el formulario necesita destino» | **Resuelto en otro lado.** El destino de los CTA quedó en `/contacto`, que es esta página. Lo que esta página hace con lo que junta es la fase 2. |
+| El responsive medido de la referencia | **Derogado en su detalle**, no en su criterio: la caída a una columna sigue ocurriendo en 810px, que es el corte del sitio. |
 
-**Las dos mitades son tarjetas independientes con su propio radio de 24px**,
-separadas por 16px de gap, sobre el fondo de color de la página. No es una
-tarjeta partida al medio: son dos, y por eso se ve el color entre ellas.
+Lo único que sobrevive del documento viejo es el radio de 24px de las tarjetas,
+que en el sistema es `--r-card`, y el corte de 810px.
 
-`min-height: 550px` y `max-height: 800px` son la clave para que la tarjeta no se
-deforme en pantallas muy bajas o muy altas.
+---
 
-## Mitad izquierda — el panel oscuro
+## La estructura
 
-Fondo tinta, titular display grande, y objetos sueltos alrededor.
-En la referencia lleva una línea manuscrita chica arriba del titular.
+**Nav · CON-1 · CON-3 · Footer**
 
-**Tu versión** `[NUESTRO]`: acá va la imagen representativa que pediste. Dos
-opciones: foto de backstage con el titular encima, o campo de color con objetos
-del sistema. La segunda es más coherente con el cierre de la home, que también
-es campo de color con mancha blanca.
+Acento de la página: `--acento-4` con `--texto-sobre-4`, el mismo par que el nav
+declara para Contacto en `lib/paginas.ts`.
 
-## Mitad derecha — información y formulario
+**⚠ NO LLEVA B8Cierre, Y NO ES UN OLVIDO.** B8 es el llamado a reservar la
+llamada, y ésta es la página de reservar la llamada: cerrarla con un botón que
+lleva acá mismo es un lazo. Las otras tres páginas sí lo llevan, porque desde
+ellas el CTA va a algún lado.
 
-`[VERIFICADO]`
+---
 
-| Elemento | Valor |
+## CON-1 · Dos columnas
+
+Izquierda el panel con el titular, derecha el flujo. En móvil se apila —panel
+arriba, flujo abajo— y el panel pasa a **apaisado**: uno cuadrado se come media
+pantalla de un teléfono antes de que se vea la primera pregunta. Medido a 390px:
+244px de alto, 34% del viewport.
+
+### El panel se construye en CSS, no es una imagen
+
+Existe un PNG con este titular horneado y **no se usa**. Un titular dentro de una
+imagen no se selecciona, no escala con el zoom del navegador, no lo lee un
+buscador y para un lector de pantalla depende de que alguien haya escrito un buen
+`alt`. Sería el único titular del sitio que no es texto, justo en la página que
+convierte. Y el PNG viene cuadrado, con marco y esquinas horneadas, así que
+ataría el bloque a que el fondo sea exactamente ese azul para siempre.
+
+Todo lo que lleva ya estaba en el sistema:
+
+| Pieza | De dónde sale |
 |---|---|
-| `In4` (bloque de datos) | `flex-flow: column` · `gap: 32px` |
-| `Line` | separador de `1px` en color de acento (`#ff742e` en la referencia) |
-| Cada fila (`Office`, `Phone`, `Email`) | `flex-flow: row` · `gap: 16px` · icono en círculo de color + etiqueta + dato |
-| `Social Media` | `flex-flow: row` · `gap: 8px`, íconos en círculo con contorno |
-| `All Form` | `flex-flow: row` · `gap: 16px` — formulario + botón de envío al costado |
-| `Name & Email` | `flex-flow: row` · `gap: 16px` — dos campos en una fila |
-| `Form` | `flex-flow: column` · `gap: 16px` |
-| Botón de envío | columna propia a la derecha, alto completo, con estado `Disabled` |
+| El campo oscuro | `--tinta`, **el mismo del footer**. ⚠ La paleta no tiene «navy»: tiene la tinta con la que se escribe y con la que se pinta el único bloque oscuro del sitio. Un color más sería una sexta decisión de color sin nadie que la sostenga. |
+| «HABLEMOS DE» | Anton en `--fondo` sobre el campo. 18.1:1. |
+| «TU NEGOCIO.» dentro de una mancha crema | **El mismo recurso que B8 en el cierre**, no uno nuevo. Lo único que cambia es que acá va rotada 2.5°. |
+| El garabato amarillo | ⚠ **Pendiente.** El archivo no llegó al repo. El lugar está previsto y anotado en `CON1Flujo.tsx`; cuando aparezca se convierte a WebP con alfa y entra como `<img aria-hidden>`. Es un adorno, no información: el bloque funciona sin él y por eso no se esperó. |
 
-**Estructura de campos de la referencia:** Nombre y Email en fila, Mensaje
-debajo a ancho completo, y el botón de envío como una **columna vertical
-separada** a la derecha de todo el formulario, no debajo.
+**El panel va `sticky` en escritorio.** La columna derecha es bastante más alta
+—cuatro pasos, y en la fase 2 un calendario—, así que sin esto el titular se va
+de cuadro en la primera pregunta. El offset es `--alto-nav`, que el nav publica
+midiéndose solo.
 
-**Radios en uso:** `24px` tarjetas · `56px` campos · `59px` círculos de ícono.
+### ⚠ En el paso 4 la columna izquierda desaparece
 
-## Tu versión del contenido `[NUESTRO]`
+Es un contrato, no una decoración. El calendario de la fase 2 necesita la grilla
+del mes **más** una columna de horarios al lado, y eso en media pantalla de
+1440px no entra sin apilarse. El flujo toma el ancho completo. **Ya está
+implementado**, con el marcador adentro, para que cuando llegue el calendario el
+layout no sea una sorpresa.
 
-Pediste solo teléfono y email, sin dirección.
+---
 
-> **Teléfono** · [a completar]
-> **Email** · [a completar]
+## El flujo — cuatro pasos
 
-**Consecuencia:** la referencia tiene tres filas y vos dos, así que el bloque
-queda más corto y sobra aire. Dos salidas: subir el `gap` de 32 a 48 para que
-las dos filas ocupen el espacio, o sumar una tercera fila con algo que sí
-tengas — horario de atención, o "respondemos en menos de 24 h".
-
-**Campos del formulario, propuesta:** Nombre y Email en fila, Empresa o tienda,
-y un mensaje abierto. La pregunta abierta de Meraki —*"¿Qué le estás pidiendo
-hoy a tu agencia?"*— es mejor placeholder que "contanos tu proyecto", porque te
-da el diagnóstico antes de la llamada.
-
-**⚠ BLOQUEANTE:** el formulario necesita destino. Si el envío va a Calendly con
-los datos precargados, no hace falta backend. Si querés capturar al que llena y
-no agenda, sí. Es la misma decisión pendiente de la home.
-
-## Responsive de Contacto
-
-`[VERIFICADO]` — es la página que más cambia de las cuatro.
-
-**Mobile <810:**
-
-| Elemento | Cambio |
+| Paso | Qué es |
 |---|---|
-| `Hero` | `height: min-content` — **deja de ser 100vh** |
-| Contenedor | `padding: 150px 16px 50px` |
-| `Contact` | `flex-direction: column` · `gap: 8px` · `max-height: unset` · `min-height: unset` — las dos mitades se apilan y se liberan los topes de alto |
-| `Heading` e `Information` | `width: 100%` · `padding: 16px` |
-| `All Form` y `Name & Email` | `flex-direction: column` · `gap: 8px` — **los campos dejan de ir en fila** |
-| Botón de envío | `align-self: unset` · `width: 100%` · `height: 56px` — pasa de columna vertical a botón ancho debajo |
-| Tipografía de campos | `--framer-input-font-size: 14px` |
+| 1 | ¿En qué rubro estás? · cinco opciones |
+| 2 | ¿Qué querés lograr? · cuatro opciones |
+| 3 | ¿Cómo te contactamos? · cinco campos obligatorios |
+| 4 | Elegí día y horario · **marcador: el calendario va en la fase 2** |
 
-**Tablet 810–1199:** la tarjeta **sigue en dos columnas**. Solo bajan los gaps a
-`8px` y el padding interno a `16px`. La caída a una columna ocurre recién en
-mobile.
+El copy de los tres primeros está confirmado y vive en `src/data/contacto.ts`,
+que es la fuente única del bloque igual que `casos.ts` lo es de Casos.
 
-**Anchos de diseño:** `390px` mobile · `810px` tablet.
+### El estado está escrito para serializarse, aunque todavía no se envíe
+
+La fase 1 no guarda nada. Pero lo que la fase 2 va a guardar **no es el índice
+del radio marcado**: es el TEXTO de la opción elegida, que es lo que alguien va a
+leer en la base sin tener que traducir un número. Por eso cada opción tiene `id`
+y texto por separado, y `respuestasSerializables()` devuelve el objeto listo:
+
+```json
+{
+  "respuestas": [
+    { "pregunta": "¿En qué rubro estás?", "id": "retail",
+      "respuesta": "Retail — local físico con presencia digital" },
+    { "pregunta": "¿Qué querés lograr?", "id": "escalar",
+      "respuesta": "Escalar las ventas que ya tengo" }
+  ],
+  "contacto": { "nombre": "…", "telefono": "…", "email": "…",
+                "empresa": "…", "web": "…" }
+}
+```
+
+El contrato se escribió ahora, mientras las decisiones estaban frescas, y no
+cuando haya que conectarlo con apuro.
+
+### Las reglas de los pasos 1 y 2
+
+- **Radios nativos dentro de un `label` que envuelve la tarjeta entera.** Con el
+  label al costado, lo tocable sería el círculo de 16px del control. La tarjeta
+  mide 87px de alto.
+- **⚠ NO HAY AUTOAVANCE AL ELEGIR.** Un grupo de radios se recorre con las
+  flechas: al elegir la primera opción para escuchar las demás, autoavanzar
+  dejaría a quien navega con teclado sin poder llegar nunca a la tercera. Y con
+  lector de pantalla la página se movería sola bajo el foco. El avance es
+  siempre explícito, con el botón.
+- **Al cambiar de paso el foco va al titular del paso nuevo**, con `tabIndex={-1}`
+  y anillo propio. ⚠ Y **no** en el primer render: mover el foco al cargar le
+  roba el control a quien recién llega y se saltea el nav entero.
+- **No se puede avanzar sin elegir**, con el aviso «Elegí una opción para
+  seguir.» ⚠ El motivo no es de formulario sino **de dato**: estos dos pasos son
+  la calificación, y son exactamente lo que la fase 2 va a guardar. Dejar avanzar
+  sin elegir hace que el paso 4 llegue con dos respuestas nulas, y esas dos nulas
+  se escriben en la base junto con el resto — un contacto sin rubro ni objetivo
+  es un contacto que hay que volver a preguntar entero. Acá alcanza un mensaje
+  único, a diferencia del paso 3: la pregunta es una y la respuesta también.
+- **Los cuatro pasos existen en el DOM desde el primer render**, escondidos con
+  `hidden`. No se montan y desmontan: eso perdería lo escrito al volver atrás.
+  Verificado que la elección sobrevive al ir y volver.
+
+  **⚠ ACOPLAMIENTO SILENCIOSO: ese `hidden` funciona por el preflight de
+  Tailwind, no por nosotros.** `.con1-paso { display: grid }` le gana al
+  `display: none` que el atributo `hidden` trae en la hoja del NAVEGADOR, que
+  pierde contra cualquier regla de autor. Lo que lo salva es
+  `[hidden]:where(:not([hidden="until-found"])) { display: none !important }`,
+  que viene en el preflight de Tailwind v4.
+
+  Es el peor tipo de dependencia: **si algún día se saca el preflight, los cuatro
+  pasos aparecen apilados y no falla nada ruidosamente** — no hay error de build,
+  no hay excepción, no hay test rojo. Sólo una página con las cuatro preguntas
+  juntas que alguien tiene que ver. Está anotado también en `contacto.css`, sobre
+  la propia regla; si se saca el preflight, hay que escribir esa línea a mano.
+- **Progreso:** barra decorativa con `aria-hidden` más el texto «Paso N de 4». El
+  estado no se dice dos veces.
+
+### La validación del paso 3 — por campo
+
+- Cada campo con **su propio mensaje**, atado por `aria-describedby`. Un cartel
+  único arriba obliga a adivinar cuál de los cinco falla.
+- `aria-invalid` va **junto con** el mensaje, nunca en su lugar: solo, anuncia
+  «inválido» y nada más.
+- **Corre al intentar avanzar, no al tipear.** Marcar un email como inválido en
+  la primera letra es hostil. El error se limpia al tocar el campo.
+- Al enviar, **el foco salta al primer campo con problema**.
+- **Teléfono:** se cuentan sólo los dígitos, mínimo 8. La gente lo escribe con
+  espacios, guiones, paréntesis y un `+` adelante, y los cinco son válidos.
+- **Web o Instagram:** no se valida como URL. `@tumarca` es una respuesta
+  correcta. Por eso el campo es `type="text"` y no `type="url"`.
+- **Email:** regex laxo. Uno estricto rechaza direcciones válidas y no atrapa las
+  que importan.
+- **Honeypot escondido también para el lector de pantalla:** `aria-hidden`, fuera
+  de tabulación y fuera de pantalla. ⚠ **No** lleva `.solo-lectores`: esa clase
+  esconde a la vista pero sí se anuncia, así que una persona ciega escucharía un
+  campo pidiéndole su sitio web y lo completaría — y completarlo es exactamente
+  lo que marca el envío como robot.
+- **Los campos van a 16px** o iOS hace zoom solo al enfocarlos.
+
+Los mensajes dicen **qué hacer, no qué está mal**: «Escribí tu nombre completo» y
+no «campo requerido». El segundo describe el estado del formulario; el primero le
+dice a la persona cuál es su próximo movimiento.
+
+---
+
+## CON-3 · Contacto directo
+
+Panel `--acento-4` con borde de onda, después del flujo. Titular «¿Preferís
+escribir antes?» y dos datos:
+
+- **Email** · `marketing@velocentum.com`, el mismo de B9 y **desde el mismo
+  lugar**: la constante `MAIL` era local de `B9Footer.tsx` y se mudó a
+  `data/contacto.ts`, que ahora leen los dos. Dos constantes con la misma
+  dirección es una de las dos desactualizada esperando su turno.
+- **Teléfono** · ⚠ **marcador visible**, no una fila omitida en silencio. El
+  sitio actual muestra un `+54 9 11 3581-0100` y nadie confirmó todavía si se usa
+  también acá. Omitirla dejaría la página pareciendo terminada con un dato menos.
+
+---
+
+## Lo que queda para la fase 2
+
+1. El calendario propio del paso 4, con la columna izquierda ya escondida.
+2. La integración con Calendly.
+3. La persistencia en Supabase, contra el contrato de `respuestasSerializables()`.
+4. El garabato amarillo del panel.
+5. Confirmar el teléfono de CON-3.
 
 ---
 

@@ -1,0 +1,448 @@
+/* ===========================================================
+   PÁGINA CONTACTO — CON-1 y CON-3.
+   El nav y el footer se reutilizan de la home y sus estilos
+   viven en `home.css`.
+   =========================================================== */
+
+@layer components {
+  /* =========================================================
+     CON-1 · DOS COLUMNAS
+     ========================================================= */
+
+  .con1 {
+    position: relative;
+    background: var(--fondo);
+    color: var(--tinta);
+    /* El acento de la página. Los botones del flujo y el foco de
+       los pasos lo usan, así que viaja por la sección en vez de
+       repetirse en cada regla. */
+    --acento: var(--acento-4);
+    --sobre: var(--texto-sobre-4);
+  }
+
+  /* Apilado por defecto: móvil primero. La reserva de arriba es la
+     banda del nav, que es fijo y taparía el panel. */
+  .con1__caja {
+    display: grid;
+    gap: var(--space-4);
+    padding-top: calc(var(--alto-nav, 96px) + var(--space-5));
+    padding-bottom: var(--space-7);
+  }
+
+  /* --- El panel --- */
+
+  /* ⚠ EL CAMPO ES `--tinta`, EL MISMO DEL FOOTER, y no un navy
+     nuevo. La paleta no tiene navy: tiene la tinta con la que se
+     escribe y con la que se pinta el único bloque oscuro del
+     sitio. Un color más sería una sexta decisión de color sin
+     nadie que la sostenga. */
+  .con1__panel {
+    background: var(--tinta);
+    color: var(--fondo);
+    border-radius: var(--r-card);
+    padding: var(--space-6) var(--space-5);
+    display: grid;
+    align-content: center;
+    /* ⚠ APAISADO EN MÓVIL, NO CUADRADO. Un panel cuadrado en un
+       teléfono se come media pantalla antes de que se vea la
+       primera pregunta, y la primera pregunta es de lo que se
+       trata la página. Con el alto atado al viewport ocupa lo que
+       tiene que ocupar y deja ver que abajo sigue algo. */
+    min-height: 34vh;
+  }
+
+  .con1__titular {
+    font-family: var(--font-display);
+    /* `Hablemos de tu negocio.` son 22 caracteres. Entra en dos
+       renglones en todo el rango. */
+    font-size: clamp(38px, 8vw, 84px);
+    line-height: 1.02;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .con1__titular-linea {
+    color: var(--fondo);
+  }
+
+  /* LA MANCHA ES EL RECURSO DE B8, NO UNO NUEVO.
+     Campo crema con el titular en tinta adentro, esquinas muy
+     redondeadas. Lo único que cambia respecto del cierre de la
+     home es que acá va rotada.
+
+     `inline-block` es obligatorio: un `span` en flujo no se rota,
+     `transform` no aplica a las cajas en línea. */
+  .con1__mancha {
+    display: inline-block;
+    background: var(--fondo);
+    color: var(--tinta);
+    border-radius: clamp(20px, 3vw, 40px);
+    padding: 0.08em 0.36em 0.16em;
+    transform: rotate(-2.5deg);
+  }
+
+  /* La rotación es estática y no una animación, así que no la
+     apaga `prefers-reduced-motion`: la preferencia es sobre el
+     movimiento, y esto no se mueve. */
+
+  /* --- El flujo --- */
+
+  .con1__flujo {
+    display: grid;
+    align-content: start;
+    gap: var(--space-4);
+  }
+
+  /* --- El progreso --- */
+
+  .con1__progreso {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .con1__progreso-texto {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--texto-2);
+    margin: 0;
+  }
+
+  /* La barra es decorativa —el estado lo dice el texto de arriba— y
+     por eso va `aria-hidden` en el componente. Acá sólo se dibuja. */
+  .con1__barra {
+    height: 4px;
+    border-radius: var(--r-pill);
+    background: color-mix(in srgb, var(--tinta) 12%, transparent);
+    overflow: hidden;
+  }
+
+  .con1__barra-avance {
+    display: block;
+    height: 100%;
+    width: calc(var(--avance, 0) * 100%);
+    background: var(--acento);
+    border-radius: inherit;
+    transition: width var(--motion-hover) var(--motion-ease);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .con1__barra-avance {
+      transition: none;
+    }
+  }
+
+  /* --- Cada paso --- */
+
+  /* ⚠ ESTE `display: grid` GANARÍA POR ENCIMA DE `hidden`, Y NO LO
+     HACE POR UNA RAZÓN QUE CONVIENE SABER. El atributo `hidden`
+     vale `display: none` en la hoja del NAVEGADOR, que pierde
+     contra cualquier regla de autor: con sólo esto, los cuatro
+     pasos se verían apilados a la vez.
+
+     Lo que lo salva es el preflight de Tailwind v4, que trae
+     `[hidden]:where(:not([hidden="until-found"])) { display: none
+     !important }`. O sea que la mecánica de este bloque depende de
+     una regla que no está escrita acá. Verificado en el DOM: los
+     tres pasos escondidos resuelven a `display: none` y miden 0.
+
+     Si algún día se saca el preflight, hay que agregar la regla a
+     mano —o esto se rompe en silencio, mostrando las cuatro
+     preguntas juntas—. */
+  .con1-paso {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  /* El titular del paso recibe el foco al entrar, así que necesita
+     su propio anillo: sin esto, alguien que navega con teclado ve
+     saltar el foco a un texto sin marca y no sabe dónde quedó.
+     `fit-content` para que el anillo abrace la pregunta y no toda
+     la columna. */
+  .con1-paso__titulo {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3.4vw, 40px);
+    line-height: 1.05;
+    text-transform: uppercase;
+    margin: 0;
+    width: fit-content;
+  }
+
+  .con1-paso__titulo:focus-visible {
+    outline: 3px solid currentColor;
+    outline-offset: 6px;
+    border-radius: 4px;
+  }
+
+  .con1-paso__ayuda {
+    color: var(--texto-2);
+    margin: 0;
+  }
+
+  /* --- Las opciones --- */
+
+  /* El `fieldset` es la agrupación semántica del grupo de radios.
+     Se le sacan el borde y el padding que trae por defecto: acá el
+     grupo se ve por el espaciado, no por una caja. */
+  .con1-opciones {
+    display: grid;
+    gap: var(--space-2);
+    border: none;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+
+  /* ⚠ LA TARJETA ES EL `label`, Y ESO ES EL ÁREA TÁCTIL.
+     Con el label al costado del radio, lo tocable sería el círculo
+     de 16px del control. Envolviendo la tarjeta entera, se toca la
+     tarjeta — que es lo que cualquiera intenta hacer. */
+  .con1-opcion {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: var(--control-comfort-height);
+    padding: var(--space-3) var(--space-4);
+    border: 1.5px solid color-mix(in srgb, var(--tinta) 18%, transparent);
+    border-radius: var(--r-campo);
+    background: var(--fondo);
+    cursor: pointer;
+    transition:
+      border-color var(--motion-hover) var(--motion-ease),
+      background-color var(--motion-hover) var(--motion-ease);
+  }
+
+  .con1-opcion:hover {
+    border-color: var(--acento);
+  }
+
+  /* El radio va NATIVO. Uno dibujado con `appearance: none` pierde
+     el recorrido con flechas, el anuncio de «1 de 5» y el modo de
+     alto contraste, y hay que reescribir las tres cosas a mano.
+     `accent-color` alcanza para que se vea del color de la página. */
+  .con1-opcion input[type="radio"] {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    accent-color: var(--acento);
+  }
+
+  /* El estado elegido se lee en la tarjeta entera, no sólo en el
+     círculo de 20px. `:has()` es lo que deja que el contenedor
+     reaccione a su propio control sin una clase puesta desde JS. */
+  .con1-opcion:has(input:checked) {
+    border-color: var(--acento);
+    background: color-mix(in srgb, var(--acento) 8%, var(--fondo));
+  }
+
+  /* El anillo de foco va en la TARJETA y no en el radio: es lo que
+     se ve, y un anillo de 20px dentro de una tarjeta de 56 se
+     pierde. */
+  .con1-opcion:has(input:focus-visible) {
+    outline: 3px solid currentColor;
+    outline-offset: 3px;
+  }
+
+  .con1-opcion__texto {
+    display: grid;
+    gap: 2px;
+  }
+
+  .con1-opcion__nombre {
+    font-weight: 600;
+  }
+
+  .con1-opcion__detalle {
+    font-size: 15px;
+    color: var(--texto-2);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .con1-opcion {
+      transition: none;
+    }
+  }
+
+  /* --- El aviso de «elegí una opción» --- */
+
+  .con1__aviso {
+    margin: 0;
+    font-size: 15px;
+    color: var(--acento-2);
+  }
+
+  /* --- Los campos del paso 3 --- */
+
+  .con1-campos {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .con1-campo {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .con1-campo__etiqueta {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .con1-campo__control {
+    min-height: var(--control-comfort-height);
+    padding-inline: var(--space-3);
+    border: 1.5px solid color-mix(in srgb, var(--tinta) 18%, transparent);
+    border-radius: var(--r-campo);
+    background: var(--fondo);
+    color: var(--tinta);
+    font-family: var(--font-texto);
+    /* ⚠ 16px NO ES ESTÉTICA: por debajo de eso, iOS hace zoom solo
+       al enfocar el campo y deja la página corrida, con el resto
+       del formulario fuera de cuadro. Es el mínimo, no el gusto. */
+    font-size: 16px;
+  }
+
+  .con1-campo__control:focus-visible {
+    outline: 3px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  /* El campo con problema se marca por color Y por el mensaje de
+     abajo. Sólo por color no alcanza: 1.4.1 pide que el color no
+     sea el único portador de la información. */
+  .con1-campo__control[aria-invalid="true"] {
+    border-color: var(--acento-2);
+  }
+
+  .con1-campo__error {
+    margin: 0;
+    font-size: 14px;
+    color: var(--acento-2);
+  }
+
+  /* --- El honeypot --- */
+
+  /* ⚠ FUERA DE PANTALLA, NO `display: none`. Algunos robots
+     ignoran los campos ocultos con `display`, así que el campo
+     tiene que existir y ser rellenable — sólo que nadie de carne y
+     hueso llega a él: está fuera del viewport, fuera de tabulación
+     y `aria-hidden` en el componente. */
+  .con1__trampa {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  /* --- Los botones de cada paso --- */
+
+  .con1__botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+  }
+
+  .con1__marcador {
+    color: var(--texto-2);
+    margin: 0;
+  }
+
+  /* =========================================================
+     CON-1 EN ESCRITORIO — las dos columnas
+     ========================================================= */
+
+  @media (min-width: 810px) {
+    .con1__caja {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-5);
+      align-items: start;
+    }
+
+    /* EL PANEL SE FIJA. La columna derecha es más alta que él —
+       cuatro pasos, y en la fase 2 un calendario— así que sin esto
+       el titular se va de cuadro en la primera pregunta.
+
+       El offset es el del nav real, igual que el resto de los
+       `sticky` del sitio: `--alto-nav` lo publica el nav
+       midiéndose solo. */
+    .con1__panel {
+      position: sticky;
+      top: calc(var(--alto-nav, 96px) + var(--space-3));
+      min-height: 0;
+      /* Acá sí es cuadrado o casi: en escritorio la columna tiene
+         ancho de sobra y el panel se lee como una pieza, no como
+         una franja. */
+      aspect-ratio: 1 / 1;
+      padding: var(--space-7) var(--space-6);
+    }
+
+    /* ⚠ EN EL PASO 4 LA COLUMNA IZQUIERDA DESAPARECE, Y ES EL
+       CONTRATO DEL CALENDARIO. La grilla del mes más la columna de
+       horarios al lado no entran en media pantalla de 1440px sin
+       apilarse, así que el flujo toma el ancho completo. El panel
+       se esconde con `hidden` desde el componente; acá la grilla
+       deja de reservarle columna. */
+    .con1--ancho .con1__caja {
+      grid-template-columns: minmax(0, 1fr);
+      max-width: var(--medida-titular);
+      margin-inline: auto;
+    }
+  }
+
+  /* =========================================================
+     CON-3 · CONTACTO DIRECTO
+     ========================================================= */
+
+  .con3__contenido {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: var(--space-5);
+    padding-block: var(--space-section) var(--space-7);
+  }
+
+  .con3__titular {
+    font-family: var(--font-display);
+    /* `¿Preferís escribir antes?` son 24 caracteres: entra en un
+       renglón de 480px para arriba. */
+    font-size: clamp(30px, 5vw, 64px);
+    line-height: 1.05;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .con3__datos {
+    display: grid;
+    gap: var(--space-4);
+    justify-items: center;
+  }
+
+  .con3__dato {
+    display: grid;
+    gap: var(--space-1);
+    justify-items: center;
+    margin: 0;
+  }
+
+  /* Opacidad plena en los dos. `--texto-2` está calculado contra el
+     fondo crema y sobre el violeta pierde contraste sin avisar: acá
+     manda `--texto-sobre-4`, que llega heredado del campo. Misma
+     lección que el eyebrow del hero y el cierre azul. */
+  .con3__etiqueta,
+  .con3__marcador {
+    color: inherit;
+  }
+
+  .con3__mail {
+    color: inherit;
+    font-size: clamp(18px, 2.4vw, 24px);
+  }
+
+  .con3__marcador {
+    opacity: 0.72;
+  }
+}
