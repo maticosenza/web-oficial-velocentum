@@ -823,10 +823,14 @@
     white-space: nowrap;
   }
 
+  /* Un control deshabilitado tiene que PARECER deshabilitado.
+     ⚠ HOY NO LA USA NADIE, y se deja igual: era la regla del CTA
+     mientras el destino de la agenda no existía, y es el estado
+     deshabilitado del sistema para el próximo control que lo
+     necesite —un formulario enviándose, por ejemplo—. Borrarla
+     obligaría a reinventarla. */
   .boton:disabled,
   .boton[aria-disabled="true"] {
-    /* Un control deshabilitado tiene que PARECER deshabilitado.
-       Se usa sobre el CTA cuyo destino todavía no existe. */
     opacity: 0.55;
     cursor: not-allowed;
   }
@@ -890,6 +894,42 @@
   .boton--relleno {
     background: var(--acento);
     color: var(--sobre);
+  }
+
+  /* EL GLOW DEL CTA, que el plan pedía desde el principio y estuvo
+     afuera todo este tiempo por una razón concreta: el botón no
+     navegaba, y un halo que se enciende al pasar el mouse promete
+     una interacción. Ahora los tres CTA van a `/contacto`, así que
+     vuelve.
+
+     Sale del propio `--acento` del botón, no de un color escrito:
+     el CTA del hero brilla azul, el de Método y los tres cierres
+     brillan bermellón, y si mañana cambia el acento el halo lo
+     sigue. Se suma a la sombra de relieve que llevan todos los
+     botones — el halo dice «esto responde», la sombra dice «esto
+     se levanta», y son dos cosas.
+
+     Sólo `--relleno`: los de contorno son navegación secundaria y
+     un halo los pondría a competir con el CTA. */
+  .boton--relleno:not(:disabled):not([aria-disabled="true"]):hover {
+    box-shadow:
+      0 8px 18px rgb(20 16 36 / 0.24),
+      0 0 22px 2px color-mix(in srgb, var(--acento) 60%, transparent);
+  }
+
+  /* ⚠ ESTE BORDE ES ACCESIBILIDAD, NO DECORACIÓN.
+     Lo lleva el CTA del cierre azul, donde el relleno bermellón da
+     1.25 contra el campo y no llega al 3.0 que WCAG 1.4.11 pide
+     para un objeto gráfico. El borde va en `--sobre` —la misma
+     tinta del texto, 4.08 contra el azul—, así que el LÍMITE del
+     botón sí pasa el mínimo aunque el relleno no. Es la salida que
+     la propia norma admite: lo que define el objeto es su
+     contorno.
+
+     Colgado de `--sobre` y no de un color escrito: si el par del
+     botón cambia, el borde lo sigue y no se descalibra solo. */
+  .boton--perfilado {
+    border: 1.5px solid var(--sobre);
   }
 
   .boton--contorno {

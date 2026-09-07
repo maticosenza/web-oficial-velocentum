@@ -43,15 +43,14 @@
    Máximo dos en el hero, y no más de 6° de rotación.
    =========================================================== */
 
-import { useId, useRef, type CSSProperties } from "react";
+import { useRef, type CSSProperties } from "react";
 
+import { EnlaceConCortina } from "../componentes/RouteCurtain";
 import { TitularPorLetras } from "../componentes/TitularPorLetras";
 import { Flecha } from "../componentes/Flecha";
 import { useParallaxDelHero } from "../lib/parallaxDelHero";
 
 export function B1Hero() {
-  const idPendiente = useId();
-
   /* El hook escribe `--mancha-x/-y/-rot/-escala` acá, y el CSS
      los aplica a la capa que flota. El ascenso por scroll no pasa
      por el hook: sale de `--cobertura` directamente en CSS. Ver la
@@ -133,47 +132,30 @@ export function B1Hero() {
           />
         </div>
 
-        {/* PENDIENTE: el destino de la agenda no está decidido, así
-            que el CTA no navega.
+        {/* EL CTA NAVEGA, Y POR ESO ES UN ENLACE.
+            Va a `/contacto`, que es navegación interna: no es una
+            acción, es ir a otro lado. Con `EnlaceConCortina`, igual
+            que el nav y que los rectángulos del footer — el
+            `<button>` de antes existía sólo porque el destino no
+            estaba decidido, y con él se van el `aria-disabled`, la
+            descripción que explicaba el pendiente y el 55% de
+            opacidad que arrastraba el estado deshabilitado.
 
-            El aviso dejó de estar a la vista —competía con el
-            titular— pero NO desapareció: va como descripción del
-            botón, para lectores de pantalla.
-
-            Por eso el botón lleva `aria-disabled` y no `disabled`.
-            Un `disabled` de verdad sale del orden de tabulación y
-            la mayoría de los lectores lo saltea, así que su
-            descripción no se anunciaría nunca: el aviso quedaría
-            escrito y nadie lo escucharía. Con `aria-disabled` el
-            botón se anuncia como deshabilitado y explica por qué.
-            No hace falta frenar nada: no tiene handler ni destino,
-            así que activarlo no hace nada.
-
-            El aviso sigue a la vista en el CTA de B8, que está
-            sobre el campo azul y no compite con ningún titular. */}
+            Azul `--acento-1` con su par de texto: blanco, 4.56
+            sobre el azul. El botón contra el fondo crema de la
+            página da 4.45, holgado sobre el 3.0 que pide un objeto
+            gráfico. */}
         <div className="b1__cta">
-          {/* Azul `--acento-1` con su par de texto. El relieve en
-              hover lo da la regla general de `.boton`, que excluye
-              los deshabilitados: mientras el destino de la agenda
-              no exista, este botón no se levanta. Cuando se
-              defina y se saque el `aria-disabled`, lo hereda solo,
-              sin tocar nada. */}
-          <button
-            type="button"
+          <EnlaceConCortina
+            to="/contacto"
             className="boton boton--relleno"
             style={
               { "--acento": "var(--acento-1)", "--sobre": "var(--texto-sobre-1)" } as CSSProperties
             }
-            aria-disabled="true"
-            aria-describedby={idPendiente}
           >
             Reservá tu análisis
             <Flecha />
-          </button>
-          <p id={idPendiente} className="solo-lectores">
-            Pendiente: el destino de la agenda todavía no está definido, así que este botón no
-            navega.
-          </p>
+          </EnlaceConCortina>
         </div>
       </div>
     </div>

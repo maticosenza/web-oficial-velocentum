@@ -20,17 +20,20 @@
    fijado sólo mientras este bloque tenga recorrido. La misma
    razón por la que B2 mide 108vh.
 
-   EL CTA NO NAVEGA, Y POR ESO NO TIENE GLOW
-   El plan pide glow en hover. Presupone que el botón lleva a la
-   agenda, y el destino sigue sin definir: es el pendiente 3 del
-   `00_LEEME` y la decisión 5 del documento de copy. Va el mismo
-   marcador que el hero —botón deshabilitado y el pendiente
-   escrito al lado— porque un enlace a ninguna parte es peor que
-   un botón que dice que todavía no está. Un glow sobre un
-   control que no responde promete lo mismo que ese enlace.
+   EL CTA NAVEGA, Y CON ESO VUELVE EL GLOW
+   El destino era el pendiente 3 del `00_LEEME` y la decisión 5 del
+   documento de copy: quedó en `/contacto`. El botón deshabilitado
+   y el aviso de pendiente que había al lado se fueron, y con ellos
+   el 55% de opacidad que arrastraba el estado deshabilitado.
 
-   Cuando se decida el destino se cambian las dos cosas juntas,
-   acá y en `B1Hero.tsx`.
+   El glow en hover que el plan pedía estaba afuera justamente
+   porque el botón no llevaba a ningún lado — un glow sobre un
+   control que no responde promete algo que no pasa. Ahora
+   responde, así que vuelve. Vive en `.boton--relleno` y lo
+   heredan los tres CTA.
+
+   ⚠ `/contacto` es hoy la PaginaProvisional del andamio. El CTA
+   lleva a una página vacía hasta que se construya F4.
 
    EL TEXTO SOBRE EL AZUL VA A OPACIDAD PLENA
    Nada de `etiqueta--apagada` acá adentro: `--texto-2` es un gris
@@ -43,6 +46,7 @@
 import type { CSSProperties } from "react";
 
 import { SeccionConBorde } from "../componentes/SectionEdge";
+import { EnlaceConCortina } from "../componentes/RouteCurtain";
 import { Reveal } from "../componentes/Reveal";
 import { Flecha } from "../componentes/Flecha";
 
@@ -90,25 +94,44 @@ export function B8Cierre({
           {bajada ? <p className="b8__bajada">{bajada}</p> : null}
 
           <div className="b8__cta">
-            {/* CREMA, NO ROSA NI VIOLETA, Y ESTÁ MEDIDO.
-                Contra el campo azul `--acento-1`, el botón necesita
-                3.0 de contraste para leerse como un objeto aparte.
-                Ningún acento llega: violeta da 1.10, el rosa de
-                marca 1.23, bermellón 1.25, verde 2.07 y amarillo
-                2.84. El problema no es la saturación sino la
+            {/* ⚠ BERMELLÓN SOBRE EL AZUL FALLA LA MÉTRICA, Y VA
+                IGUAL — CON UN BORDE QUE LA ARREGLA.
+
+                Contra el campo `--acento-1`, un objeto gráfico
+                necesita 3.0 (WCAG 1.4.11). El bermellón da 1.25:
+                es el mismo número por el que en su momento se
+                descartaron violeta (1.10), rosa (1.23), verde
+                (2.07) y amarillo (2.84) y se terminó en crema
+                (4.45). El problema no es la saturación sino la
                 luminancia — todos pesan casi lo mismo que el azul.
-                Crema da 4.45 y su texto en tinta 18.14, que es lo
-                más lejos que se puede llegar con la paleta. */}
-            <button
-              type="button"
-              className="boton boton--relleno"
-              style={{ "--acento": "var(--fondo)", "--sobre": "var(--tinta)" } as CSSProperties}
-              disabled
+
+                Naranja y azul son complementarios, así que EN LA
+                PRÁCTICA el botón se ve: la métrica mide luminancia
+                y no tono, y ahí es donde se queda corta. Pero
+                «se ve» no es un criterio verificable y 1.4.11 no
+                se cumple sola.
+
+                Por eso el borde en `--sobre`, que acá es tinta:
+                4.08 contra el azul, y con eso el LÍMITE del botón
+                pasa el mínimo aunque el relleno no lo pase. Es la
+                salida que la propia norma admite — el contorno es
+                lo que define el objeto.
+
+                El texto sí pasa por su cuenta: tinta sobre
+                bermellón da 5.09, sobre el 4.5 de 1.4.3. */}
+            <EnlaceConCortina
+              to="/contacto"
+              className="boton boton--relleno boton--perfilado"
+              style={
+                {
+                  "--acento": "var(--acento-2)",
+                  "--sobre": "var(--texto-sobre-2)",
+                } as CSSProperties
+              }
             >
               Reservá tu análisis
               <Flecha />
-            </button>
-            <p className="etiqueta b8__pendiente">Pendiente · destino de la agenda sin definir</p>
+            </EnlaceConCortina>
           </div>
         </Reveal>
       </div>

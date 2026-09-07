@@ -27,13 +27,12 @@
    con los números, está en `estilos/metodo.css`.
    =========================================================== */
 
-import { useId, type CSSProperties } from "react";
+import type { CSSProperties } from "react";
 
+import { EnlaceConCortina } from "../componentes/RouteCurtain";
 import { Flecha } from "../componentes/Flecha";
 
 export function MET1Hero() {
-  const idPendiente = useId();
-
   return (
     <section className="met1" aria-labelledby="met1-titulo">
       {/* DECORATIVA, Y POR ESO `alt=""`. El significado del bloque
@@ -74,29 +73,33 @@ export function MET1Hero() {
           Después proponer.
         </h1>
 
-        {/* El mismo marcador que la home: el destino de la agenda
-            sigue sin definir, así que el botón no navega y el
-            aviso va como su descripción accesible.
-            `aria-disabled` y no `disabled`, por lo mismo que en
-            B1: un `disabled` de verdad sale del orden de
-            tabulación y su descripción no se anunciaría nunca. */}
+        {/* Enlace a `/contacto`, igual que el de la home: es
+            navegación interna y va con cortina.
+
+            ⚠ BERMELLÓN, NO AZUL. El azul es el acento de Inicio, y
+            un CTA azul en el hero de Método rompía la leyenda de
+            color que el nav declara. Va `--acento-2` con su par,
+            tinta, que da 5.09 sobre el bermellón.
+
+            El campo de atrás no es un token sino la imagen 3D del
+            hero, así que no hay un número único que medir para el
+            límite del botón: es azul oscuro donde cae el CTA y
+            cambia de tono a los costados. El bermellón se despega
+            de ese azul por tono y por luminancia, y es el mismo
+            criterio que el resto del sitio — donde el campo SÍ es
+            un token plano y falla la métrica, como el cierre azul,
+            va el borde de `.boton--perfilado`. Acá no hace falta. */}
         <div className="met1__cta">
-          <button
-            type="button"
+          <EnlaceConCortina
+            to="/contacto"
             className="boton boton--relleno"
             style={
-              { "--acento": "var(--acento-1)", "--sobre": "var(--texto-sobre-1)" } as CSSProperties
+              { "--acento": "var(--acento-2)", "--sobre": "var(--texto-sobre-2)" } as CSSProperties
             }
-            aria-disabled="true"
-            aria-describedby={idPendiente}
           >
             Reservá tu análisis
             <Flecha />
-          </button>
-          <p id={idPendiente} className="solo-lectores">
-            Pendiente: el destino de la agenda todavía no está definido, así que este botón no
-            navega.
-          </p>
+          </EnlaceConCortina>
         </div>
       </div>
     </section>

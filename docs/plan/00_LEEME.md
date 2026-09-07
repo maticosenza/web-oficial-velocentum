@@ -115,8 +115,19 @@ criterio de cada componente, no una fase final.
    pueden usar en el nav. Ver `01_sistema/identidad.md`.
 
 **Bloquean publicar:**
-3. Destino de la agenda o del formulario. Recomendación: agenda como acción
-   principal, formulario como alternativa.
+3. ~~Destino de la agenda o del formulario~~ **RESUELTO**: los cinco CTA
+   —el hero de la Home, el hero de Método y los tres cierres azules— apuntan a
+   `/contacto`. Dejaron de ser botones deshabilitados y pasaron a enlaces con
+   cortina, como el resto de la navegación interna: son navegación, no una
+   acción. Con eso recuperan el color pleno —arrastraban el 55% de opacidad del
+   estado deshabilitado— y vuelve el glow en hover que el plan pedía y que
+   estaba afuera justamente porque el botón no llevaba a ningún lado.
+
+   **Con esto el sitio se queda sin un solo marcador de pendiente a la vista.**
+
+   ⚠ `/contacto` es todavía la `PaginaProvisional` del andamio, así que hasta
+   que se construya F4 los CTA llevan a una página vacía. Es el orden correcto
+   —primero el destino, después la página— pero queda anotado.
 4. ~~Mail y redes reales~~ **RESUELTOS** y construidos en B9:
    `marketing@velocentum.com`, LinkedIn, Instagram y Facebook.
    **No se enlaza a `velocentum.agency`:** decisión explícita.
