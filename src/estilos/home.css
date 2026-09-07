@@ -1350,7 +1350,15 @@
   }
 
   /* Tres columnas en desktop, una abajo. No hay paso intermedio
-     de dos: con tres tarjetas, un 2+1 deja una huérfana. */
+     de dos: con tres tarjetas, un 2+1 deja una huérfana.
+
+     `grid-auto-rows: 1fr` NO ES COSMÉTICO, y es la misma razón que
+     en MET-3: la máscara se estira con `mask-size: 100% 100%`, así
+     que dos tarjetas de distinto alto deforman la onda distinto y
+     la diferencia se ve al lado. Con las filas iguales, las tres
+     salen idénticas. En escritorio las tres comparten fila y ya se
+     estiraban solas —medido, 419px las tres—; la regla es la que
+     lo sostiene apilado, donde cada una tendría su propia fila. */
   .b6__pasos {
     list-style: none;
     margin: 0;
@@ -1359,6 +1367,7 @@
     display: grid;
     gap: var(--space-6);
     grid-template-columns: 1fr;
+    grid-auto-rows: 1fr;
   }
 
   @media (min-width: 810px) {
@@ -1367,20 +1376,89 @@
     }
   }
 
-  /* Campo de color pleno con su par de texto. */
+  /* Campo de color pleno con su par de texto, y los cuatro bordes
+     ondulados con la silueta de `tarjeta-onda.svg` — la misma de
+     MET-3, el mismo archivo y la misma técnica.
+
+     ⚠ EL PADDING SALE DEL DIP DE LA ONDA, Y EL NÚMERO NO SE COPIA
+     DE MET-3. La silueta muerde hacia adentro el 5.52% de cada
+     lado, medido sobre los 720 puntos del propio path. Eso da
+     números distintos en cada bloque porque las tarjetas miden
+     distinto, y acá el problema además se INVIERTE:
+
+     | | tarjeta | mordisco H | mordisco V |
+     |---|---|---|---|
+     | MET-3 | 572×508 | 31.6px | 28.0px |
+     | B6    | 357×419 | 19.7px | 23.1px |
+
+     MET-3 es más ANCHA que alta; B6 es más ALTA que ancha.
+
+     ⚠ Y ACÁ ESTÁ LA TRAMPA: EL `%` DE UN PADDING SE RESUELVE
+     CONTRA EL ANCHO EN LOS CUATRO LADOS, arriba y abajo incluidos.
+     En MET-3 eso no se notó porque el 5.5% del ancho —31.5px—
+     sobraba para el mordisco vertical de 28. Acá el 5.5% del ancho
+     da 19.6 contra los 26 que muerde arriba y abajo, así que la
+     compensación quedaría 6.4px corta y el aire de la tarjeta se
+     comería esa diferencia. No llegaría a recortar el texto —el
+     `--space-6` de aire normal la cubre— pero el padding dejaría de
+     significar lo que dice que significa, y el próximo que cambie
+     el copy no tendría de dónde agarrarse.
+
+     Por eso el eje vertical va en píxeles y con su cuenta escrita.
+     El alto converge: (307 de contenido + 112 de aire) / (1 −
+     2×0.0552) = 471px, medido después en el DOM como 471 exactos, y
+     el 5.52% de eso son 26. Si cambia el copy de las bajadas y la
+     tarjeta crece, hay que rehacer esta cuenta — no es un valor que
+     se pueda dejar envejecer.
+
+     Comprobado a 390, 810 y 1440: el caso más exigente es 810, con
+     la tarjeta en 227×510 y un mordisco vertical de 28.2 contra los
+     74 de padding. La holgura nunca baja de 23px en ningún lado. */
   .b6-paso {
+    --mordisco-v: 26px;
+    position: relative;
     display: grid;
     justify-items: center;
     text-align: center;
     gap: var(--space-3);
     align-content: start;
-    background: var(--acento);
     color: var(--sobre);
-    border-radius: var(--r-card);
     /* Más grandes que con cuatro: con tres columnas cada tarjeta
        pasa de ~268px a ~373px sobre 1168 de contenido, y el aire
        interno acompaña. */
-    padding: var(--space-6) var(--space-5) var(--space-7);
+    padding: calc(var(--space-6) + var(--mordisco-v)) calc(var(--space-5) + 5.5%)
+      calc(var(--space-7) + var(--mordisco-v));
+  }
+
+  /* LA MÁSCARA VA ACÁ, NO EN LA TARJETA.
+     Lo dice `SectionEdge` y lo confirmó MET-3: la máscara sobre una
+     capa DECORATIVA, nunca sobre texto, controles ni anillos de
+     foco. Enmascarando la tarjeta entera, cualquier texto que
+     rozara una entrada de la onda se recortaría en silencio —sin
+     error, sin aviso— y un anillo de foco también.
+
+     Las propiedades van separadas: el atajo
+     `mask-image: url() 50%/cover no-repeat alpha` NO es válido.
+
+     Se va el `border-radius`: las esquinas ahora las da la silueta,
+     y un radio sobre una caja que ya no se ve no redondea nada. */
+  .b6-paso__campo {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: var(--acento);
+    mask-image: url("/assets/tarjeta-onda.svg");
+    mask-position: center;
+    mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+    mask-mode: alpha;
+    pointer-events: none;
+  }
+
+  /* El contenido, por encima del campo. */
+  .b6-paso > *:not(.b6-paso__campo) {
+    position: relative;
+    z-index: 1;
   }
 
   /* Hereda `--sobre`. Nada de `--texto-2`: es un gris calculado
@@ -1453,8 +1531,14 @@
       padding: var(--space-3);
     }
 
+    /* Apilada, la tarjeta cambia de proporción: a 390px mide unos
+       358 de ancho y el alto lo fija la más alta de las tres. El
+       mordisco vertical se recalcula igual que arriba y baja a 22,
+       porque el objeto se achica a 100 y la tarjeta con él. */
     .b6-paso {
-      padding: var(--space-5) var(--space-4) var(--space-6);
+      --mordisco-v: 22px;
+      padding: calc(var(--space-5) + var(--mordisco-v)) calc(var(--space-4) + 5.5%)
+        calc(var(--space-6) + var(--mordisco-v));
     }
   }
 

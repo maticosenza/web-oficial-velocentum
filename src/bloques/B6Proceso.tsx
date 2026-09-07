@@ -50,6 +50,21 @@
    Los cuatro objetos son decorativos: el significado está en el
    número, el título y la bajada, que son texto. Por eso van
    `aria-hidden` y con `alt` vacío.
+
+   LOS CUATRO BORDES ONDULADOS
+   La misma silueta de MET-3, con el mismo `tarjeta-onda.svg` y la
+   misma técnica. Y con las dos cosas que se aprendieron allá:
+
+   ⚠ LA MÁSCARA NUNCA VA SOBRE EL CONTENIDO. En MET-3 la primera
+   versión enmascaró la tarjeta entera y recortaba el texto en
+   silencio — y con él recortaría un anillo de foco. Va en una capa
+   decorativa detrás, que es lo único que este componente agrega al
+   markup: un `div` vacío y `aria-hidden`.
+
+   ⚠ Y EL PADDING SALE DEL DIP, NO DE OJO. El número no se copia de
+   MET-3 porque estas tarjetas son más ANGOSTAS —357×419 contra
+   572×508—, y eso invierte el problema. Ver la cuenta en
+   `home.css`, sobre la regla.
    =========================================================== */
 
 import type { CSSProperties } from "react";
@@ -109,6 +124,13 @@ export function B6Proceso() {
               className="b6-paso"
               style={{ "--acento": p.acento, "--sobre": p.sobre } as CSSProperties}
             >
+              {/* EL CAMPO DE COLOR ES UNA CAPA APARTE, Y ESO ES EL
+                  PUNTO. La máscara de la onda vive acá y no en la
+                  tarjeta: enmascarando la tarjeta entera, cualquier
+                  texto que rozara una entrada de la onda se
+                  recortaría sin que nada avise. */}
+              <div className="b6-paso__campo" aria-hidden="true" />
+
               {/* El número es dato, no decoración: es el orden del
                   método y se lee. La lista es `ol` por lo mismo. */}
               <p className="etiqueta b6-paso__n">{p.n}</p>
