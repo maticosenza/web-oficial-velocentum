@@ -31,13 +31,20 @@
 
   /* --- El panel --- */
 
-  /* ⚠ EL CAMPO ES `--tinta`, EL MISMO DEL FOOTER, y no un navy
-     nuevo. La paleta no tiene navy: tiene la tinta con la que se
-     escribe y con la que se pinta el único bloque oscuro del
-     sitio. Un color más sería una sexta decisión de color sin
-     nadie que la sostenga. */
+  /* ⚠ EL CAMPO ES `--navy`, Y NO `--tinta`. Esto arrancó en tinta
+     con el argumento de que la paleta no tenía navy y un color más
+     sería una decisión sin nadie que la sostenga. El argumento era
+     bueno y el resultado estaba mal: el footer también es un campo
+     de `--tinta`, así que la misma página tenía dos superficies
+     oscuras del mismo color exacto y se leían como una repetición,
+     no como dos piezas.
+
+     El token vive en `base.css`, entre los candidatos a token del
+     plan, con la medición de por qué es ese valor y no el de la
+     referencia. Su par de texto sigue siendo `--fondo`: 15.25
+     sobre el navy. */
   .con1__panel {
-    background: var(--tinta);
+    background: var(--navy);
     color: var(--fondo);
     border-radius: var(--r-card);
     padding: var(--space-6) var(--space-5);

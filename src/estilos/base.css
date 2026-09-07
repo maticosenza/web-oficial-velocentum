@@ -13,6 +13,25 @@
      propio —y no como uso suelto de --space-section— porque el
      borde de onda lo modifica por cálculo. Ver componentes.css. */
   --pad-seccion: var(--space-section);
+
+  /* EL SEGUNDO CAMPO OSCURO DEL SITIO.
+     `--tinta` es el negro con el que se escribe y con el que se
+     pinta el footer. El panel de Contacto también es un campo
+     oscuro, y con `--tinta` los dos eran EL MISMO campo en la
+     misma página: se leían como un error de repetición y no como
+     dos superficies distintas.
+
+     Este navy es más azul y más claro. La referencia ronda
+     #101A3C, que medido queda a 1.09 de `--tinta` — o sea, casi
+     indistinguible. Subido a #0F2050 la separación llega a 1.19 y
+     a simple vista ya son dos colores, sin que el panel se vuelva
+     una versión apagada de `--acento-1`.
+
+     ⚠ SU PAR DE TEXTO ES `--fondo`, y está medido: el crema da
+     15.25 sobre este navy, contra los 18.14 que daba sobre tinta.
+     Los dos muy por encima del 4.5 de texto normal, así que el
+     titular y la mancha del panel no cambian de color. */
+  --navy: #0f2050;
 }
 
 @media (max-width: 809px) {
