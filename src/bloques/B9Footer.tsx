@@ -174,7 +174,7 @@ export function B9Footer() {
               esto no vale una discrepancia de hidratación.
               Hay que actualizarlo a mano cada enero. */}
           <p className="b9__legal">
-            Diseñado por Velocentum · © 2026 · Todos los derechos reservados
+            <span>Diseñado por Velocentum</span> <span>© 2026 · Todos los derechos reservados</span>
           </p>
         </div>
       </div>

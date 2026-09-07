@@ -1745,10 +1745,6 @@
     gap: var(--space-2);
   }
 
-  .b8__pendiente {
-    color: inherit;
-  }
-
   @media (min-width: 810px) {
     .b8--centrado > .seccion-con-borde__contenido {
       min-height: 108vh;
@@ -2058,9 +2054,22 @@
 
   /* Opacidad plena. `--texto-2` está calculado contra el fondo
      crema y sobre el campo oscuro no dice nada verificable. */
+  /* LA LÍNEA LEGAL SON DOS TRAMOS, Y EN MÓVIL SON DOS RENGLONES.
+     En escritorio entra en uno solo y se lee como una línea con el
+     punto medio del sistema en el medio, que es como estaba. En un
+     teléfono la misma línea se apretaba contra los bordes, así que
+     cada tramo pasa a su propio renglón y el separador se va: un
+     punto medio colgando al final de un renglón no separa nada.
+
+     El separador es contenido generado y no texto del markup
+     justamente para poder apagarlo sin tocar lo que se lee. */
   .b9__legal {
     margin: 0;
     font-size: 14px;
+  }
+
+  .b9__legal > span + span::before {
+    content: "· ";
   }
 
   /* En móvil los cuatro pasan a franjas horizontales angostas:
@@ -2085,6 +2094,14 @@
       justify-content: center;
       text-align: center;
       gap: var(--space-4);
+    }
+
+    .b9__legal > span {
+      display: block;
+    }
+
+    .b9__legal > span + span::before {
+      content: none;
     }
 
     /* La firma se achica con el resto de la barra, pero no baja
