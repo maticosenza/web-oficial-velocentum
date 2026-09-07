@@ -62,9 +62,9 @@
    alrededor: no se convierte en una barra de borde a borde.
 
    Y entra en UNA SOLA FILA, horizontal y fina, porque cambia la
-   marca: en vez del logotipo completo va el isotipo dentro de un
-   círculo. Con la palabra entera no entraba a ningún ancho de
-   teléfono —a 390px quedan 334px útiles y al logotipo le
+   marca: en vez del logotipo completo va el isotipo suelto, sin
+   círculo ni contorno. Con la palabra entera no entraba a ningún
+   ancho de teléfono —a 390px quedan 334px útiles y al logotipo le
    sobrarían 90 contra los 135–155 que pide identidad.md—, así que
    la salida no era achicar la palabra sino cambiar de marca.
    `identidad.md` ya admite la V como firma secundaria en avatar,
@@ -106,11 +106,21 @@ export function B0Nav() {
               que el nombre del enlace lo da siempre la visible y
               no se duplica.
               En desktop la palabra completa, como pide
-              identidad.md. En móvil el isotipo dentro de un
-              círculo de contorno fino, sin relleno: es la única
-              forma de que la card entre en una sola fila, y la
-              propia identidad admite la V como firma secundaria
-              en avatar. Va la V NEGRA, porque la card es clara. */}
+              identidad.md. En móvil el isotipo solo, apoyado
+              directo sobre la card: es la única forma de que
+              entre en una sola fila, y la propia identidad admite
+              la V como firma secundaria en avatar.
+              Va el SVG bicolor —bermellón y violeta, fondo
+              transparente—, el mismo archivo que usan las dos
+              apariciones del footer. Trae su propio color, así que
+              no hay versión negra ni blanca que elegir ni campo
+              que dibujarle, y NO se le aplica ningún `filter`.
+
+              La variante `-ui` es el mismo dibujo con el viewBox
+              pegado a la caja de tinta: sin ese recorte, el ancho
+              que se declara no es el que se ve, porque el archivo
+              de marca encuadra la V en un cuadrado con casi un
+              cuarto de aire. Ver el propio archivo. */}
           <img
             className="b0__logotipo"
             src="/assets/velocentum-logotipo-negro.png"
@@ -119,7 +129,7 @@ export function B0Nav() {
             height={743}
           />
           <span className="b0__isotipo" aria-hidden="true">
-            <img src="/assets/velocentum-isotipo-negro.png" alt="" width={794} height={904} />
+            <img src="/assets/velocentum-v-bicolor-ui.svg" alt="" width={997} height={841} />
           </span>
         </EnlaceConCortina>
 

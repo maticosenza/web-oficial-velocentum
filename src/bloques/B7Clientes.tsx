@@ -1,14 +1,14 @@
 /* ===========================================================
    B7 · MARCAS
 
-   En desktop, el titular queda a la izquierda y la banda de doce
+   En desktop, el titular queda a la izquierda y la banda de trece
    logos a la derecha. En mobile se apilan para darle ancho real al
    ticker. La pista conserva su movimiento, máscara y duplicación.
 
-   Los logos son negros sobre un disco del acento rebajado al 40%,
-   la misma regla que las píldoras de B5: disco pastel, contenido
-   oscuro. Con el color en el campo y no en un contorno, el acento
-   significa algo en vez de decorar.
+   Los logos vienen a color y se apoyan sobre el fondo de la
+   página, dentro de un anillo de contorno del acento. El disco
+   pastel existía para sostener logos negros: con logos que traen su
+   propia paleta, teñir el campo es pelear con ellos.
    El bloque queda fijado mientras B8 sube por encima; eso lo
    resuelve `HeroSticky`.
    =========================================================== */
@@ -20,18 +20,22 @@ import { Reveal } from "../componentes/Reveal";
 import { LOGOS, MARCAS_DEL_MARQUEE } from "../data/casos";
 
 /* El marquee arranca con los ocho casos en su orden y sigue con
-   los cuatro clientes que tienen logo pero no caso: Patagonia
-   Vessels, BuyNow, Lámina y Uprise. Las doce ranuras tienen nombre
-   real — ya no queda ningún marcador.
+   los cinco clientes que tienen logo pero no caso: Patagonia
+   Vessels, BuyNow, Lámina, Uprise e Imaginarios. Las trece ranuras
+   tienen nombre real — ya no queda ningún marcador.
+
+   Imaginarios está sólo acá: tiene logo y va en la banda, pero no
+   tiene caso escrito, así que no entra en `/casos`.
 
    Sale de `data/casos.ts`: la home y `/casos` tienen que leerse
    como un mismo conjunto y no como dos listas distintas, y la
    única forma de garantizarlo es que sean la misma lista. */
 
-/* Los cinco acentos. Con los logos negros sobre el disco pastel el
-   contraste dejó de ser la restricción —de 10.89 a 16.32 sobre los
-   cinco, contra el mínimo de 3 para objeto gráfico—, así que ya no
-   hay que sacar verde ni amarillo como con los logos blancos. */
+/* Los cinco acentos. Con el campo transparente, lo que hay que
+   cuidar ya no es el contraste del logo contra el disco —cada marca
+   se ve sobre el fondo crema de la página, que es su caso normal—
+   sino el del contorno contra ese mismo fondo, y los cinco pasan
+   holgados el mínimo de 3 para objeto gráfico. */
 const ACENTOS = [
   "var(--acento-1)",
   "var(--acento-2)",

@@ -158,120 +158,138 @@ export const CASOS: Caso[] = [
 export const CASOS_EN_LA_HOME = CASOS.slice(0, 4);
 
 /* CLIENTES QUE TIENEN LOGO PERO NO SON CASOS.
-   Van en el marquee de B7 y no en `/casos`. */
-export const CLIENTES_SIN_CASO = ["Patagonia Vessels", "BuyNow", "Lámina", "Uprise"];
+   Van en el marquee de B7 y no en `/casos`.
 
-/* Las doce ranuras del marquee de B7: los ocho casos en su orden y
-   los cuatro clientes que sólo tienen logo. Ya no hay marcadores.
+   ⚠ IMAGINARIOS ENTRA ACÁ Y NO EN `CASOS`. Tiene logo y va en la
+   banda de la home, pero no tiene caso escrito: meterlo en `CASOS`
+   le inventaría rubro, frase y pieza, y de paso rompería los ocho
+   que la página de Casos anuncia en su encabezado. */
+export const CLIENTES_SIN_CASO = ["Patagonia Vessels", "BuyNow", "Lámina", "Uprise", "Imaginarios"];
 
-   Doce era además el ancho de pista con el que se probaron el loop
-   y la máscara del Ticker, así que el bloque no cambia de forma al
-   entrar los logos reales.
+/* Las trece ranuras del marquee de B7: los ocho casos en su orden
+   y los cinco clientes que sólo tienen logo. Ya no hay marcadores.
 
-   El ticker duplica la pista completa, así que el ciclo visual
-   sigue cerrando aunque los cinco acentos no dividan doce. */
+   Eran doce hasta que entró Imaginarios. El ancho de pista con el
+   que se probaron el loop y la máscara del Ticker era doce, y trece
+   no lo rompe: el componente duplica la pista completa, así que el
+   ciclo visual cierra igual — como ya cerraba con doce, que
+   tampoco son divisibles por los cinco acentos. */
 export const MARCAS_DEL_MARQUEE: string[] = [...CASOS.map((c) => c.nombre), ...CLIENTES_SIN_CASO];
 
 /* ===========================================================
-   LOS DOCE LOGOS — versiones negras vectorizadas.
+   LOS TRECE LOGOS — versiones a color.
 
-   Son SVG de un solo relleno, `#05050C`, en `logos-clientes/`.
-   Reemplazan a los PNG blancos que había antes, y ese cambio es el
-   que permitió que el contenedor pase a PASTEL: con un logo oscuro,
-   el disco puede llevar el acento rebajado en vez del acento pleno,
-   igual que las píldoras de B5. Ver `.b7-cliente__anillo`.
+   Son PNG de 132×132 con fondo transparente, en
+   `logos-clientes-color/`. Reemplazan a los SVG negros, y ese
+   cambio es el que vació el contenedor: un disco pastel debajo de
+   un logo que ya trae su propia paleta pelea con él, así que el
+   acento se fue al contorno y el logo quedó apoyado sobre el fondo
+   de la página. Ver `.b7-cliente__anillo`.
+
+   ⚠ NO SE LES APLICA NADA. Ni filtro, ni sombra, ni recoloreo:
+   cada marca se ve con los colores que entregó. Lo único que este
+   archivo decide es CUÁNTO OCUPA cada una.
 
    POR QUÉ NO SE NORMALIZAN POR ANCHO NI POR ALTO
-   Las cajas de tinta van de 11:1 —`greenpac`, 940×84— a 2.4:1
-   —`vinotique`, 915×383—. Igualando el ancho, Vinotique aplasta al
-   resto; igualando el alto, lo hace Greenpac. Lo que el ojo compara
-   no es ninguna de las dos medidas sino cuánta tinta hay, así que
-   es eso lo que se iguala.
+   Las cajas de tinta van de 4.6:1 —`uprise`, 104×26— a 1:2
+   —`buynow`, 24×48—. Igualando el ancho, Uprise aplasta al resto;
+   igualando el alto, lo hace BuyNow. Lo que el ojo compara no es
+   ninguna de las dos medidas sino cuánta tinta hay, así que es eso
+   lo que se iguala.
 
-   ⚠ LOS ARCHIVOS VIENEN NORMALIZADOS POR ANCHO, NO POR ÁREA. Los
-   doce tienen `viewBox` de 1056 de ancho y alto variable. Esa
-   normalización es del archivo y no sirve como criterio de
-   composición: si se usara tal cual, `greenpac` —una firma finita y
-   larguísima— ocuparía lo mismo que `vinotique`, que es cuatro
-   veces más denso.
+   ⚠ LOS ARCHIVOS VIENEN CON AIRE PROPIO, Y CADA UNO CON EL SUYO.
+   Los doce de 132px comparten lienzo pero no encuadre: la tinta va
+   del 18% del ancho —`buynow`— al 91% —`snake-store`—. Ese aire
+   no se puede leer como intención de composición ni ignorar: hay
+   que medirlo y descontarlo, que es lo que hace el paso 1.
 
    CÓMO SALE CADA NÚMERO
-   1. Cada SVG se rasteriza a 1056 de ancho y se mide su CAJA DE
-      TINTA real, que no es el `viewBox`: los archivos traen aire
-      propio adentro —de 5% a 12% del ancho— y ese aire descalibra
-      cualquier medida que venga después.
+   1. Se mide la CAJA DE TINTA real de cada PNG, no el lienzo: el
+      bounding box de los píxeles con alfa > 16. El umbral no es
+      cosmético — los lienzos traen ruido casi invisible en las
+      esquinas y a umbral 0 la caja da el archivo entero.
    2. Se cuentan los píxeles con alfa > 128: eso es la tinta.
-   3. Se escala cada logo para que las doce cajas de tinta muestren
+   3. Se escala cada logo para que las trece cajas de tinta muestren
       la MISMA cantidad. Como la tinta crece con el cuadrado de la
-      escala, el factor es `sqrt(T / tinta)`, con `T = 0.05437` en
-      unidades de D², el diámetro del contenedor.
-   4. Topes y suelo sobre la CAJA DE TINTA: ninguna pasa del 86% del
-      ancho ni del 55% del alto, ni deja menos del 12% de aire
-      contra la circunferencia; y ninguna deja más del 30% — al que
-      le sobra, se lo agranda hasta ahí. `T` se ajusta hasta que el
-      aire medio queda en 20%.
+      escala, el factor es `sqrt(T / tinta)`, con `T = 0.13` en
+      unidades de D², el diámetro del círculo.
+   4. Topes y suelo sobre la CAJA DE TINTA: la tinta no pasa del 70%
+      del diámetro ni del 55% de alto, y al que le sobra aire se lo
+      agranda hasta el 55% de ancho.
 
-   ⚠ `ancho` ES EL ANCHO DEL ARCHIVO, NO EL DE LA TINTA, y por eso
-   algunos valores rozan 1.0. El `<img>` renderiza el `viewBox`
-   entero, aire incluido, así que el número está inflado por ese
-   aire: `greenpac` pide 0.966 de ancho de archivo para que su tinta
-   ocupe 0.860. Es fracción del diámetro del contenedor, así que el
-   mismo número sirve en el anillo de B7 y en el círculo más grande
-   de Casos.
+   ⚠ `ancho` ES EL ANCHO DEL ARCHIVO, NO EL DE LA TINTA. El `<img>`
+   renderiza el PNG entero, aire incluido, así que el número está
+   inflado por ese aire: `greenpac` pide 0.971 de ancho de archivo
+   para que su tinta ocupe 0.427. Es fracción del DIÁMETRO del
+   círculo —no del contenedor, que con el borde de 2px ya no mide lo
+   mismo—, así que el mismo número sirve en el anillo de B7 y en el
+   círculo más grande de Casos.
 
    ⚠ NO PONERLE TOPES EN CSS. Un `max-width` sobre el `<img>` se
    pisa con este número y gana en silencio, dejando la
    normalización a medias: los topes ya están aplicados acá, sobre
    la tinta, que es lo que se ve.
 
-   ⚠ CINCO LLEGAN AL TOPE DE ANCHO y muestran menos tinta que el
-   resto: son las firmas muy apaisadas. Es inevitable —una firma
-   fina y larguísima no puede pesar lo mismo sin salirse del
-   círculo— y es exactamente lo que el tope está para evitar.
+   ⚠ CUATRO NO LLEGAN AL 55% Y NO ES UN ERROR DE CÁLCULO: es el
+   techo del raster. Los archivos miden 132px de ancho y el círculo
+   más grande del sitio —Casos en desktop— mide 136, así que
+   `ancho` no puede pasar de 132/136 = 0.971 sin dibujar un PNG por
+   encima de sus píxeles. `armbruster` (tinta al 41%), `greenpac`
+   (43%), `glam-ragazza` (50%) y `buynow` (18% de ancho, aunque 35%
+   de alto, que es su medida real: es la única marca vertical) están
+   contra ese techo. Para que entren en la banda hacen falta
+   archivos con la tinta más grande dentro del lienzo, o los mismos
+   a más resolución — no un número más alto acá, que sólo los
+   agrandaría borrosos.
 
-   ⚠ Y DOS LLEGAN AL TECHO DE AIRE, `snake-store` y `vinotique`:
-   son las más compactas, así que igualar tinta las achicaba de más
-   y el techo las levanta. Vinotique supo tener un multiplicador a
-   mano de 1.25 por este mismo motivo; con el techo puesto ya no
-   hace falta y se sacó.
+   ⚠ CINCO LLEGAN AL TOPE DE ANCHO: son las firmas apaisadas
+   —`caracter`, `lamina`, `patagonia-vessels`, `snake-store`,
+   `uprise`—. Igualar tinta las haría enormes de ancho, y el tope
+   está justamente para eso.
 
-   ⚠ EL TOPE DE ALTO NO LLEGA A ACTUAR con estos doce. El más alto
-   en proporción es `vinotique` y se queda en 0.270 D contra el 0.55
-   permitido: el ancho es siempre el que manda primero. Se deja
-   declarado igual, porque un logo futuro más cuadrado sí lo
-   necesitaría.
+   ⚠ EL TOPE DE ALTO SÍ ACTÚA ACÁ, a diferencia de los SVG negros:
+   `imaginarios` es un emblema circular y `buynow` un rayo vertical,
+   y los dos lo tocan. Con firmas apaisadas el ancho manda siempre
+   primero; con marcas altas, no.
    =========================================================== */
 
 export type Logo = {
   /** Ruta del archivo. */
   archivo: string;
   /**
-   * Ancho del ARCHIVO como fracción del diámetro del contenedor.
-   * Incluye el aire que el SVG trae adentro: la tinta ocupa menos.
+   * Ancho del ARCHIVO como fracción del diámetro del círculo.
+   * Incluye el aire que el PNG trae adentro: la tinta ocupa menos.
    */
   ancho: number;
 };
 
 export const LOGOS: Record<string, Logo> = {
-  "Snake Store": { archivo: "/assets/logos-clientes/logo-snake-store-negro-hd.svg", ancho: 0.73 }, // al techo de aire
-  Carácter: { archivo: "/assets/logos-clientes/logo-caracter-negro-hd.svg", ancho: 0.769 },
+  "Snake Store": {
+    archivo: "/assets/logos-clientes-color/logo-snake-store-color.png",
+    ancho: 0.776,
+  }, // tinta 0.700 — tope de ancho
+  Carácter: { archivo: "/assets/logos-clientes-color/logo-caracter-color.png", ancho: 0.797 }, // tinta 0.700 — tope de ancho
   "Glam Ragazza": {
-    archivo: "/assets/logos-clientes/logo-glam-ragazza-negro-hd.svg",
-    ancho: 0.922,
-  }, // al tope de ancho
-  Vinotique: { archivo: "/assets/logos-clientes/logo-vinotique-negro-hd.svg", ancho: 0.745 }, // al techo de aire
-  Ilsapore: { archivo: "/assets/logos-clientes/logo-ilsapore-negro-hd.svg", ancho: 0.825 },
-  Armbruster: { archivo: "/assets/logos-clientes/logo-armbruster-negro-hd.svg", ancho: 0.936 }, // al tope de ancho
-  Greenpac: { archivo: "/assets/logos-clientes/logo-greenpac-negro-hd.svg", ancho: 0.966 }, // al tope de ancho
+    archivo: "/assets/logos-clientes-color/logo-glam-ragazza-color.png",
+    ancho: 0.971,
+  }, // tinta 0.500 — ⚠ techo del raster
+  Vinotique: { archivo: "/assets/logos-clientes-color/logo-vinotique-color.png", ancho: 0.971 }, // tinta 0.662 — ⚠ techo del raster
+  Ilsapore: { archivo: "/assets/logos-clientes-color/logo-ilsapore-color.png", ancho: 0.864 }, // tinta 0.550 — suelo
+  Armbruster: { archivo: "/assets/logos-clientes-color/logo-armbruster-color.png", ancho: 0.971 }, // tinta 0.412 — ⚠ techo del raster
+  Greenpac: { archivo: "/assets/logos-clientes-color/logo-greenpac-color.png", ancho: 0.971 }, // tinta 0.427 — ⚠ techo del raster
   "Comercial Pas": {
-    archivo: "/assets/logos-clientes/logo-comercial-pas-negro-hd.svg",
-    ancho: 0.918,
-  }, // al tope de ancho
+    archivo: "/assets/logos-clientes-color/logo-comercial-pas-color.png",
+    ancho: 0.849,
+  }, // tinta 0.630
   "Patagonia Vessels": {
-    archivo: "/assets/logos-clientes/logo-patagonia-vessels-negro-hd.svg",
-    ancho: 0.845,
-  },
-  BuyNow: { archivo: "/assets/logos-clientes/logo-buynow-negro-hd.svg", ancho: 0.945 }, // al tope de ancho
-  Lámina: { archivo: "/assets/logos-clientes/logo-lamina-negro-hd.svg", ancho: 0.817 },
-  Uprise: { archivo: "/assets/logos-clientes/logo-uprise-negro-hd.svg", ancho: 0.816 },
+    archivo: "/assets/logos-clientes-color/logo-patagonia-vessels-color.png",
+    ancho: 0.783,
+  }, // tinta 0.700 — tope de ancho
+  BuyNow: { archivo: "/assets/logos-clientes-color/logo-buynow-color.png", ancho: 0.971 }, // tinta 0.177 de ancho y 0.353 de alto — ⚠ techo del raster
+  Lámina: { archivo: "/assets/logos-clientes-color/logo-lamina-color.png", ancho: 0.77 }, // tinta 0.700 — tope de ancho
+  Uprise: { archivo: "/assets/logos-clientes-color/logo-uprise-color.png", ancho: 0.888 }, // tinta 0.700 — tope de ancho
+  Imaginarios: {
+    archivo: "/assets/logos-clientes-color/logo-imaginarios-color.png",
+    ancho: 0.734,
+  }, // tinta 0.554 de ancho y 0.550 de alto — tope de alto
 };

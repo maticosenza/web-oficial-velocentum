@@ -69,17 +69,20 @@ export function B9Footer() {
       <div className="b9__contenido contenido">
         <div className="b9__cabecera">
           <div className="b9__marca">
-            {/* La V va dentro de la forma de nube, que identidad.md
-                define como contenedor opcional y no como parte del
-                símbolo. Campo claro, isotipo negro: la regla es
-                negro sobre claro, blanco sobre oscuro. */}
-            <div className="b9__nube">
+            {/* La V va sola, sin contenedor. identidad.md lo define
+                como opcional y no como parte del símbolo, y acá no
+                aporta: el disco crema existía porque la V negra
+                necesitaba campo claro, y el anillo que lo
+                reemplazó sólo le quitaba tamaño. El SVG bicolor
+                trae sus dos colores y se apoya directo sobre el
+                campo oscuro. */}
+            <div className="b9__isotipo">
               <img
-                src="/assets/velocentum-isotipo-negro.png"
+                src="/assets/velocentum-v-bicolor-ui.svg"
                 alt=""
                 aria-hidden="true"
-                width={794}
-                height={904}
+                width={997}
+                height={841}
                 loading="lazy"
               />
             </div>
@@ -87,13 +90,27 @@ export function B9Footer() {
             <div className="b9__identidad">
               {/* El wordmark ES el nombre de marca, así que su alt
                   lleva el texto y no va vacío. Versión blanca,
-                  porque el campo es oscuro. */}
+                  porque el campo es oscuro.
+
+                  VA LA COPIA RECORTADA, Y ES SÓLO UN RECORTE. El
+                  archivo de marca es un lienzo de 2117×743 con la
+                  palabra adentro ocupando 1925×291: más de un
+                  tercio del alto es transparente, así que la caja
+                  medía mucho más que la palabra y el wordmark se
+                  veía chico al lado de la V por más ancho que se le
+                  diera. `-tight` es el MISMO PNG con los píxeles
+                  transparentes recortados —umbral de alfa 16, que
+                  es lo que hace falta para ignorar el ruido casi
+                  invisible del lienzo, más cuatro píxeles de
+                  margen—, sin redimensionar ni redibujar nada. El
+                  original queda intacto y se sigue usando donde
+                  haga falta el encuadre con aire. */}
               <img
                 className="b9__logotipo"
-                src="/assets/velocentum-logotipo-blanco.png"
+                src="/assets/velocentum-logotipo-blanco-tight.png"
                 alt="Velocentum"
-                width={2117}
-                height={743}
+                width={1933}
+                height={299}
                 loading="lazy"
               />
               <a className="b9__mail" href={`mailto:${MAIL}`}>
@@ -147,7 +164,7 @@ export function B9Footer() {
         <div className="b9__barra">
           <p className="b9__firma">
             <span className="b9__firma-iso" aria-hidden="true">
-              <img src="/assets/velocentum-isotipo-blanco.png" alt="" width={794} height={904} />
+              <img src="/assets/velocentum-v-bicolor-ui.svg" alt="" width={997} height={841} />
             </span>
             velocentum
           </p>

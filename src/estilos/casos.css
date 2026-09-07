@@ -165,28 +165,39 @@
     gap: var(--space-2);
   }
 
-  /* El mismo disco pastel de B7, más grande: acá el logo es la
-     identificación del caso y no una ranura de un marquee.
+  /* El mismo anillo de contorno de B7, apenas más grande: acá el
+     logo es la identificación del caso y no una ranura de un
+     marquee. El campo va transparente y el acento vive sólo en el
+     borde — ver la nota larga en `.b7-cliente__anillo`.
 
-     120 y no 160: el logo compite con el nombre del cliente en
+     136 y no 160: el logo compite con el nombre del cliente en
      display justo debajo, y un círculo grande convertía al círculo
      en el protagonista de la columna. */
   .cas-caso__logo {
+    --d: 136px;
     display: grid;
     place-items: center;
-    width: 120px;
-    aspect-ratio: 1;
+    width: var(--d);
+    aspect-ratio: 1 / 1;
     border-radius: var(--r-pill);
-    background: color-mix(in srgb, var(--anillo) 40%, var(--fondo));
+    background: transparent;
+    border: 2px solid var(--anillo);
   }
 
   /* El mismo `--logo-ancho` de B7: fracción del diámetro, ya
      normalizada por área de tinta y con sus topes aplicados. Sin
-     `max-width` acá, por lo mismo que allá. */
+     `max-width` acá, por lo mismo que allá.
+
+     ⚠ ÉSTE ES EL CÍRCULO MÁS GRANDE DEL SITIO, y por eso es el que
+     fija el techo de la normalización: los PNG miden 132px de
+     ancho natural, así que ningún `--logo-ancho` puede pasar de
+     132/136 = 0,971 sin agrandar un raster por encima de sus
+     píxeles. Ver `LOGOS` en `data/casos.ts`. */
   .cas-caso__logo img {
     display: block;
-    width: calc(var(--logo-ancho, 0.6) * 100%);
+    width: calc(var(--logo-ancho, 0.6) * var(--d));
     height: auto;
+    image-rendering: auto;
   }
 
   .cas-caso__nombre {
@@ -366,9 +377,10 @@
     }
 
     /* El círculo se achica con el bloque. Los logos lo siguen
-       solos: su ancho es una fracción del contenedor. */
+       solos: su ancho es una fracción de `--d`. */
     .cas-caso__logo {
-      width: 96px;
+      --d: 112px;
+      width: var(--d);
     }
   }
 

@@ -42,8 +42,9 @@ import { MedioDeCaso } from "../componentes/MedioDeCaso";
 import { ScrollMedia } from "../componentes/ScrollMedia";
 import { CASOS, LOGOS, type Caso } from "../data/casos";
 
-/* Mismo criterio que B7: logo negro sobre blanco y el acento sólo
-   en el contorno. Los cinco colores pasan a estar disponibles. */
+/* Mismo criterio que B7: logo a color sobre el fondo de la página
+   y el acento sólo en el contorno. Los cinco colores están
+   disponibles. */
 const ACENTOS = [
   "var(--acento-1)",
   "var(--acento-2)",
