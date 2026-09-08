@@ -270,8 +270,9 @@ export function CON1Flujo() {
       leadId.current = id;
       irA(4);
       await cargarHorarios();
-    } catch {
-      setErrorEnvio("No pudimos guardar tus datos. Probá de nuevo en unos minutos.");
+    } catch (error) {
+      const detalle = error instanceof Error ? error.message : "Error desconocido.";
+      setErrorEnvio(`No pudimos guardar tus datos: ${detalle}`);
     } finally {
       setEnviando(false);
     }
