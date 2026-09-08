@@ -13,6 +13,12 @@ const cors = {
 
 type Lead = { id: string; nombre: string; email: string };
 type CalendlyResource = { uri: string };
+type CalendlyLocation = { kind: string };
+type CalendlyEventType = {
+  uri: string;
+  scheduling_url: string;
+  locations?: CalendlyLocation[];
+};
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -35,7 +41,11 @@ async function calendly(path: string, init: RequestInit = {}) {
       ...(init.headers ?? {}),
     },
   });
-  if (!response.ok) throw new Error(`Calendly respondió ${response.status}.`);
+  if (!response.ok) {
+    const detalle = await response.text();
+    console.error("Calendly rechazó la solicitud", { path, status: response.status, detalle });
+    throw new Error(`Calendly respondió ${response.status}: ${detalle}`);
+  }
   return response.json();
 }
 
@@ -45,14 +55,14 @@ async function eventTypeUri() {
   if (!user) throw new Error("No se encontró el usuario de Calendly.");
 
   const types = (await calendly(`/event_types?user=${encodeURIComponent(user)}&active=true`)) as {
-    collection?: Array<{ uri: string; scheduling_url: string }>;
+    collection?: CalendlyEventType[];
   };
   const expected = EVENT_URL.replace(/\/$/, "");
   const eventType = types.collection?.find(
     (type) => type.scheduling_url.replace(/\/$/, "") === expected,
   );
   if (!eventType) throw new Error("No se encontró el evento Análisis de negocio en Calendly.");
-  return eventType.uri;
+  return eventType;
 }
 
 async function leadById(id: string) {
@@ -107,7 +117,7 @@ Deno.serve(async (request) => {
         return fail("El rango máximo es de 31 días.");
       }
       const query = new URLSearchParams({
-        event_type: await eventTypeUri(),
+        event_type: (await eventTypeUri()).uri,
         start_time: start.toISOString(),
         end_time: end.toISOString(),
       });
@@ -131,12 +141,17 @@ Deno.serve(async (request) => {
 
       const lead = await leadById(leadId);
       if (!lead) return fail("No se encontró el lead.", 404);
+      const eventType = await eventTypeUri();
+      const location = eventType.locations?.length === 1 ? eventType.locations[0] : undefined;
       const result = (await calendly("/invitees", {
         method: "POST",
         body: JSON.stringify({
-          event_type: await eventTypeUri(),
+          event_type: eventType.uri,
           start_time: new Date(startTime).toISOString(),
           invitee: { name: lead.nombre, email: lead.email, timezone },
+          // Calendly exige que una reserva indique la ubicación cuando
+          // el tipo de evento tiene una sola ubicación configurada.
+          ...(location ? { location } : {}),
           tracking: { utm_content: lead.id },
         }),
       })) as { resource?: CalendlyResource };

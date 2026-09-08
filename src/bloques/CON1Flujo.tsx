@@ -294,8 +294,9 @@ export function CON1Flujo() {
         leadId: leadId.current,
       });
       setReservaLista(true);
-    } catch {
-      setErrorReserva("Ese horario acaba de dejar de estar disponible. Elegí otro, por favor.");
+    } catch (error) {
+      const detalle = error instanceof Error ? error.message : "Error desconocido.";
+      setErrorReserva(`No pudimos reservar ese horario: ${detalle}`);
       await cargarHorarios();
     } finally {
       setReservando(null);
