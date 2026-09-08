@@ -219,7 +219,9 @@ export function CON1Flujo() {
      al primer campo con problema — si no, con cinco campos hay que
      buscar cuál falló. */
   const cargarHorarios = useCallback(async () => {
-    const inicio = new Date();
+    // Calendly exige una fecha futura. Un "ahora" exacto ya puede haber
+    // quedado atrás cuando llega la petición al servidor.
+    const inicio = new Date(Date.now() + 5 * 60 * 1000);
     const fin = new Date(inicio);
     fin.setDate(fin.getDate() + 21);
     try {
