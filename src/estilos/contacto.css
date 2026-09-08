@@ -82,8 +82,8 @@
   }
 
   .con1__marca-v {
-    top: 16%;
-    left: 50%;
+    top: 15%;
+    left: 69%;
     width: clamp(48px, 7vw, 86px);
     transform: translateX(-50%);
     filter: drop-shadow(0 9px 18px rgb(0 0 0 / 0.18));
@@ -179,12 +179,13 @@
 
   @media (min-width: 810px) {
     .con1__titular {
-      font-size: clamp(52px, 3.7vw, 72px);
+      font-size: clamp(58px, 4.1vw, 78px);
       line-height: 0.98;
     }
 
     .con1__mancha {
-      width: auto;
+      display: block;
+      width: min(90%, 480px);
       margin: 0.12em auto 0;
       font-size: inherit;
     }
@@ -193,10 +194,10 @@
 
   @media (max-width: 809px) {
     .con1__panel {
-      min-height: 300px;
-      aspect-ratio: 1.16;
+      min-height: 0;
+      aspect-ratio: 1.78;
       padding: var(--space-5);
-      background: var(--navy) url("/assets/contacto-cta-mobile.png") center / cover no-repeat;
+      background: var(--navy) url("/assets/contacto-cta-escena.png") center / cover no-repeat;
     }
 
     .con1__titular {
