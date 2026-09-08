@@ -74,6 +74,7 @@ export function MET1Hero() {
           ya tiene el encuadre correcto. */}
       <div className="met1__objetos-movil" aria-hidden="true">
         <span className="met1__objeto-movil met1__objeto-movil--arriba" />
+        <span className="met1__objeto-movil met1__objeto-movil--arriba-der" />
         <span className="met1__objeto-movil met1__objeto-movil--abajo" />
       </div>
 

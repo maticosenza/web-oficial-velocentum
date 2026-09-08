@@ -428,12 +428,7 @@ export function CON1Flujo() {
 function Panel({ oculto }: { oculto: boolean }) {
   return (
     <div className="con1__panel" hidden={oculto}>
-      <div className="con1__escena" aria-hidden="true">
-        <img className="con1__objeto con1__objeto--conexion" src="/assets/conexion.png" alt="" />
-        <img className="con1__objeto con1__objeto--foco" src="/assets/foco.png" alt="" />
-        <img className="con1__objeto con1__objeto--rayo" src="/assets/rayo.png" alt="" />
-        <img className="con1__marca-v" src="/assets/velocentum-v-bicolor-ui.svg" alt="" />
-      </div>
+      <img className="con1__marca-v" src="/assets/velocentum-v-bicolor-ui.svg" alt="" aria-hidden="true" />
       <Reveal indice={0}>
         <h1 id="con1-titulo" className="con1__titular">
           <span className="con1__titular-linea">Hablemos de</span>{" "}

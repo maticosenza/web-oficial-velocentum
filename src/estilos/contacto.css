@@ -58,7 +58,7 @@
      una franja. */
   .con1__panel {
     position: relative;
-    background: var(--navy);
+    background: var(--navy) url("/assets/contacto-cta-escena.png") left center / auto 100% no-repeat;
     color: var(--fondo);
     border-radius: var(--r-card);
     padding: var(--space-5);
@@ -69,31 +69,10 @@
     overflow: hidden;
   }
 
-  /* Una luz muy sutil, tomada de la escena 3D: evita que el navy
-     quede plano detrás del CTA sin competir con el formulario. */
-  .con1__panel::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(circle at 14% 10%, color-mix(in srgb, var(--acento-4) 22%, transparent), transparent 27%),
-      radial-gradient(circle at 88% 88%, color-mix(in srgb, var(--acento-2) 18%, transparent), transparent 30%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .con1__escena {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    overflow: hidden;
-    pointer-events: none;
-  }
-
-  .con1__objeto,
   .con1__marca-v {
     position: absolute;
     display: block;
+    z-index: 2;
     pointer-events: none;
   }
 
@@ -102,31 +81,11 @@
     z-index: 2;
   }
 
-  .con1__objeto--conexion {
-    top: -13%;
-    left: -18%;
-    width: 42%;
-    transform: rotate(-20deg);
-  }
-
-  .con1__objeto--foco {
-    bottom: -18%;
-    left: -18%;
-    width: 43%;
-    transform: rotate(10deg);
-  }
-
-  .con1__objeto--rayo {
-    right: -8%;
-    bottom: 11%;
-    width: 18%;
-    transform: rotate(17deg);
-  }
-
   .con1__marca-v {
-    top: 13%;
-    right: 13%;
+    top: 16%;
+    left: 50%;
     width: clamp(48px, 7vw, 86px);
+    transform: translateX(-50%);
     filter: drop-shadow(0 9px 18px rgb(0 0 0 / 0.18));
   }
 
@@ -134,7 +93,9 @@
     .con1__marca-v {
       top: 10px;
       right: 14px;
+      left: auto;
       width: 38px;
+      transform: none;
     }
   }
 
@@ -171,10 +132,10 @@
   .con1__mancha {
     position: relative;
     display: inline-block;
-    color: var(--fondo);
-    border: 0.055em solid currentColor;
+    background: var(--fondo);
+    color: var(--navy);
     border-radius: 58% 53% 62% 48%;
-    padding: 0.08em 0.24em 0.14em;
+    padding: 0.1em 0.28em 0.15em;
     white-space: nowrap;
     transform: rotate(0.8deg);
   }
@@ -184,12 +145,10 @@
     position: absolute;
     right: 12%;
     bottom: -0.27em;
-    width: 0.38em;
-    height: 0.38em;
-    border-right: 0.055em solid currentColor;
-    border-bottom: 0.055em solid currentColor;
-    background: var(--navy);
-    transform: skewX(-28deg) rotate(18deg);
+    width: 0.42em;
+    height: 0.42em;
+    background: var(--fondo);
+    clip-path: polygon(0 0, 100% 0, 18% 100%);
     pointer-events: none;
   }
 
@@ -229,12 +188,11 @@
       font-size: clamp(56px, 4.2vw, 96px);
     }
 
-    .con1__objeto--conexion {
-      width: 48%;
-    }
+  }
 
-    .con1__objeto--foco {
-      width: 47%;
+  @media (max-width: 809px) {
+    .con1__titular {
+      font-size: clamp(38px, 9vw, 66px);
     }
   }
 

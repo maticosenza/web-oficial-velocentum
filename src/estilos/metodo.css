@@ -66,7 +66,7 @@
     position: absolute;
     inset: 0;
     background: #030f2e;
-    opacity: 0.45;
+    opacity: 0;
     pointer-events: none;
   }
 
@@ -95,7 +95,7 @@
        poco menos de cuerpo que el titular de la home. */
     /* La escena tiene que respirar: antes el titular alcanzaba
        132px y tapaba buena parte de los objetos en desktop. */
-    font-size: clamp(38px, 6.5vw, 96px);
+    font-size: clamp(36px, 5.5vw, 72px);
     /* 1.14 Y NO 0.98, POR LA TILDE DE «DESPUÉS»
 
        A 0.98 la tilde de la É del segundo renglón se metía dentro
@@ -176,13 +176,7 @@
     position: absolute;
     inset: -1em -50vw;
     z-index: -1;
-    background: linear-gradient(
-      to bottom,
-      rgba(3, 15, 46, 0) 0%,
-      rgba(3, 15, 46, 0.25) 18%,
-      rgba(3, 15, 46, 0.25) 82%,
-      rgba(3, 15, 46, 0) 100%
-    );
+    display: none;
     pointer-events: none;
   }
 
@@ -288,6 +282,17 @@
       mask-mode: alpha;
     }
 
+    .met1__objeto-movil--arriba-der {
+      top: 0;
+      right: 0;
+      width: 48vw;
+      height: min(29dvh, 230px);
+      background-size: auto 100%;
+      background-position: right top;
+      mask-image: linear-gradient(to left, #000 0 72%, transparent 100%);
+      mask-mode: alpha;
+    }
+
     /* Aro, pedestal y tubo del extremo derecho: enmarca el CTA y
        le da peso al pie sin volver a vaciar la mitad superior. */
     .met1__objeto-movil--abajo {
@@ -322,12 +327,13 @@
       padding-bottom: var(--space-6);
       gap: var(--space-5);
       z-index: 2;
+      transform: translateY(-6dvh);
     }
 
     .met1__titular {
       /* Una medida menor y un poco más tranquila que en desktop:
          entra entre los dos grupos de objetos sin perder presencia. */
-      font-size: clamp(32px, 8.6vw, 42px);
+      font-size: clamp(30px, 8vw, 38px);
       line-height: 1.1;
       white-space: nowrap;
     }
