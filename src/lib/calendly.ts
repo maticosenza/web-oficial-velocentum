@@ -1,91 +1,58 @@
-import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-const EVENTO_PUBLICO = "https://calendly.com/matias-velocentum/analisis-de-negocio";
-const API = "https://api.calendly.com";
+const SUPABASE_URL = "https://nsjvfgjscvzjddnwbnik.supabase.co";
+const SUPABASE_PUBLIC_KEY = "sb_publishable_I7EmSvOufYxyWOuSZn6QpQ_utbL7wgs";
+const ENDPOINT = `${SUPABASE_URL}/functions/v1/calendly`;
+
 type Horario = { start_time: string; scheduling_url: string };
-type RespuestaDeReserva = { resource?: { uri?: string } };
+type RespuestaDeReserva = { uri: string | null };
 let cache: { vence: number; horarios: Horario[] } | undefined;
 
-function token() {
-  const value = process.env.CALENDLY_PAT;
-  if (!value) throw new Error("Calendly todavía no está configurado.");
-  return value;
-}
-
-async function pedir(path: string) {
-  const response = await fetch(`${API}${path}`, {
-    headers: { Authorization: `Bearer ${token()}` },
+async function pedir(body: Record<string, unknown>) {
+  const response = await fetch(ENDPOINT, {
+    method: "POST",
+    headers: {
+      apikey: SUPABASE_PUBLIC_KEY,
+      Authorization: `Bearer ${SUPABASE_PUBLIC_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
   });
-  if (!response.ok) throw new Error(`Calendly respondió ${response.status}.`);
-  return response.json() as Promise<{
-    resource?: { uri: string };
-    collection?: Array<{ uri: string; scheduling_url: string }>;
-  }>;
-}
-
-async function tipoDeEvento() {
-  const usuario = (await pedir("/users/me")).resource?.uri;
-  if (!usuario) throw new Error("No se encontró el usuario de Calendly.");
-  const tipos = await pedir(`/event_types?user=${encodeURIComponent(usuario)}&active=true`);
-  const objetivo = EVENTO_PUBLICO.replace(/\/$/, "");
-  const tipo = tipos.collection?.find(
-    (item) => item.scheduling_url.replace(/\/$/, "") === objetivo,
-  );
-  if (!tipo) throw new Error("No se encontró el evento Análisis de negocio en Calendly.");
-  return tipo.uri;
+  const respuesta = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(
+      typeof respuesta.error === "string" ? respuesta.error : "No se pudo conectar con Calendly.",
+    );
+  }
+  return respuesta;
 }
 
 const esquemaReserva = z.object({
   inicio: z.string().datetime(),
-  nombre: z.string().trim().min(2).max(160),
-  email: z.string().trim().email().max(254),
   zonaHoraria: z.string().trim().min(2).max(80),
   leadId: z.string().uuid(),
 });
 
-export const reservarEnCalendly = createServerFn({ method: "POST" })
-  .validator(esquemaReserva)
-  .handler(async ({ data }) => {
-    const tipo = await tipoDeEvento();
-    const response = await fetch(`${API}/invitees`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token()}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        event_type: tipo,
-        start_time: data.inicio,
-        invitee: {
-          name: data.nombre,
-          email: data.email,
-          timezone: data.zonaHoraria,
-        },
-        tracking: { utm_content: data.leadId },
-      }),
-    });
+export async function reservarEnCalendly(data: z.infer<typeof esquemaReserva>) {
+  const reserva = esquemaReserva.parse(data);
+  return pedir({
+    action: "book",
+    lead_id: reserva.leadId,
+    start_time: reserva.inicio,
+    timezone: reserva.zonaHoraria,
+  }) as Promise<RespuestaDeReserva>;
+}
 
-    if (!response.ok) {
-      throw new Error(`Calendly respondió ${response.status}.`);
-    }
-
-    const reserva = (await response.json()) as RespuestaDeReserva;
-    return { uri: reserva.resource?.uri ?? null };
-  });
-
-export const horariosDeCalendly = createServerFn({ method: "POST" })
-  .validator(z.object({ inicio: z.string().datetime(), fin: z.string().datetime() }))
-  .handler(async ({ data }) => {
-    if (cache && cache.vence > Date.now()) return cache.horarios;
-    const tipo = await tipoDeEvento();
-    const query = new URLSearchParams({
-      event_type: tipo,
-      start_time: data.inicio,
-      end_time: data.fin,
-    });
-    const dataApi = await pedir(`/event_type_available_times?${query}`);
-    const horarios = (dataApi.collection ?? []) as Horario[];
-    cache = { horarios, vence: Date.now() + 60_000 };
-    return horarios;
-  });
+export async function horariosDeCalendly(data: { inicio: string; fin: string }) {
+  if (cache && cache.vence > Date.now()) return cache.horarios;
+  const result = (await pedir({
+    action: "availability",
+    start_time: data.inicio,
+    end_time: data.fin,
+  })) as {
+    collection?: Horario[];
+  };
+  const horarios = result.collection ?? [];
+  cache = { horarios, vence: Date.now() + 60_000 };
+  return horarios;
+}
