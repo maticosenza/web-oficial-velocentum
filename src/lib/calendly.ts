@@ -7,6 +7,7 @@ const ENDPOINT = `${SUPABASE_URL}/functions/v1/calendly`;
 type Horario = { start_time: string; scheduling_url: string };
 type RespuestaDeReserva = { uri: string | null };
 let cache: { vence: number; horarios: Horario[] } | undefined;
+let solicitudActual: Promise<Horario[]> | undefined;
 
 async function pedir(body: Record<string, unknown>) {
   const response = await fetch(ENDPOINT, {
@@ -47,14 +48,24 @@ export async function reservarEnCalendly(data: z.infer<typeof esquemaReserva>) {
 
 export async function horariosDeCalendly(data: { inicio: string; fin: string }) {
   if (cache && cache.vence > Date.now()) return cache.horarios;
-  const result = (await pedir({
-    action: "availability",
-    start_time: data.inicio,
-    end_time: data.fin,
-  })) as {
-    collection?: Horario[];
-  };
-  const horarios = result.collection ?? [];
-  cache = { horarios, vence: Date.now() + 60_000 };
-  return horarios;
+  if (solicitudActual) return solicitudActual;
+
+  solicitudActual = (async () => {
+    const result = (await pedir({
+      action: "availability",
+      start_time: data.inicio,
+      end_time: data.fin,
+    })) as {
+      collection?: Horario[];
+    };
+    const horarios = result.collection ?? [];
+    cache = { horarios, vence: Date.now() + 10 * 60_000 };
+    return horarios;
+  })();
+
+  try {
+    return await solicitudActual;
+  } finally {
+    solicitudActual = undefined;
+  }
 }

@@ -424,10 +424,170 @@
     margin: 0;
   }
 
-  .con1-calendario {
-    display: flex;
-    flex-wrap: wrap;
+  .con1-agenda {
+    display: grid;
+    overflow: hidden;
+    border: 1.5px solid color-mix(in srgb, var(--tinta) 16%, transparent);
+    border-radius: var(--r-card);
+    background: var(--fondo);
+  }
+
+  .con1-agenda__fechas,
+  .con1-agenda__horarios {
+    min-width: 0;
+    padding: var(--space-4);
+  }
+
+  .con1-agenda__horarios {
+    border-top: 1.5px solid color-mix(in srgb, var(--tinta) 12%, transparent);
+    background: color-mix(in srgb, var(--acento) 5%, var(--fondo));
+  }
+
+  .con1-agenda__etiqueta {
+    margin: 0 0 var(--space-3);
+    color: var(--tinta);
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .con1-agenda__zona {
+    margin: var(--space-3) 0 0;
+    color: var(--texto-2);
+    font-size: 13px;
+  }
+
+  .con1-agenda__lista {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-2);
+  }
+
+  .con1-agenda__horario {
+    min-height: 48px;
+    padding: var(--space-2) var(--space-3);
+    border: 1.5px solid var(--acento);
+    border-radius: var(--r-pill);
+    background: var(--fondo);
+    color: var(--tinta);
+    font-family: var(--font-texto);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+      background-color 160ms ease,
+      color 160ms ease,
+      transform 160ms ease;
+  }
+
+  .con1-agenda__horario:hover:not(:disabled) {
+    background: var(--acento);
+    color: var(--sobre);
+    transform: translateY(-1px);
+  }
+
+  .con1-agenda__horario:focus-visible {
+    outline: 3px solid var(--tinta);
+    outline-offset: 2px;
+  }
+
+  .con1-agenda__horario:disabled {
+    opacity: 0.62;
+    cursor: wait;
+  }
+
+  .con1-agenda .rdp-root {
+    --rdp-accent-color: var(--acento);
+    --rdp-accent-background-color: color-mix(in srgb, var(--acento) 13%, transparent);
+    --rdp-day-height: 44px;
+    --rdp-day-width: 44px;
+    --rdp-day_button-height: 40px;
+    --rdp-day_button-width: 40px;
+    width: 100%;
+    margin: 0;
+    color: var(--tinta);
+    font-family: var(--font-texto);
+  }
+
+  .con1-agenda .rdp-months,
+  .con1-agenda .rdp-month,
+  .con1-agenda .rdp-month_grid {
+    width: 100%;
+    max-width: none;
+  }
+
+  .con1-agenda .rdp-month_grid {
+    table-layout: fixed;
+  }
+
+  .con1-agenda .rdp-day {
+    width: auto;
+  }
+
+  .con1-agenda .rdp-day_button {
+    margin: auto;
+    border-width: 1.5px;
+    font-weight: 650;
+  }
+
+  .con1-agenda .rdp-month_caption {
+    font-size: 17px;
+    font-weight: 750;
+    text-transform: capitalize;
+  }
+
+  .con1-agenda .rdp-weekday {
+    color: var(--texto-2);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .con1-agenda .rdp-selected .rdp-day_button {
+    border-color: var(--acento);
+    background: var(--acento);
+    color: var(--sobre);
+  }
+
+  .con1-agenda .rdp-day:not(.rdp-disabled, .rdp-selected) .rdp-day_button:hover {
+    background: color-mix(in srgb, var(--acento) 12%, transparent);
+  }
+
+  .con1-agenda .rdp-today:not(.rdp-selected) .rdp-day_button {
+    border-color: var(--acento);
+  }
+
+  .con1-agenda .rdp-disabled {
+    opacity: 0.24;
+  }
+
+  .con1-exito {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border: 1.5px solid var(--acento-3);
+    border-radius: var(--r-card);
+    background: color-mix(in srgb, var(--acento-3) 9%, var(--fondo));
+  }
+
+  .con1-exito__icono {
+    display: grid;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--acento-3);
+    color: var(--sobre);
+    font-size: 22px;
+    font-weight: 800;
+  }
+
+  .con1-exito__titulo {
+    margin: 0 0 var(--space-1);
+    color: var(--tinta);
+    font-size: 20px;
+    line-height: 1.2;
   }
 
   /* =========================================================
@@ -491,6 +651,15 @@
 
     .con1__botones {
       margin-top: 0;
+    }
+
+    .con1-agenda {
+      grid-template-columns: minmax(320px, 0.9fr) minmax(300px, 1.1fr);
+    }
+
+    .con1-agenda__horarios {
+      border-top: 0;
+      border-left: 1.5px solid color-mix(in srgb, var(--tinta) 12%, transparent);
     }
 
     /* ⚠ EN EL PASO 4 LA COLUMNA IZQUIERDA DESAPARECE, Y ES EL

@@ -91,7 +91,10 @@
    el cambio de paso lo pidió alguien.
    =========================================================== */
 
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { es } from "date-fns/locale";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/style.css";
 
 import { Reveal } from "../componentes/Reveal";
 import { Flecha } from "../componentes/Flecha";
@@ -237,6 +240,12 @@ export function CON1Flujo() {
       setErrorCalendly(`No pudimos cargar los horarios: ${detalle}`);
     }
   }, []);
+
+  // Mientras la persona completa los pasos anteriores, la disponibilidad
+  // ya se consulta. Al llegar al calendario normalmente está lista.
+  useEffect(() => {
+    void cargarHorarios();
+  }, [cargarHorarios]);
 
   const avanzarDesdeDatos = async () => {
     const nuevos: Partial<Record<CampoId, string>> = {};
@@ -636,6 +645,31 @@ function PasoDelCalendario({
   reservaLista: boolean;
   reservar: (inicio: string) => void;
 }) {
+  const horariosPorDia = useMemo(() => {
+    const grupos = new Map<string, Array<{ start_time: string; scheduling_url: string }>>();
+    for (const horario of [...horarios].sort(
+      (a, b) => new Date(a.start_time).valueOf() - new Date(b.start_time).valueOf(),
+    )) {
+      const clave = claveDeFecha(new Date(horario.start_time));
+      grupos.set(clave, [...(grupos.get(clave) ?? []), horario]);
+    }
+    return grupos;
+  }, [horarios]);
+  const diasDisponibles = useMemo(() => [...horariosPorDia.keys()], [horariosPorDia]);
+  const [diaElegido, setDiaElegido] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (diaElegido && horariosPorDia.has(diaElegido)) return;
+    setDiaElegido(diasDisponibles[0] ?? null);
+  }, [diaElegido, diasDisponibles, horariosPorDia]);
+
+  const fechaElegida = diaElegido ? fechaDesdeClave(diaElegido) : undefined;
+  const primerDia = diasDisponibles[0] ? fechaDesdeClave(diasDisponibles[0]) : undefined;
+  const ultimoDia = diasDisponibles.at(-1)
+    ? fechaDesdeClave(diasDisponibles.at(-1) as string)
+    : undefined;
+  const horariosElegidos = diaElegido ? (horariosPorDia.get(diaElegido) ?? []) : [];
+
   return (
     <div className="con1-paso" hidden={!visible}>
       <h2 className="con1-paso__titulo" ref={tituloRef} tabIndex={-1}>
@@ -643,9 +677,17 @@ function PasoDelCalendario({
       </h2>
 
       {reservaLista ? (
-        <p className="con1__marcador" role="status">
-          ¡Listo! Tu llamada quedó agendada. Calendly te envió la confirmación por email.
-        </p>
+        <div className="con1-exito" role="status">
+          <span className="con1-exito__icono" aria-hidden="true">
+            ✓
+          </span>
+          <div>
+            <h3 className="con1-exito__titulo">Tu llamada quedó agendada</h3>
+            <p className="con1__marcador">
+              Revisá tu email: Calendly te envió la invitación con todos los detalles.
+            </p>
+          </div>
+        </div>
       ) : (
         <>
           {error ? (
@@ -656,33 +698,81 @@ function PasoDelCalendario({
           {!error && horarios.length === 0 ? (
             <p className="con1__marcador">Cargando horarios disponibles…</p>
           ) : null}
-          <div className="con1-calendario" aria-live="polite">
-            {horarios.slice(0, 12).map((horario) => {
-              const fecha = new Date(horario.start_time);
-              const estaReservando = reservando === horario.start_time;
-              return (
-                <button
-                  key={horario.start_time}
-                  type="button"
-                  className="boton boton--relleno"
-                  disabled={reservando !== null}
-                  onClick={() => reservar(horario.start_time)}
-                >
-                  {estaReservando
-                    ? "Reservando…"
-                    : new Intl.DateTimeFormat("es-AR", {
-                        weekday: "short",
-                        day: "numeric",
-                        month: "short",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      }).format(fecha)}
-                </button>
-              );
-            })}
-          </div>
+          {diasDisponibles.length > 0 ? (
+            <div className="con1-agenda" aria-live="polite">
+              <div className="con1-agenda__fechas">
+                <p className="con1-agenda__etiqueta">Seleccioná un día</p>
+                <DayPicker
+                  mode="single"
+                  locale={es}
+                  selected={fechaElegida}
+                  defaultMonth={primerDia}
+                  startMonth={primerDia}
+                  endMonth={ultimoDia}
+                  showOutsideDays
+                  disabled={(fecha) => !horariosPorDia.has(claveDeFecha(fecha))}
+                  onSelect={(fecha) => {
+                    if (fecha) setDiaElegido(claveDeFecha(fecha));
+                  }}
+                />
+                <p className="con1-agenda__zona">Los horarios se muestran en tu hora local.</p>
+              </div>
+
+              <div className="con1-agenda__horarios">
+                <p className="con1-agenda__etiqueta">
+                  {fechaElegida
+                    ? capitalizar(
+                        new Intl.DateTimeFormat("es-AR", {
+                          weekday: "long",
+                          day: "numeric",
+                          month: "long",
+                        }).format(fechaElegida),
+                      )
+                    : "Horarios disponibles"}
+                </p>
+                <div className="con1-agenda__lista">
+                  {horariosElegidos.map((horario) => {
+                    const estaReservando = reservando === horario.start_time;
+                    return (
+                      <button
+                        key={horario.start_time}
+                        type="button"
+                        className="con1-agenda__horario"
+                        disabled={reservando !== null}
+                        onClick={() => reservar(horario.start_time)}
+                      >
+                        {estaReservando
+                          ? "Reservando…"
+                          : new Intl.DateTimeFormat("es-AR", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }).format(new Date(horario.start_time))}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          ) : null}
         </>
       )}
     </div>
   );
+}
+
+function claveDeFecha(fecha: Date) {
+  return [
+    fecha.getFullYear(),
+    String(fecha.getMonth() + 1).padStart(2, "0"),
+    String(fecha.getDate()).padStart(2, "0"),
+  ].join("-");
+}
+
+function fechaDesdeClave(clave: string) {
+  const [anio, mes, dia] = clave.split("-").map(Number);
+  return new Date(anio, mes - 1, dia);
+}
+
+function capitalizar(texto: string) {
+  return texto.charAt(0).toUpperCase() + texto.slice(1);
 }
