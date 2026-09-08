@@ -226,7 +226,8 @@ export function CON1Flujo() {
       setErrorCalendly(null);
       setHorarios(
         await horariosDeCalendly({
-          data: { inicio: inicio.toISOString(), fin: fin.toISOString() },
+          inicio: inicio.toISOString(),
+          fin: fin.toISOString(),
         }),
       );
     } catch {
@@ -284,14 +285,10 @@ export function CON1Flujo() {
     setErrorReserva(null);
     try {
       await reservarEnCalendly({
-        data: {
-          inicio,
-          nombre: estado.datos.nombre.trim(),
-          email: estado.datos.email.trim(),
-          zonaHoraria:
-            Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Argentina/Buenos_Aires",
-          leadId: leadId.current,
-        },
+        inicio,
+        zonaHoraria:
+          Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Argentina/Buenos_Aires",
+        leadId: leadId.current,
       });
       setReservaLista(true);
     } catch {
