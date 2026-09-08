@@ -1322,16 +1322,13 @@
     }
   }
 
-  /* Bajo 810px ServiceStack suelta el apilado y esto pasa a una
-     columna. El marco se acota para que un retrato 3:4 a ancho
-     completo no ocupe una pantalla y media. */
+  /* En tablet la pieza 3D se ubica junto al contenido para que la
+     tarjeta sea más corta y las líneas de entregables no ocupen
+     todo el ancho. En mobile se elimina sólo esa pieza decorativa:
+     el contenido y el apilado animado se mantienen completos. */
   @media (max-width: 809px) {
     .b4-tarjeta {
-      /* La gráfica queda debajo del contenido, pero más acotada:
-         los objetos son cuadrados y a 340px convertían cada card
-         en una pantalla casi completa. */
       padding: var(--space-4);
-      grid-template-columns: minmax(0, 1fr);
       gap: var(--space-4);
     }
 
@@ -1363,11 +1360,29 @@
       font-size: 14px;
       max-width: none;
     }
+  }
+
+  @media (min-width: 640px) and (max-width: 809px) {
+    .b4-tarjeta {
+      grid-template-columns: minmax(0, 1fr) clamp(190px, 32vw, 240px);
+      align-items: center;
+      min-height: 400px;
+    }
+
+    .b4-tarjeta__entregables {
+      max-width: 38ch;
+    }
 
     .b4-tarjeta__medio {
       width: 100%;
-      max-width: 220px;
+      max-width: none;
       justify-self: center;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .b4-tarjeta__medio {
+      display: none;
     }
   }
 

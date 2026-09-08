@@ -265,23 +265,11 @@
   }
 
   @media (max-width: 809px) {
-    .pila-sticky__hueco {
-      position: relative;
-      top: auto;
-    }
-
+    /* El mismo apilado sticky de desktop se conserva en tablet y
+       mobile. Sólo se reduce el aire entre tarjetas para aprovechar
+       mejor el ancho y el alto disponibles. */
     .pila-sticky {
       gap: var(--space-2);
-    }
-
-    /* Sin apilado no hay salida que mostrar: las tarjetas van una
-       abajo de la otra y ninguna tapa a ninguna. Inclinar y subir
-       una tarjeta que nadie está cubriendo sería un defecto, no un
-       efecto. El hook sigue calculando `--salida` —no vale la pena
-       una rama en JS por esto—, pero acá no se lee. */
-    .pila-sticky__salida {
-      transform: none;
-      will-change: auto;
     }
   }
 
