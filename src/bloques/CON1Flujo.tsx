@@ -291,7 +291,6 @@ export function CON1Flujo() {
         inicio,
         zonaHoraria:
           Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Argentina/Buenos_Aires",
-        leadId: leadId.current,
         nombre: estado.datos.nombre,
         email: estado.datos.email,
       });

@@ -93,17 +93,11 @@ Deno.serve(async (request) => {
     }
 
     if (body.action === "book") {
-      const leadId = typeof body.lead_id === "string" ? body.lead_id : "";
       const startTime = typeof body.start_time === "string" ? body.start_time : "";
       const name = typeof body.name === "string" ? body.name.trim() : "";
       const email = typeof body.email === "string" ? body.email.trim() : "";
       const timezone =
         typeof body.timezone === "string" ? body.timezone : "America/Argentina/Buenos_Aires";
-      if (
-        !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(leadId)
-      ) {
-        return fail("Lead inválido.");
-      }
       if (Number.isNaN(new Date(startTime).valueOf())) return fail("Horario inválido.");
       if (name.length < 2 || !/^\S+@\S+\.\S+$/.test(email)) return fail("Datos de contacto inválidos.");
       const eventType = await eventTypeUri();
@@ -117,7 +111,6 @@ Deno.serve(async (request) => {
           // Calendly exige que una reserva indique la ubicación cuando
           // el tipo de evento tiene una sola ubicación configurada.
           ...(location ? { location } : {}),
-          tracking: { utm_content: leadId },
         }),
       })) as { resource?: CalendlyResource };
       return json({ uri: result.resource?.uri ?? null });
