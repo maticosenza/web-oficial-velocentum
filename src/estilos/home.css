@@ -842,8 +842,15 @@
      pueda cubrir el hero completo; sólo se compacta su aire
      interior. */
   @media (max-width: 809px) {
+    .b2 {
+      /* En teléfono el contenido ya entra holgado antes de llegar
+         al ticker; reducir el recorrido evita el vacío entre el
+         CTA y la franja de capacidades. */
+      min-height: 64dvh;
+    }
+
     .b2__contenido {
-      padding-block: var(--space-section) var(--space-6);
+      padding-block: var(--space-6) var(--space-4);
     }
   }
 
@@ -954,6 +961,12 @@
      que preservar: la fila es una tarjeta sola, así que manda el
      ancho y la pieza usa la columna entera. */
   @media (max-width: 599px) {
+    .b3__contenido {
+      /* El ticker ya funciona como separación: no necesita sumar
+         una segunda sección completa de aire antes del encabezado. */
+      padding-top: var(--space-6);
+    }
+
     /* En teléfono las piezas no necesitan viajar media pantalla para
        leerse como movimiento. La referencia de Lofty conserva apenas
        un corrimiento lateral al entrar: deja que el scroll vertical
@@ -972,15 +985,6 @@
         )
         rotate(calc((1 - var(--progreso, 1)) * var(--dir, -1) * 1.25deg))
         scale(calc(1 - (1 - var(--progreso, 1)) * 0.02));
-    }
-
-    .b3-trabajo__medio {
-      /* La media de cada caso se acerca a la ficha móvil de la
-         referencia: casi cuadrada, a ancho completo y con un pie de
-         texto compacto. Antes el 3:4 hacía que cada trabajo ocupara
-         demasiado recorrido antes de llegar al siguiente. */
-      width: 100%;
-      aspect-ratio: 1 / 1;
     }
 
     .b3-trabajo__pie {
@@ -1156,6 +1160,16 @@
          tablet ni el de la página /casos. */
       width: min(100%, 500px);
       aspect-ratio: 5 / 6;
+    }
+  }
+
+  /* Va después de la medida base para ganar la cascada. En teléfono
+     cada caso queda cuadrado y ocupa un poco menos de ancho y alto
+     para que la secuencia de trabajos sea más ágil. */
+  @media (max-width: 599px) {
+    .b3-trabajo__medio {
+      width: 92%;
+      aspect-ratio: 1 / 1;
     }
   }
 
@@ -1445,6 +1459,16 @@
      que no lo necesitan. */
   .b5__ticker .ticker__ventana {
     padding-block: var(--space-5);
+  }
+
+  @media (max-width: 809px) {
+    .b5 {
+      padding-block: var(--space-3);
+    }
+
+    .b5__ticker .ticker__ventana {
+      padding-block: var(--space-3);
+    }
   }
 
   /* =========================================================
