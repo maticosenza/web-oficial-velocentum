@@ -684,7 +684,7 @@ function PasoDelCalendario({
           <div>
             <h3 className="con1-exito__titulo">Tu llamada quedó agendada</h3>
             <p className="con1__marcador">
-              Revisá tu email: Calendly te envió la invitación con todos los detalles.
+              Te enviamos un email con la fecha, el horario y el enlace para unirte.
             </p>
           </div>
         </div>
