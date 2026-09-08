@@ -7,6 +7,7 @@ import { B3Trabajos } from "../bloques/B3Trabajos";
 import { B4Servicios } from "../bloques/B4Servicios";
 import { B5Pildoras } from "../bloques/B5Pildoras";
 import { B6Proceso } from "../bloques/B6Proceso";
+import { BNubeEquipo } from "../bloques/BNubeEquipo";
 import { B7Clientes } from "../bloques/B7Clientes";
 import { B8Cierre } from "../bloques/B8Cierre";
 import { B9Footer } from "../bloques/B9Footer";
@@ -62,6 +63,7 @@ function Inicio() {
       <B3Trabajos />
       <B4Servicios />
       <B6Proceso />
+      <BNubeEquipo />
 
       {/* B7 y B8 van cosidos, igual que B1 y B2: B7 queda fijado
           mientras el cierre azul sube encima. El offset sale del

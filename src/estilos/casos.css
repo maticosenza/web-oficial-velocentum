@@ -495,10 +495,10 @@
       max-width: 380px;
     }
 
-    /* El titular pinneado se achica: a 22vw de un teléfono la
-       palabra se sale de la pantalla. */
+    /* El titular pinneado conserva su peso de fondo, pero queda
+       un poco más chico para respirar contra los laterales. */
     .cas2__pin-texto {
-      font-size: min(30vw, 140px);
+      font-size: min(27vw, 126px);
     }
 
     /* El círculo se achica con el bloque. Los logos lo siguen
