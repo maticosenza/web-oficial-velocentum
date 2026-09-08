@@ -1051,6 +1051,11 @@
     transform: translateX(calc((1 - var(--progreso, 1)) * var(--dir, -1) * 62%))
       rotate(calc((1 - var(--progreso, 1)) * var(--dir, -1) * 5deg))
       scale(calc(1 - (1 - var(--progreso, 1)) * 0.08));
+    /* El progreso cambia durante el scroll, pero el transform no
+       tiene por qué copiar cada píxel de ese cambio. Una transición
+       corta conserva la respuesta inmediata y suma la inercia suave
+       que hace que la entrada se perciba continua en 60 Hz. */
+    transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform;
   }
 
@@ -1203,6 +1208,7 @@
   @media (prefers-reduced-motion: reduce) {
     .b3-trabajo__movil {
       transform: none;
+      transition: none;
       will-change: auto;
     }
   }
