@@ -99,7 +99,7 @@ const PASOS: Paso[] = [
   },
   {
     n: "04",
-    titulo: ["Ejecutamos el plan", "de acción"],
+    titulo: ["Ejecutamos el", "plan de acción"],
     bajada:
       "No activamos todo junto. Primero lo que más pesa, y qué tiene que estar resuelto antes de escalar.",
     objeto: "/assets/rayo.png",
