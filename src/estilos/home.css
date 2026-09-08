@@ -1150,7 +1150,11 @@
      Verificado mirando los cuatro a tamaño real. */
   @media (min-width: 810px) {
     .b3-trabajo__medio {
-      width: 100%;
+      /* La home presenta los casos; no es la galería completa. Un
+         techo de 500px preserva las dos piezas en cuadro y deja
+         aire entre ellas en escritorio, sin alterar el tamaño de
+         tablet ni el de la página /casos. */
+      width: min(100%, 500px);
       aspect-ratio: 5 / 6;
     }
   }
