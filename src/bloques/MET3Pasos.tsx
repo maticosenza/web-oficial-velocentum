@@ -61,7 +61,8 @@ import { Reveal } from "../componentes/Reveal";
 
 type Paso = {
   n: string;
-  titulo: string;
+  /** Dos líneas decididas por el contenido, no por el ancho casual de la tarjeta. */
+  titulo: readonly [string, string];
   bajada: string;
   objeto: string;
   acento: string;
@@ -71,7 +72,7 @@ type Paso = {
 const PASOS: Paso[] = [
   {
     n: "01",
-    titulo: "Revisamos tu ecosistema completo",
+    titulo: ["Revisamos tu", "ecosistema completo"],
     bajada:
       "No solo la pauta: qué vendés y a qué precio, cómo llega la gente y qué encuentra cuando llega.",
     objeto: "/assets/conexion.png",
@@ -80,7 +81,7 @@ const PASOS: Paso[] = [
   },
   {
     n: "02",
-    titulo: "Diagnosticamos tu cuello de botella",
+    titulo: ["Diagnosticamos tu", "cuello de botella"],
     bajada:
       "“No vendo lo suficiente” nunca es un solo problema. Al separarlo aparecen tres o cuatro frentes, y siempre hay uno que pesa más.",
     objeto: "/assets/foco.png",
@@ -89,7 +90,7 @@ const PASOS: Paso[] = [
   },
   {
     n: "03",
-    titulo: "Proyectamos qué pasa si se corrige",
+    titulo: ["Proyectamos qué", "pasa si se corrige"],
     bajada:
       "Con tus números reales, una proyección a 90 días. No promesas: un rango con supuestos explícitos y su inversión.",
     objeto: "/assets/barras.png",
@@ -98,7 +99,7 @@ const PASOS: Paso[] = [
   },
   {
     n: "04",
-    titulo: "Ejecutamos el plan de acción",
+    titulo: ["Ejecutamos el plan", "de acción"],
     bajada:
       "No activamos todo junto. Primero lo que más pesa, y qué tiene que estar resuelto antes de escalar.",
     objeto: "/assets/rayo.png",
@@ -145,7 +146,11 @@ export function MET3Pasos() {
                 />
               </div>
 
-              <h3 className="met3-paso__titulo">{p.titulo}</h3>
+              <h3 className="met3-paso__titulo">
+                {p.titulo[0]}
+                <br />
+                {p.titulo[1]}
+              </h3>
               <p className="met3-paso__bajada">{p.bajada}</p>
             </Reveal>
           ))}

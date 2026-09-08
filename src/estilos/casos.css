@@ -514,6 +514,13 @@
      --------------------------------------------------------- */
 
   @media (min-width: 810px) {
+    /* En escritorio el titular acompaña el recorrido de los casos,
+       pero no debe competir con la ficha que está adelante. Baja
+       apenas respecto del 22vw anterior, sin afectar móvil. */
+    .cas2__pin-texto {
+      font-size: min(19vw, 224px);
+    }
+
     /* MÁS AIRE ENTRE EL MEDIO Y LAS DOS COLUMNAS LATERALES.
        `.scroll-medio` reparte 32 en las dos direcciones; acá sólo
        se pisa el eje horizontal, así que el hueco vertical del
