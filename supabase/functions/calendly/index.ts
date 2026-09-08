@@ -69,7 +69,10 @@ async function leadById(id: string) {
   const response = await fetch(
     `${SUPABASE_URL}/rest/v1/leads?id=eq.${encodeURIComponent(id)}&select=id,nombre,email`,
     {
-      headers: { apikey: SUPABASE_ADMIN_KEY, Authorization: `Bearer ${SUPABASE_ADMIN_KEY}` },
+      // Las claves `sb_secret_` autorizan con `apikey`. Enviarlas también
+      // como Bearer hace que la API intente leerlas como JWT y rechace el
+      // pedido antes de consultar la tabla.
+      headers: { apikey: SUPABASE_ADMIN_KEY },
     },
   );
   if (!response.ok) throw new Error("No se pudo recuperar el lead.");
@@ -82,7 +85,6 @@ async function markBooked(id: string, inviteeUri: string | undefined) {
     method: "PATCH",
     headers: {
       apikey: SUPABASE_ADMIN_KEY,
-      Authorization: `Bearer ${SUPABASE_ADMIN_KEY}`,
       "Content-Type": "application/json",
       Prefer: "return=minimal",
     },
