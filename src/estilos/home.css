@@ -954,8 +954,42 @@
      que preservar: la fila es una tarjeta sola, así que manda el
      ancho y la pieza usa la columna entera. */
   @media (max-width: 599px) {
+    /* En teléfono las piezas no necesitan viajar media pantalla para
+       leerse como movimiento. La referencia de Lofty conserva apenas
+       un corrimiento lateral al entrar: deja que el scroll vertical
+       lleve la escena y la tarjeta se asiente despacio, sin competir
+       con el gesto del pulgar. */
+    .b3__piezas {
+      gap: clamp(32px, 9vw, 40px);
+      margin-top: var(--space-5);
+    }
+
+    .b3-trabajo__movil {
+      transform: translate3d(
+          calc((1 - var(--progreso, 1)) * var(--dir, -1) * 6%),
+          calc((1 - var(--progreso, 1)) * 16px),
+          0
+        )
+        rotate(calc((1 - var(--progreso, 1)) * var(--dir, -1) * 1.25deg))
+        scale(calc(1 - (1 - var(--progreso, 1)) * 0.02));
+    }
+
     .b3-trabajo__medio {
+      /* La media de cada caso se acerca a la ficha móvil de la
+         referencia: casi cuadrada, a ancho completo y con un pie de
+         texto compacto. Antes el 3:4 hacía que cada trabajo ocupara
+         demasiado recorrido antes de llegar al siguiente. */
       width: 100%;
+      aspect-ratio: 1 / 1;
+    }
+
+    .b3-trabajo__pie {
+      gap: var(--space-1);
+      padding-top: var(--space-3);
+    }
+
+    .b3-trabajo__nombre {
+      font-size: clamp(34px, 10vw, 42px);
     }
   }
 
