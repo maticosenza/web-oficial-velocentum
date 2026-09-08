@@ -14,14 +14,10 @@ const esquemaLead = z.object({
 type Lead = z.infer<typeof esquemaLead>;
 
 function configuracion() {
-  const url = import.meta.env.VITE_VELO_SUPABASE_URL;
-  const key = import.meta.env.VITE_VELO_SUPABASE_PUBLISHABLE_KEY;
-
-  if (!url || !key) {
-    throw new Error("Supabase todavía no está configurado.");
-  }
-
-  return { url: url.replace(/\/$/, ""), key };
+  return {
+    url: "https://nsjvfgjscvzjddnwbnik.supabase.co",
+    key: "sb_publishable_I7EmSvOufYxyWOuSZn6QpQ_utbL7wgs",
+  };
 }
 
 /** La Publishable key es segura en el navegador: la política RLS de
