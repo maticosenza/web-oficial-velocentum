@@ -306,6 +306,47 @@
     background: linear-gradient(180deg, #8ec5ff 0%, var(--cielo) 55%, #dceeff 100%);
   }
 
+  /* Nubes chicas sobre el cielo limpio. Son formas CSS, así que
+     quedan livianas y no compiten con la textura de abajo. */
+  .b1__nube {
+    position: absolute;
+    top: 35%;
+    width: 74px;
+    height: 24px;
+    border-radius: var(--r-pill);
+    background: rgb(255 255 255 / 0.96);
+    filter: drop-shadow(0 5px 9px rgb(15 32 80 / 0.12));
+    pointer-events: none;
+  }
+
+  .b1__nube span {
+    position: absolute;
+    bottom: 0;
+    border-radius: 50%;
+    background: inherit;
+  }
+
+  .b1__nube span:first-child {
+    width: 34px;
+    height: 34px;
+    left: 13px;
+  }
+
+  .b1__nube span:last-child {
+    width: 26px;
+    height: 26px;
+    left: 38px;
+  }
+
+  .b1__nube--izq {
+    left: clamp(28px, 9vw, 160px);
+  }
+
+  .b1__nube--der {
+    right: clamp(28px, 9vw, 160px);
+    transform: scale(0.82);
+  }
+
   /* LA MANCHA · 1 de 3 — EL ENCUADRE. No se mueve nunca.
 
      NO ES UN OBJETO: ES UNA FRANJA QUE ATRAVIESA EL HERO.
@@ -561,13 +602,13 @@
   }
 
   .b1__objeto--izq {
-    left: 0;
-    transform: translate(-42%, -50%) rotate(-5deg);
+    left: 10%;
+    transform: translate(-50%, -50%) rotate(-5deg);
   }
 
   .b1__objeto--der {
-    right: 0;
-    transform: translate(42%, -50%) rotate(5deg);
+    right: 10%;
+    transform: translate(50%, -50%) rotate(5deg);
   }
 
   /* En móvil NO pueden seguir flanqueando el renglón 2: a 390px el
@@ -593,6 +634,19 @@
       bottom: 0;
       right: 0;
       transform: translate(14%, 78%) rotate(5deg);
+    }
+
+    .b1__nube {
+      top: 28%;
+      transform: scale(0.66);
+    }
+
+    .b1__nube--izq {
+      left: -3px;
+    }
+
+    .b1__nube--der {
+      right: -3px;
     }
   }
 
@@ -1273,9 +1327,12 @@
      completo no ocupe una pantalla y media. */
   @media (max-width: 809px) {
     .b4-tarjeta {
-      padding: var(--space-5);
+      /* La gráfica queda debajo del contenido, pero más acotada:
+         los objetos son cuadrados y a 340px convertían cada card
+         en una pantalla casi completa. */
+      padding: var(--space-4);
       grid-template-columns: minmax(0, 1fr);
-      gap: var(--space-5);
+      gap: var(--space-4);
     }
 
     .b4-tarjeta__texto {
@@ -1291,21 +1348,25 @@
     }
 
     .b4-tarjeta__entregables {
-      margin-top: var(--space-4);
+      margin-top: var(--space-3);
     }
 
     .b4-tarjeta__entregable {
-      gap: var(--space-2);
+      display: grid;
+      grid-template-columns: 2.5ch minmax(0, 1fr);
+      gap: var(--space-3);
       padding-block: var(--space-2);
+      text-align: left;
     }
 
     .b4-tarjeta__entregable-texto {
       font-size: 14px;
+      max-width: none;
     }
 
     .b4-tarjeta__medio {
       width: 100%;
-      max-width: 340px;
+      max-width: 220px;
       justify-self: center;
     }
   }

@@ -52,19 +52,17 @@ export type PasoDeOpciones = {
   opciones: Opcion[];
 };
 
-/* Los dos primeros pasos. El copy está confirmado y no se toca:
-   las cinco opciones del rubro y las cuatro del objetivo salen
-   tal cual de la definición de la página. */
+/* La primera pregunta deja sólo rubros que cambian el diagnóstico:
+   Retail solapaba E-commerce y las aclaraciones repetían el nombre. */
 export const PASOS_DE_OPCIONES: PasoDeOpciones[] = [
   {
     id: "rubro",
     titulo: "¿En qué rubro estás?",
     ayuda: "Elegí el que mejor te describa.",
     opciones: [
-      { id: "ecommerce", nombre: "E-commerce", detalle: "vendo productos online" },
-      { id: "retail", nombre: "Retail", detalle: "local físico con presencia digital" },
-      { id: "servicios", nombre: "Servicios", detalle: "vendo servicios o experiencias" },
-      { id: "b2b", nombre: "B2B", detalle: "vendo a otras empresas" },
+      { id: "ecommerce", nombre: "E-commerce" },
+      { id: "servicios", nombre: "Servicios" },
+      { id: "b2b", nombre: "B2B" },
       { id: "otro", nombre: "Otro" },
     ],
   },
@@ -88,7 +86,7 @@ export function textoDeOpcion(opcion: Opcion): string {
 
 /* --- El paso 3 --- */
 
-export type CampoId = "nombre" | "telefono" | "email" | "empresa" | "web";
+export type CampoId = "nombre" | "telefono" | "email" | "instagram" | "web";
 
 /**
  * Cómo se valida cada campo. Los cinco son obligatorios; la
@@ -139,11 +137,11 @@ export const CAMPOS: Campo[] = [
   },
   {
     id: "telefono",
-    etiqueta: "Teléfono o WhatsApp",
+    etiqueta: "WhatsApp",
     autocompletado: "tel",
     tipo: "tel",
     comprobacion: "digitos",
-    errorVacio: "Escribí tu teléfono o WhatsApp.",
+    errorVacio: "Escribí tu WhatsApp.",
     errorFormato: "Escribilo con característica, como +54 9 11 3581-0100.",
   },
   {
@@ -156,26 +154,20 @@ export const CAMPOS: Campo[] = [
     errorFormato: "Escribilo con arroba y dominio, como nombre@empresa.com.",
   },
   {
-    id: "empresa",
-    etiqueta: "Empresa o marca",
-    autocompletado: "organization",
+    id: "instagram",
+    etiqueta: "Instagram",
+    autocompletado: "url",
     tipo: "text",
     comprobacion: "ninguna",
-    errorVacio: "Escribí el nombre de tu empresa o marca.",
+    errorVacio: "Escribí el Instagram de tu marca.",
   },
   {
     id: "web",
-    etiqueta: "Web o Instagram",
-    /* `url` y no `off`: el navegador ofrece lo que ya guardó, y
-       si la persona escribe `@tumarca` tampoco molesta. */
+    etiqueta: "Web",
     autocompletado: "url",
-    /* ⚠ `text` Y NO `url`. Con `type="url"` el navegador valida
-       solo y rechaza `@tumarca`, que es una respuesta correcta a
-       esta pregunta. La validación de este campo es que esté
-       escrito, y nada más. */
-    tipo: "text",
+    tipo: "url",
     comprobacion: "ninguna",
-    errorVacio: "Escribí tu web o tu usuario de Instagram.",
+    errorVacio: "Escribí la web de tu marca.",
   },
 ];
 
@@ -224,7 +216,7 @@ export type EstadoDelFlujo = {
 
 export const ESTADO_INICIAL: EstadoDelFlujo = {
   elecciones: {},
-  datos: { nombre: "", telefono: "", email: "", empresa: "", web: "" },
+  datos: { nombre: "", telefono: "", email: "", instagram: "", web: "" },
 };
 
 /**

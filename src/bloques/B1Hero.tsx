@@ -67,6 +67,14 @@ export function B1Hero() {
           que simulaban la mancha se fueron, porque superponerlos a
           la textura real lavaba los dos. */}
       <div className="b1__atmosfera" aria-hidden="true" />
+      <div className="b1__nube b1__nube--izq" aria-hidden="true">
+        <span />
+        <span />
+      </div>
+      <div className="b1__nube b1__nube--der" aria-hidden="true">
+        <span />
+        <span />
+      </div>
 
       {/* LA MANCHA, EN TRES ENVOLTORIOS.
           Uno por movimiento, y no por prolijidad: si compartieran

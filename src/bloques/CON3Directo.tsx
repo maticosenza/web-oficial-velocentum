@@ -44,8 +44,10 @@ export function CON3Directo() {
           </p>
 
           <p className="con3__dato">
-            <span className="etiqueta con3__etiqueta">Teléfono</span>
-            <span className="etiqueta con3__marcador">Pendiente · a confirmar</span>
+            <span className="etiqueta con3__etiqueta">WhatsApp</span>
+            <a className="con3__mail" href="https://wa.me/5491135810100">
+              +54 9 11 3581-0100
+            </a>
           </p>
         </Reveal>
       </div>

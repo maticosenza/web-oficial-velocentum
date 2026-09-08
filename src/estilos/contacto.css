@@ -11,7 +11,10 @@
 
   .con1 {
     position: relative;
-    background: var(--fondo);
+    /* Las dos piezas viven dentro del mismo campo celeste, igual
+       que el CTA de Inicio: el navy de la izquierda y el crema del
+       formulario quedan definidos como tarjetas independientes. */
+    background: var(--acento-1);
     color: var(--tinta);
     /* El acento de la página. Los botones del flujo y el foco de
        los pasos lo usan, así que viaja por la sección en vez de
@@ -25,7 +28,7 @@
   .con1__caja {
     display: grid;
     gap: var(--space-4);
-    padding-top: calc(var(--alto-nav, 96px) + var(--space-5));
+    padding-top: calc(var(--alto-nav, 96px) + var(--space-6));
     padding-bottom: var(--space-7);
   }
 
@@ -54,12 +57,16 @@
      que el texto necesita y ni un píxel más, que es lo que lo hace
      una franja. */
   .con1__panel {
+    position: relative;
     background: var(--navy);
     color: var(--fondo);
     border-radius: var(--r-card);
     padding: var(--space-5);
     display: grid;
     align-content: center;
+    justify-items: center;
+    text-align: center;
+    overflow: hidden;
   }
 
   /* El titular usa el ANCHO del panel, que en móvil es lo que
@@ -80,7 +87,11 @@
   }
 
   .con1__titular-linea {
+    display: inline-block;
     color: var(--fondo);
+    white-space: nowrap;
+    transform: rotate(-2.2deg) scaleX(1.05);
+    transform-origin: left bottom;
   }
 
   /* LA MANCHA ES EL RECURSO DE B8, NO UNO NUEVO.
@@ -91,12 +102,53 @@
      `inline-block` es obligatorio: un `span` en flujo no se rota,
      `transform` no aplica a las cajas en línea. */
   .con1__mancha {
+    position: relative;
     display: inline-block;
     background: var(--fondo);
-    color: var(--tinta);
-    border-radius: clamp(20px, 3vw, 40px);
-    padding: 0.08em 0.36em 0.16em;
-    transform: rotate(-2.5deg);
+    color: var(--navy);
+    border-radius: 999px;
+    padding: 0.1em 0.28em 0.15em;
+    white-space: nowrap;
+    transform: rotate(0.8deg);
+  }
+
+  .con1__mancha::before,
+  .con1__mancha::after {
+    content: "";
+    position: absolute;
+    border-top: 0.06em solid #fff36b;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .con1__mancha::after {
+    right: 17%;
+    bottom: -0.34em;
+    width: 37%;
+    height: 0.2em;
+    transform: rotate(-3deg);
+  }
+
+  .con1__mancha::before {
+    right: 29%;
+    bottom: -0.56em;
+    width: 24%;
+    height: 0.16em;
+    transform: rotate(-5deg);
+  }
+
+  @media (min-width: 810px) {
+    .con1__titular {
+      font-size: clamp(64px, 4.5vw, 88px);
+      line-height: 0.98;
+    }
+
+    .con1__mancha {
+      display: block;
+      width: min(100%, 760px);
+      margin: 0.12em auto 0;
+      font-size: clamp(56px, 4.2vw, 96px);
+    }
   }
 
   /* La rotación es estática y no una animación, así que no la
@@ -109,6 +161,9 @@
     display: grid;
     align-content: start;
     gap: var(--space-4);
+    background: var(--fondo);
+    border-radius: var(--r-card);
+    padding: var(--space-5);
   }
 
   /* --- El progreso --- */
@@ -369,13 +424,25 @@
     margin: 0;
   }
 
+  .con1-calendario {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
   /* =========================================================
      CON-1 EN ESCRITORIO — las dos columnas
      ========================================================= */
 
   @media (min-width: 810px) {
     .con1__caja {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+      --alto-tarjeta-contacto: clamp(
+        580px,
+        calc(100dvh - var(--alto-nav, 96px) - var(--space-4)),
+        720px
+      );
+      padding-top: calc(var(--alto-nav, 96px) + var(--space-3));
       gap: var(--space-5);
       align-items: start;
     }
@@ -389,13 +456,41 @@
        midiéndose solo. */
     .con1__panel {
       position: sticky;
-      top: calc(var(--alto-nav, 96px) + var(--space-3));
-      min-height: 0;
-      /* Acá sí es cuadrado o casi: en escritorio la columna tiene
-         ancho de sobra y el panel se lee como una pieza, no como
-         una franja. */
-      aspect-ratio: 1 / 1;
+      top: calc(var(--alto-nav, 96px) + var(--space-2));
+      height: var(--alto-tarjeta-contacto);
       padding: var(--space-7) var(--space-6);
+    }
+
+    /* Ambas tarjetas mantienen alto y posición. Los pasos largos
+       hacen scroll dentro de la tarjeta del formulario. */
+    .con1__flujo {
+      position: sticky;
+      top: calc(var(--alto-nav, 96px) + var(--space-2));
+      height: var(--alto-tarjeta-contacto);
+      overflow-y: auto;
+      scrollbar-gutter: stable;
+    }
+
+    .con1-paso:has(.con1-campos) {
+      gap: var(--space-2);
+    }
+
+    .con1-campos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-2);
+    }
+
+    .con1-campo:nth-child(3) {
+      grid-column: 1 / -1;
+    }
+
+    .con1__trampa,
+    .con1__botones {
+      grid-column: 1 / -1;
+    }
+
+    .con1__botones {
+      margin-top: 0;
     }
 
     /* ⚠ EN EL PASO 4 LA COLUMNA IZQUIERDA DESAPARECE, Y ES EL

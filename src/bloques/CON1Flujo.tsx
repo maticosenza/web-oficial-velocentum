@@ -95,12 +95,15 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 
 import { Reveal } from "../componentes/Reveal";
 import { Flecha } from "../componentes/Flecha";
+import { horariosDeCalendly, reservarEnCalendly } from "../lib/calendly";
+import { guardarLead } from "../lib/leads";
 import {
   CAMPOS,
   ESTADO_INICIAL,
   PASOS_DE_OPCIONES,
   errorDeCampo,
   textoDeOpcion,
+  respuestasSerializables,
   type CampoId,
   type EstadoDelFlujo,
 } from "../data/contacto";
@@ -115,6 +118,16 @@ export function CON1Flujo() {
   const [paso, setPaso] = useState(1);
   const [estado, setEstado] = useState<EstadoDelFlujo>(ESTADO_INICIAL);
   const [errores, setErrores] = useState<Partial<Record<CampoId, string>>>({});
+  const [horarios, setHorarios] = useState<Array<{ start_time: string; scheduling_url: string }>>(
+    [],
+  );
+  const [errorCalendly, setErrorCalendly] = useState<string | null>(null);
+  const [errorEnvio, setErrorEnvio] = useState<string | null>(null);
+  const [enviando, setEnviando] = useState(false);
+  const [reservando, setReservando] = useState<string | null>(null);
+  const [errorReserva, setErrorReserva] = useState<string | null>(null);
+  const [reservaLista, setReservaLista] = useState(false);
+  const leadId = useRef<string | null>(null);
   const [faltaElegir, setFaltaElegir] = useState(false);
 
   /* El foco se mueve sólo cuando el cambio de paso lo pidió
@@ -205,7 +218,23 @@ export function CON1Flujo() {
      de escribirlo. Corre al intentar avanzar, y ahí el foco salta
      al primer campo con problema — si no, con cinco campos hay que
      buscar cuál falló. */
-  const avanzarDesdeDatos = () => {
+  const cargarHorarios = useCallback(async () => {
+    const inicio = new Date();
+    const fin = new Date(inicio);
+    fin.setDate(fin.getDate() + 21);
+    try {
+      setErrorCalendly(null);
+      setHorarios(
+        await horariosDeCalendly({
+          data: { inicio: inicio.toISOString(), fin: fin.toISOString() },
+        }),
+      );
+    } catch {
+      setErrorCalendly("No pudimos cargar los horarios. Probá de nuevo en unos minutos.");
+    }
+  }, []);
+
+  const avanzarDesdeDatos = async () => {
     const nuevos: Partial<Record<CampoId, string>> = {};
     for (const campo of CAMPOS) {
       const error = errorDeCampo(campo, estado.datos[campo.id]);
@@ -218,7 +247,58 @@ export function CON1Flujo() {
       campoRefs.current[primero.id]?.focus();
       return;
     }
-    irA(4);
+    const serializado = respuestasSerializables(estado);
+    const [respuestaRubro, respuestaObjetivo] = serializado.respuestas;
+
+    if (!respuestaRubro.respuesta || !respuestaObjetivo.respuesta) {
+      setErrorEnvio("Elegí tu rubro y objetivo antes de continuar.");
+      return;
+    }
+
+    setEnviando(true);
+    setErrorEnvio(null);
+    try {
+      const id = crypto.randomUUID();
+      await guardarLead({
+        data: {
+          id,
+          rubro: respuestaRubro.respuesta,
+          objetivo: respuestaObjetivo.respuesta,
+          ...serializado.contacto,
+        },
+      });
+      leadId.current = id;
+      irA(4);
+      await cargarHorarios();
+    } catch {
+      setErrorEnvio("No pudimos guardar tus datos. Probá de nuevo en unos minutos.");
+    } finally {
+      setEnviando(false);
+    }
+  };
+
+  const reservar = async (inicio: string) => {
+    if (!leadId.current) return;
+    setReservando(inicio);
+    setErrorReserva(null);
+    try {
+      await reservarEnCalendly({
+        data: {
+          inicio,
+          nombre: estado.datos.nombre.trim(),
+          email: estado.datos.email.trim(),
+          zonaHoraria:
+            Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Argentina/Buenos_Aires",
+          leadId: leadId.current,
+        },
+      });
+      setReservaLista(true);
+    } catch {
+      setErrorReserva("Ese horario acaba de dejar de estar disponible. Elegí otro, por favor.");
+      await cargarHorarios();
+    } finally {
+      setReservando(null);
+    }
   };
 
   const enElCalendario = paso === TOTAL_DE_PASOS;
@@ -312,9 +392,19 @@ export function CON1Flujo() {
             escribir={escribir}
             atras={() => irA(2)}
             avanzar={avanzarDesdeDatos}
+            enviando={enviando}
+            errorEnvio={errorEnvio}
           />
 
-          <PasoDelCalendario visible={enElCalendario} tituloRef={paso === 4 ? tituloRef : null} />
+          <PasoDelCalendario
+            visible={enElCalendario}
+            tituloRef={paso === 4 ? tituloRef : null}
+            horarios={horarios}
+            error={errorCalendly ?? errorReserva}
+            reservando={reservando}
+            reservaLista={reservaLista}
+            reservar={reservar}
+          />
         </div>
       </div>
     </section>
@@ -329,21 +419,9 @@ function Panel({ oculto }: { oculto: boolean }) {
       <Reveal indice={0}>
         <h1 id="con1-titulo" className="con1__titular">
           <span className="con1__titular-linea">Hablemos de</span>{" "}
-          {/* La mancha crema con el titular oscuro adentro: el
-              mismo recurso del cierre de la home, rotado unos
-              grados. La rotación pide `inline-block` — un `span` en
-              flujo no se puede rotar. */}
           <span className="con1__mancha">Tu negocio.</span>
         </h1>
       </Reveal>
-
-      {/* ⚠ EL GARABATO AMARILLO TODAVÍA NO ESTÁ EN EL REPO.
-          El lugar queda previsto y reservado: cuando llegue el
-          archivo, se convierte a WebP con alfa, se guarda en
-          `public/assets/` y se pone acá como `<img aria-hidden>`.
-          El bloque funciona sin él —es un adorno, no información—
-          y por eso no se esperó. El hueco no reserva alto: si se
-          reservara, hoy se vería un vacío sin motivo. */}
     </div>
   );
 }
@@ -418,6 +496,8 @@ function PasoDeDatos({
   escribir,
   atras,
   avanzar,
+  enviando,
+  errorEnvio,
 }: {
   visible: boolean;
   tituloRef: React.RefObject<HTMLHeadingElement | null> | null;
@@ -427,6 +507,8 @@ function PasoDeDatos({
   escribir: (campo: CampoId, valor: string) => void;
   atras: () => void;
   avanzar: () => void;
+  enviando: boolean;
+  errorEnvio: string | null;
 }) {
   const base = useId();
   const trampa = useId();
@@ -436,7 +518,6 @@ function PasoDeDatos({
       <h2 className="con1-paso__titulo" ref={tituloRef} tabIndex={-1}>
         ¿Cómo te contactamos?
       </h2>
-      <p className="con1-paso__ayuda">Últimos datos. En el paso siguiente elegís día y horario.</p>
 
       {/* `noValidate`: la validación es nuestra y por campo. La del
           navegador muestra un globo por vez, en el idioma del
@@ -498,13 +579,25 @@ function PasoDeDatos({
           <input id={trampa} type="text" name="sitio-web" tabIndex={-1} autoComplete="off" />
         </div>
 
+        {errorEnvio ? (
+          <p className="con1__aviso" role="alert">
+            {errorEnvio}
+          </p>
+        ) : null}
+
         <div className="con1__botones">
-          <button type="button" className="boton boton--contorno" onClick={atras}>
+          <button
+            type="button"
+            className="boton boton--contorno"
+            onClick={atras}
+            disabled={enviando}
+          >
             Atrás
           </button>
           <button
             type="submit"
             className="boton boton--relleno"
+            disabled={enviando}
             style={
               {
                 "--acento": "var(--acento-4)",
@@ -512,7 +605,7 @@ function PasoDeDatos({
               } as React.CSSProperties
             }
           >
-            Elegí tu horario
+            {enviando ? "Guardando…" : "Elegí tu horario"}
             <Flecha />
           </button>
         </div>
@@ -526,9 +619,19 @@ function PasoDeDatos({
 function PasoDelCalendario({
   visible,
   tituloRef,
+  horarios,
+  error,
+  reservando,
+  reservaLista,
+  reservar,
 }: {
   visible: boolean;
   tituloRef: React.RefObject<HTMLHeadingElement | null> | null;
+  horarios: Array<{ start_time: string; scheduling_url: string }>;
+  error: string | null;
+  reservando: string | null;
+  reservaLista: boolean;
+  reservar: (inicio: string) => void;
 }) {
   return (
     <div className="con1-paso" hidden={!visible}>
@@ -536,11 +639,47 @@ function PasoDelCalendario({
         Elegí día y horario
       </h2>
 
-      {/* El marcador va A LA VISTA y no como comentario: es lo
-          mismo que hace el resto del sitio con lo que todavía no
-          existe. Cuando entre el calendario de la fase 2, esto se
-          reemplaza y la columna izquierda ya está escondida. */}
-      <p className="etiqueta con1__marcador">Pendiente · el calendario va en la fase 2</p>
+      {reservaLista ? (
+        <p className="con1__marcador" role="status">
+          ¡Listo! Tu llamada quedó agendada. Calendly te envió la confirmación por email.
+        </p>
+      ) : (
+        <>
+          {error ? (
+            <p className="con1__aviso" role="alert">
+              {error}
+            </p>
+          ) : null}
+          {!error && horarios.length === 0 ? (
+            <p className="con1__marcador">Cargando horarios disponibles…</p>
+          ) : null}
+          <div className="con1-calendario" aria-live="polite">
+            {horarios.slice(0, 12).map((horario) => {
+              const fecha = new Date(horario.start_time);
+              const estaReservando = reservando === horario.start_time;
+              return (
+                <button
+                  key={horario.start_time}
+                  type="button"
+                  className="boton boton--relleno"
+                  disabled={reservando !== null}
+                  onClick={() => reservar(horario.start_time)}
+                >
+                  {estaReservando
+                    ? "Reservando…"
+                    : new Intl.DateTimeFormat("es-AR", {
+                        weekday: "short",
+                        day: "numeric",
+                        month: "short",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      }).format(fecha)}
+                </button>
+              );
+            })}
+          </div>
+        </>
+      )}
     </div>
   );
 }
