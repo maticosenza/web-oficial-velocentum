@@ -69,6 +69,75 @@
     overflow: hidden;
   }
 
+  /* Una luz muy sutil, tomada de la escena 3D: evita que el navy
+     quede plano detrás del CTA sin competir con el formulario. */
+  .con1__panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 14% 10%, color-mix(in srgb, var(--acento-4) 22%, transparent), transparent 27%),
+      radial-gradient(circle at 88% 88%, color-mix(in srgb, var(--acento-2) 18%, transparent), transparent 30%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .con1__escena {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .con1__objeto,
+  .con1__marca-v {
+    position: absolute;
+    display: block;
+    pointer-events: none;
+  }
+
+  .con1__panel > .reveal {
+    position: relative;
+    z-index: 2;
+  }
+
+  .con1__objeto--conexion {
+    top: -13%;
+    left: -18%;
+    width: 42%;
+    transform: rotate(-20deg);
+  }
+
+  .con1__objeto--foco {
+    bottom: -18%;
+    left: -18%;
+    width: 43%;
+    transform: rotate(10deg);
+  }
+
+  .con1__objeto--rayo {
+    right: -8%;
+    bottom: 11%;
+    width: 18%;
+    transform: rotate(17deg);
+  }
+
+  .con1__marca-v {
+    top: 13%;
+    right: 13%;
+    width: clamp(48px, 7vw, 86px);
+    filter: drop-shadow(0 9px 18px rgb(0 0 0 / 0.18));
+  }
+
+  @media (max-width: 809px) {
+    .con1__marca-v {
+      top: 10px;
+      right: 14px;
+      width: 38px;
+    }
+  }
+
   /* El titular usa el ANCHO del panel, que en móvil es lo que
      sobra. A 8vw daba 31px y caía al piso de 38, dos renglones
      cortos contra un panel de 358 de ancho: el texto se leía
@@ -84,57 +153,67 @@
     line-height: 1.02;
     text-transform: uppercase;
     margin: 0;
+    position: relative;
+    z-index: 1;
   }
 
   .con1__titular-linea {
     display: inline-block;
     color: var(--fondo);
     white-space: nowrap;
-    transform: rotate(-2.2deg) scaleX(1.05);
+    transform: rotate(-1.2deg) scaleX(1.04);
     transform-origin: left bottom;
   }
 
-  /* LA MANCHA ES EL RECURSO DE B8, NO UNO NUEVO.
-     Campo crema con el titular en tinta adentro, esquinas muy
-     redondeadas. Lo único que cambia respecto del cierre de la
-     home es que acá va rotada.
-
-     `inline-block` es obligatorio: un `span` en flujo no se rota,
-     `transform` no aplica a las cajas en línea. */
+  /* El segundo renglón pasa a estar DENTRO de un globo de diálogo,
+     no en una cápsula rellena. El gesto habla de conversación y
+     convierte el CTA en una escena antes de entrar al formulario. */
   .con1__mancha {
     position: relative;
     display: inline-block;
-    background: var(--fondo);
-    color: var(--navy);
-    border-radius: 999px;
-    padding: 0.1em 0.28em 0.15em;
+    color: var(--fondo);
+    border: 0.055em solid currentColor;
+    border-radius: 58% 53% 62% 48%;
+    padding: 0.08em 0.24em 0.14em;
     white-space: nowrap;
     transform: rotate(0.8deg);
   }
 
-  .con1__mancha::before,
   .con1__mancha::after {
     content: "";
     position: absolute;
-    border-top: 0.06em solid #fff36b;
-    border-radius: 50%;
+    right: 12%;
+    bottom: -0.27em;
+    width: 0.38em;
+    height: 0.38em;
+    border-right: 0.055em solid currentColor;
+    border-bottom: 0.055em solid currentColor;
+    background: var(--navy);
+    transform: skewX(-28deg) rotate(18deg);
     pointer-events: none;
   }
 
-  .con1__mancha::after {
-    right: 17%;
-    bottom: -0.34em;
-    width: 37%;
-    height: 0.2em;
-    transform: rotate(-3deg);
+  .con1__trazos {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 28%;
+    min-width: 92px;
+    height: 18px;
+    margin: 0.55rem auto 0;
+    border-top: 3px solid #fff36b;
+    border-radius: 50%;
+    transform: rotate(-4deg);
   }
 
-  .con1__mancha::before {
-    right: 29%;
-    bottom: -0.56em;
-    width: 24%;
-    height: 0.16em;
-    transform: rotate(-5deg);
+  .con1__trazos::after {
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: 16%;
+    width: 68%;
+    border-top: 3px solid #fff36b;
+    border-radius: 50%;
   }
 
   @media (min-width: 810px) {
@@ -148,6 +227,14 @@
       width: min(100%, 760px);
       margin: 0.12em auto 0;
       font-size: clamp(56px, 4.2vw, 96px);
+    }
+
+    .con1__objeto--conexion {
+      width: 48%;
+    }
+
+    .con1__objeto--foco {
+      width: 47%;
     }
   }
 

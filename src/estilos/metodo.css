@@ -93,7 +93,9 @@
     /* Dos renglones de 17 caracteres. El factor de esta fuente es
        ~6.95 veces el cuerpo para 16 caracteres, así que 17 pide un
        poco menos de cuerpo que el titular de la home. */
-    font-size: clamp(38px, 10vw, 132px);
+    /* La escena tiene que respirar: antes el titular alcanzaba
+       132px y tapaba buena parte de los objetos en desktop. */
+    font-size: clamp(38px, 6.5vw, 96px);
     /* 1.14 Y NO 0.98, POR LA TILDE DE «DESPUÉS»
 
        A 0.98 la tilde de la É del segundo renglón se metía dentro
@@ -189,6 +191,14 @@
     justify-items: center;
   }
 
+  /* La foto de Método es una escena horizontal. En un teléfono no
+     se usa como fondo entero: se toman sus dos extremos y se
+     convierten en un marco vertical. Así se ven objetos arriba y
+     abajo sin recortar el centro del título. */
+  .met1__objetos-movil {
+    display: none;
+  }
+
   /* =========================================================
      MET-1 EN MÓVIL — LA FOTO ENTERA, NO RECORTADA
 
@@ -235,26 +245,59 @@
          donde tiene que estar. */
     }
 
-    /* La foto deja de ocupar el hero entero y pasa a apoyarse
-       abajo, con su alto natural. */
+    /* La foto completa se apaga en móvil: a su proporción original
+       sólo deja una franja de 215px. Las dos piezas siguientes usan
+       sus extremos, donde sí están los objetos. */
     .met1__foto {
-      inset: auto 0 0 0;
-      background: none;
+      inset: 0;
+      background: transparent;
     }
 
     .met1__foto-img {
-      height: auto;
-      /* `contain` sobre una caja de alto automático no recorta
-         nada: la imagen define su propio alto por proporción. */
-      object-fit: contain;
+      display: none;
     }
 
-    /* El desvanecido del borde de arriba. 72px es algo más de un
-       tercio del alto que la imagen toma a 390px, suficiente para
-       que la esfera cortada se disuelva sin comerse los
-       pedestales de abajo. */
-    .met1__foto {
-      mask-image: linear-gradient(to bottom, transparent 0, #000 72px);
+    .met1__objetos-movil {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      display: block;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .met1__objeto-movil {
+      position: absolute;
+      display: block;
+      background-image: url("/assets/imagen-metodo.webp");
+      background-repeat: no-repeat;
+      pointer-events: none;
+    }
+
+    /* El objeto coral, tubo y prisma de la esquina superior
+       izquierda. La transición a navy es parte de la imagen, por
+       eso se integra sin formar un rectángulo. */
+    .met1__objeto-movil--arriba {
+      top: 0;
+      left: 0;
+      width: 63vw;
+      height: min(34dvh, 270px);
+      background-size: auto 100%;
+      background-position: left top;
+      mask-image: linear-gradient(to right, #000 0 70%, transparent 100%);
+      mask-mode: alpha;
+    }
+
+    /* Aro, pedestal y tubo del extremo derecho: enmarca el CTA y
+       le da peso al pie sin volver a vaciar la mitad superior. */
+    .met1__objeto-movil--abajo {
+      right: 0;
+      bottom: 0;
+      width: 70vw;
+      height: min(42dvh, 350px);
+      background-size: auto 100%;
+      background-position: right bottom;
+      mask-image: linear-gradient(to left, #000 0 76%, transparent 100%);
       mask-mode: alpha;
     }
 
@@ -278,6 +321,15 @@
          se despegaba del centro. */
       padding-bottom: var(--space-6);
       gap: var(--space-5);
+      z-index: 2;
+    }
+
+    .met1__titular {
+      /* Una medida menor y un poco más tranquila que en desktop:
+         entra entre los dos grupos de objetos sin perder presencia. */
+      font-size: clamp(32px, 8.6vw, 42px);
+      line-height: 1.1;
+      white-space: nowrap;
     }
   }
 

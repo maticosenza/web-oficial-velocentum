@@ -66,6 +66,17 @@ export function MET1Hero() {
           tocar la imagen. */}
       <div className="met1__velo" aria-hidden="true" />
 
+      {/* En móvil la foto horizontal no puede cubrir una pantalla
+          vertical sin perder todos los objetos. Estas dos piezas
+          toman sus extremos y los llevan a las esquinas, para que
+          el titular quede dentro de la escena y no sobre un campo
+          vacío. En escritorio siguen ocultas: ahí la foto completa
+          ya tiene el encuadre correcto. */}
+      <div className="met1__objetos-movil" aria-hidden="true">
+        <span className="met1__objeto-movil met1__objeto-movil--arriba" />
+        <span className="met1__objeto-movil met1__objeto-movil--abajo" />
+      </div>
+
       <div className="met1__contenido contenido">
         <h1 id="met1-titulo" className="met1__titular">
           Primero entender.
