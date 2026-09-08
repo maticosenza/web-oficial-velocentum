@@ -31,6 +31,8 @@ const esquemaReserva = z.object({
   inicio: z.string().datetime(),
   zonaHoraria: z.string().trim().min(2).max(80),
   leadId: z.string().uuid(),
+  nombre: z.string().trim().min(2).max(160),
+  email: z.string().trim().email().max(254),
 });
 
 export async function reservarEnCalendly(data: z.infer<typeof esquemaReserva>) {
@@ -40,6 +42,8 @@ export async function reservarEnCalendly(data: z.infer<typeof esquemaReserva>) {
     lead_id: reserva.leadId,
     start_time: reserva.inicio,
     timezone: reserva.zonaHoraria,
+    name: reserva.nombre,
+    email: reserva.email,
   }) as Promise<RespuestaDeReserva>;
 }
 

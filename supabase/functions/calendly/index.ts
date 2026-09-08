@@ -1,8 +1,3 @@
-const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
-const PUBLIC_KEYS = JSON.parse(Deno.env.get("SUPABASE_PUBLISHABLE_KEYS") ?? "{}");
-const ADMIN_KEYS = JSON.parse(Deno.env.get("SUPABASE_SECRET_KEYS") ?? "{}");
-const SUPABASE_PUBLIC_KEY = PUBLIC_KEYS.default ?? Deno.env.get("SUPABASE_ANON_KEY")!;
-const SUPABASE_ADMIN_KEY = ADMIN_KEYS.default ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const CALENDLY_PAT = Deno.env.get("CALENDLY_PAT");
 const CALENDLY_API = "https://api.calendly.com";
 const EVENT_URL = "https://calendly.com/matias-velocentum/analisis-de-negocio";
@@ -11,7 +6,6 @@ const cors = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-type Lead = { id: string; nombre: string; email: string };
 type CalendlyResource = { uri: string };
 type CalendlyLocation = { kind: string };
 type CalendlyEventType = {
@@ -65,40 +59,6 @@ async function eventTypeUri() {
   return eventType;
 }
 
-async function leadById(id: string) {
-  const response = await fetch(
-    `${SUPABASE_URL}/rest/v1/leads?id=eq.${encodeURIComponent(id)}&select=id,nombre,email`,
-    {
-      // Las claves `sb_secret_` autorizan con `apikey`. Enviarlas también
-      // como Bearer hace que la API intente leerlas como JWT y rechace el
-      // pedido antes de consultar la tabla.
-      headers: { apikey: SUPABASE_ADMIN_KEY },
-    },
-  );
-  if (!response.ok) {
-    const detalle = await response.text();
-    throw new Error(`No se pudo recuperar el lead (${response.status}): ${detalle}`);
-  }
-  const leads = (await response.json()) as Lead[];
-  return leads[0] ?? null;
-}
-
-async function markBooked(id: string, inviteeUri: string | undefined) {
-  const response = await fetch(`${SUPABASE_URL}/rest/v1/leads?id=eq.${encodeURIComponent(id)}`, {
-    method: "PATCH",
-    headers: {
-      apikey: SUPABASE_ADMIN_KEY,
-      "Content-Type": "application/json",
-      Prefer: "return=minimal",
-    },
-    body: JSON.stringify({
-      calendly_invitee_uri: inviteeUri ?? null,
-      agendado_en: new Date().toISOString(),
-    }),
-  });
-  if (!response.ok) throw new Error("La reserva se creó, pero no se pudo actualizar el lead.");
-}
-
 Deno.serve(async (request) => {
   if (request.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (request.method !== "POST") return fail("Método no permitido.", 405);
@@ -135,6 +95,8 @@ Deno.serve(async (request) => {
     if (body.action === "book") {
       const leadId = typeof body.lead_id === "string" ? body.lead_id : "";
       const startTime = typeof body.start_time === "string" ? body.start_time : "";
+      const name = typeof body.name === "string" ? body.name.trim() : "";
+      const email = typeof body.email === "string" ? body.email.trim() : "";
       const timezone =
         typeof body.timezone === "string" ? body.timezone : "America/Argentina/Buenos_Aires";
       if (
@@ -143,9 +105,7 @@ Deno.serve(async (request) => {
         return fail("Lead inválido.");
       }
       if (Number.isNaN(new Date(startTime).valueOf())) return fail("Horario inválido.");
-
-      const lead = await leadById(leadId);
-      if (!lead) return fail("No se encontró el lead.", 404);
+      if (name.length < 2 || !/^\S+@\S+\.\S+$/.test(email)) return fail("Datos de contacto inválidos.");
       const eventType = await eventTypeUri();
       const location = eventType.locations?.length === 1 ? eventType.locations[0] : undefined;
       const result = (await calendly("/invitees", {
@@ -153,14 +113,13 @@ Deno.serve(async (request) => {
         body: JSON.stringify({
           event_type: eventType.uri,
           start_time: new Date(startTime).toISOString(),
-          invitee: { name: lead.nombre, email: lead.email, timezone },
+          invitee: { name, email, timezone },
           // Calendly exige que una reserva indique la ubicación cuando
           // el tipo de evento tiene una sola ubicación configurada.
           ...(location ? { location } : {}),
-          tracking: { utm_content: lead.id },
+          tracking: { utm_content: leadId },
         }),
       })) as { resource?: CalendlyResource };
-      await markBooked(lead.id, result.resource?.uri);
       return json({ uri: result.resource?.uri ?? null });
     }
 

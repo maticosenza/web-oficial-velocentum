@@ -292,6 +292,8 @@ export function CON1Flujo() {
         zonaHoraria:
           Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Argentina/Buenos_Aires",
         leadId: leadId.current,
+        nombre: estado.datos.nombre,
+        email: estado.datos.email,
       });
       setReservaLista(true);
     } catch (error) {
