@@ -657,11 +657,20 @@ function PasoDelCalendario({
   }, [horarios]);
   const diasDisponibles = useMemo(() => [...horariosPorDia.keys()], [horariosPorDia]);
   const [diaElegido, setDiaElegido] = useState<string | null>(null);
+  const [esEscritorio, setEsEscritorio] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 810px)");
+    const actualizar = () => setEsEscritorio(media.matches);
+    actualizar();
+    media.addEventListener("change", actualizar);
+    return () => media.removeEventListener("change", actualizar);
+  }, []);
 
   useEffect(() => {
     if (diaElegido && horariosPorDia.has(diaElegido)) return;
-    setDiaElegido(diasDisponibles[0] ?? null);
-  }, [diaElegido, diasDisponibles, horariosPorDia]);
+    setDiaElegido(esEscritorio ? (diasDisponibles[0] ?? null) : null);
+  }, [diaElegido, diasDisponibles, esEscritorio, horariosPorDia]);
 
   const fechaElegida = diaElegido ? fechaDesdeClave(diaElegido) : undefined;
   const primerDia = diasDisponibles[0] ? fechaDesdeClave(diasDisponibles[0]) : undefined;
@@ -718,40 +727,40 @@ function PasoDelCalendario({
                 <p className="con1-agenda__zona">Los horarios se muestran en tu hora local.</p>
               </div>
 
-              <div className="con1-agenda__horarios">
-                <p className="con1-agenda__etiqueta">
-                  {fechaElegida
-                    ? capitalizar(
-                        new Intl.DateTimeFormat("es-AR", {
-                          weekday: "long",
-                          day: "numeric",
-                          month: "long",
-                        }).format(fechaElegida),
-                      )
-                    : "Horarios disponibles"}
-                </p>
-                <div className="con1-agenda__lista">
-                  {horariosElegidos.map((horario) => {
-                    const estaReservando = reservando === horario.start_time;
-                    return (
-                      <button
-                        key={horario.start_time}
-                        type="button"
-                        className="con1-agenda__horario"
-                        disabled={reservando !== null}
-                        onClick={() => reservar(horario.start_time)}
-                      >
-                        {estaReservando
-                          ? "Reservando…"
-                          : new Intl.DateTimeFormat("es-AR", {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            }).format(new Date(horario.start_time))}
-                      </button>
-                    );
-                  })}
+              {fechaElegida ? (
+                <div className="con1-agenda__horarios">
+                  <p className="con1-agenda__etiqueta">
+                    {capitalizar(
+                      new Intl.DateTimeFormat("es-AR", {
+                        weekday: "long",
+                        day: "numeric",
+                        month: "long",
+                      }).format(fechaElegida),
+                    )}
+                  </p>
+                  <div className="con1-agenda__lista">
+                    {horariosElegidos.map((horario) => {
+                      const estaReservando = reservando === horario.start_time;
+                      return (
+                        <button
+                          key={horario.start_time}
+                          type="button"
+                          className="con1-agenda__horario"
+                          disabled={reservando !== null}
+                          onClick={() => reservar(horario.start_time)}
+                        >
+                          {estaReservando
+                            ? "Reservando…"
+                            : new Intl.DateTimeFormat("es-AR", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              }).format(new Date(horario.start_time))}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              ) : null}
             </div>
           ) : null}
         </>

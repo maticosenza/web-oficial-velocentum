@@ -395,6 +395,35 @@
     color: var(--acento-2);
   }
 
+  /* En ventanas angostas de escritorio y tablets horizontales, los
+     campos relacionados entran de a dos. El teléfono sigue usando
+     una sola columna para conservar controles cómodos. */
+  @media (min-width: 600px) {
+    .con1-paso:has(.con1-campos) {
+      gap: var(--space-2);
+    }
+
+    .con1-campos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-2);
+    }
+
+    .con1-campo:nth-child(3),
+    .con1__trampa,
+    .con1__aviso,
+    .con1__botones {
+      grid-column: 1 / -1;
+    }
+
+    .con1-campo__control {
+      min-height: 52px;
+    }
+
+    .con1__botones {
+      margin-top: 0;
+    }
+  }
+
   /* --- El honeypot --- */
 
   /* ⚠ FUERA DE PANTALLA, NO `display: none`. Algunos robots
@@ -631,28 +660,6 @@
       scrollbar-gutter: stable;
     }
 
-    .con1-paso:has(.con1-campos) {
-      gap: var(--space-2);
-    }
-
-    .con1-campos {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-2);
-    }
-
-    .con1-campo:nth-child(3) {
-      grid-column: 1 / -1;
-    }
-
-    .con1__trampa,
-    .con1__botones {
-      grid-column: 1 / -1;
-    }
-
-    .con1__botones {
-      margin-top: 0;
-    }
-
     .con1-agenda {
       grid-template-columns: minmax(320px, 0.9fr) minmax(300px, 1.1fr);
     }
@@ -727,4 +734,11 @@
   .con3__marcador {
     opacity: 0.72;
   }
+}
+
+/* `react-day-picker` publica su cursor fuera de nuestras capas. Esta
+   regla evita que la mano nativa reaparezca encima del cursor azul
+   cuando el cursor personalizado está activo. */
+.con-cursor-propio:has(.cursor-propio[data-visible="sí"]) .con1-agenda .rdp-day_button {
+  cursor: none !important;
 }
