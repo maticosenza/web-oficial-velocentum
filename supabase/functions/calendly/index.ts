@@ -75,7 +75,10 @@ async function leadById(id: string) {
       headers: { apikey: SUPABASE_ADMIN_KEY },
     },
   );
-  if (!response.ok) throw new Error("No se pudo recuperar el lead.");
+  if (!response.ok) {
+    const detalle = await response.text();
+    throw new Error(`No se pudo recuperar el lead (${response.status}): ${detalle}`);
+  }
   const leads = (await response.json()) as Lead[];
   return leads[0] ?? null;
 }
