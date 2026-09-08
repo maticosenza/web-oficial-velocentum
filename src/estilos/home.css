@@ -456,6 +456,18 @@
     }
   }
 
+  /* B1+B2 conserva el pin también en mobile. Se declara en esta
+     pareja para no cambiar el comportamiento de otros HeroSticky,
+     como clientes+cierre. */
+  @media (max-width: 809px) and (prefers-reduced-motion: no-preference) {
+    .home-hero-nube > .hero-sticky__hero {
+      position: sticky;
+      top: 0;
+      height: 100dvh;
+      min-height: 0;
+    }
+  }
+
   /* LA MANCHA · 2 de 3 — EL ASCENSO POR SCROLL.
      Al bajar sube, al subir vuelve. Es reversible porque
      `--cobertura` es un valor continuo, no un disparo.
@@ -464,21 +476,22 @@
      —la publica `HeroSticky`— y agregarle al hook un listener del
      scroll absoluto sería una segunda fuente para lo mismo.
 
-     ⚠ LAS DOS CONDICIONES DEL MEDIA QUERY NO SON DECORATIVAS.
-     Bajo 810px el pin está apagado y `--cobertura` arranca
-     distinta de cero con la página arriba de todo, así que la
-     mancha nacería desplazada. Y con movimiento reducido el
-     primitivo de scroll publica 1 como estado final neutro, que
-     acá significaría -400px de entrada: el fondo saltaría al
-     extremo. Apagada en los dos casos, la textura queda quieta en
-     su encuadre. */
+     En mobile recorre menos distancia: conserva la profundidad
+     del efecto sin sacar la textura completa de una pantalla
+     angosta. Con movimiento reducido queda quieta. */
   .b1__mancha-scroll {
     transform: none;
   }
 
-  @media (min-width: 810px) and (prefers-reduced-motion: no-preference) {
+  @media (prefers-reduced-motion: no-preference) {
     .b1__mancha-scroll {
-      transform: translate3d(0, calc(var(--cobertura, 0) * -400px), 0);
+      transform: translate3d(0, calc(var(--cobertura, 0) * var(--ascenso-mancha, -400px)), 0);
+    }
+  }
+
+  @media (max-width: 809px) {
+    .b1__mancha-scroll {
+      --ascenso-mancha: -220px;
     }
   }
 
@@ -541,36 +554,20 @@
      referencia.
 
      No es un reveal: es un valor continuo, así que se deshace solo
-     al scrollear para arriba.
-
-     DOS CONDICIONES, Y NINGUNA ES DECORATIVA.
-
-     1. `no-preference`. El hook deja `--cobertura` en 1 con
-        movimiento reducido, porque para sus otros consumidores 1
-        es el estado final neutro. Acá 1 significa "tapado del
-        todo": aplicar la regla dejaría el titular hundido e
-        invisible.
-
-     2. `min-width: 810px`. Abajo de eso el pin del hero está
-        apagado, y sin pin el efecto no se degrada: se rompe. El
-        hero pasa a `min-height: 76vh`, así que B2 arranca DENTRO
-        del viewport y la cobertura nace distinta de cero con la
-        página arriba de todo. Medido a 854px de ventana: 0.0678
-        de entrada, o sea el titular naciendo al 88% de opacidad y
-        quedándose ahí. En un teléfono, con el hero más corto
-        respecto del viewport, la fracción es peor.
-
-        Y no es sólo el valor inicial: sin pin el hero se va
-        scrolleando con la página, así que "cuánto lo tapó la
-        nube" deja de significar lo que el efecto asume.
-
-     Con las dos apagadas el texto queda quieto, entero y legible,
-     que es el peor caso aceptable. */
-  @media (min-width: 810px) and (prefers-reduced-motion: no-preference) {
+     al scrollear para arriba. En mobile baja menos para que el CTA
+     no salga demasiado rápido de la zona visible. Con movimiento
+     reducido el bloque queda quieto, entero y legible. */
+  @media (prefers-reduced-motion: no-preference) {
     .b1__contenido {
-      transform: translateY(calc(var(--cobertura, 0) * 16vh));
+      transform: translateY(calc(var(--cobertura, 0) * var(--hundimiento-hero, 16vh)));
       opacity: calc(1 - var(--cobertura, 0) * 1.7);
       will-change: transform, opacity;
+    }
+  }
+
+  @media (max-width: 809px) {
+    .b1__contenido {
+      --hundimiento-hero: 10dvh;
     }
   }
 
@@ -841,16 +838,18 @@
     padding-block: var(--space-7);
   }
 
-  /* Bajo 810px el pin está apagado, así que el viewport de alto no
-     sostiene nada: sólo dejaría el mismo hueco muerto. El alto
-     pasa a ser el del contenido. */
+  /* En mobile B2 conserva el recorrido del pin para que la nube
+     pueda cubrir el hero completo; sólo se compacta su aire
+     interior. */
   @media (max-width: 809px) {
-    .b2 {
-      min-height: 0;
-    }
-
     .b2__contenido {
       padding-block: var(--space-section) var(--space-6);
+    }
+  }
+
+  @media (max-width: 809px) and (prefers-reduced-motion: reduce) {
+    .b2 {
+      min-height: 0;
     }
   }
 

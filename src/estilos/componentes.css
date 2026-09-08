@@ -704,9 +704,9 @@
     padding-bottom: calc(var(--aire-onda, 0px) + var(--borde-onda-alto));
   }
 
-  /* Bajo 810px el pin se suelta: un hero fijado se come el
-     viewport entero de un teléfono. Alto natural, pero el campo
-     de color sigue llenando gracias al grid. */
+  /* Por defecto, en pantallas angostas se mantiene el alto natural.
+     La pareja B1+B2 activa el pin desde home.css porque su diseño
+     sí tiene un recorrido mobile específico. */
   @media (max-width: 809px) {
     .hero-sticky__hero {
       position: relative;

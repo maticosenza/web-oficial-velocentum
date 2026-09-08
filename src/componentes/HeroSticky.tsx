@@ -52,10 +52,11 @@
    quien lo consume es su HERMANO, y una custom property se
    hereda hacia abajo, no de costado.
 
-   SE APAGA BAJO 810px
-   No es una preferencia: con la pantalla de un teléfono el hero
-   fijado se come todo el viewport. Ahí pasa a flujo normal, con
-   alto natural. Con movimiento reducido, lo mismo.
+   MOBILE ES OPT-IN
+   El primitivo pasa a flujo normal bajo 810px. Una pareja que
+   tenga un recorrido mobile específico puede reactivar el pin
+   desde su propia hoja de estilos. Con movimiento reducido queda
+   siempre en flujo normal.
    =========================================================== */
 
 import { useRef, type CSSProperties, type ReactNode } from "react";
