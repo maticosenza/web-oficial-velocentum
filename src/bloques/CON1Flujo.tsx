@@ -230,8 +230,9 @@ export function CON1Flujo() {
           fin: fin.toISOString(),
         }),
       );
-    } catch {
-      setErrorCalendly("No pudimos cargar los horarios. Probá de nuevo en unos minutos.");
+    } catch (error) {
+      const detalle = error instanceof Error ? error.message : "Error desconocido.";
+      setErrorCalendly(`No pudimos cargar los horarios: ${detalle}`);
     }
   }, []);
 
