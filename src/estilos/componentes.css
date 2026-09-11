@@ -861,15 +861,20 @@
       transform: none;
     }
 
-    .boton__texto-carril,
+    .boton__texto-linea,
     .boton .flecha {
       transition: none;
     }
 
-    .boton:hover .boton__texto-carril,
-    .b0__link:hover .boton__texto-carril,
+    .boton:hover .boton__texto-linea,
+    .b0__link:hover .boton__texto-linea,
     .boton:hover .flecha {
       transform: none;
+      opacity: 1;
+    }
+
+    .boton__texto-linea[aria-hidden="true"] {
+      display: none;
     }
 
     .boton--relleno::before,
@@ -970,31 +975,49 @@
     z-index: 1;
   }
 
-  /* Dos copias visuales de la misma etiqueta dentro de una ventana
-     de una línea. La segunda vive en un pseudo-elemento, por eso el
-     lector de pantalla sigue anunciando el texto una sola vez. */
+  /* La referencia no recorta una caja pegada a la palabra. Las dos
+     etiquetas se superponen y el recorte sucede recién en el borde
+     del botón: la primera sale hacia arriba mientras la segunda
+     entra desde abajo. Así el gesto se lee limpio y continuo. */
   .boton__texto {
+    position: relative;
     display: block;
     height: 1.2em;
-    overflow: hidden;
+    overflow: visible;
     line-height: 1.2;
   }
 
   .boton__texto-carril {
-    display: flex;
-    flex-direction: column;
-    transition: transform 420ms var(--motion-ease);
+    position: relative;
+    display: block;
   }
 
   .boton__texto-linea {
     display: block;
-    flex: none;
     white-space: nowrap;
+    transition:
+      transform 560ms var(--motion-ease),
+      opacity 360ms ease;
   }
 
-  .boton:not(:disabled):not([aria-disabled="true"]):hover .boton__texto-carril,
-  .b0__link:hover .boton__texto-carril {
-    transform: translateY(-50%);
+  .boton__texto-linea[aria-hidden="true"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: translateY(135%);
+  }
+
+  .boton:not(:disabled):not([aria-disabled="true"]):hover
+    .boton__texto-linea:not([aria-hidden="true"]),
+  .b0__link:hover .boton__texto-linea:not([aria-hidden="true"]) {
+    opacity: 0;
+    transform: translateY(-135%);
+  }
+
+  .boton:not(:disabled):not([aria-disabled="true"]):hover .boton__texto-linea[aria-hidden="true"],
+  .b0__link:hover .boton__texto-linea[aria-hidden="true"] {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .boton .flecha {

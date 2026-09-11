@@ -302,18 +302,23 @@
       height: auto;
     }
 
-    /* `wrap` es una red, no el plan: con el padding de abajo los
-       cuatro entran en una fila a 390px, pero si el copy de un
-       link creciera, se envuelve en vez de desbordarse. */
+    /* Cuatro columnas iguales. El ancho fluido cabe desde 360px y
+       evita que Inicio quede circular mientras Contacto se estira:
+       todos se leen como el mismo rectángulo redondeado. */
     .b0__links {
+      display: grid;
+      grid-template-columns: repeat(4, clamp(59px, 16vw, 68px));
       gap: var(--space-1);
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       justify-content: center;
     }
 
     .b0__link {
-      padding-inline: var(--space-1);
-      font-size: clamp(12px, 3.25vw, 13px);
+      width: 100%;
+      justify-content: center;
+      padding-inline: 0;
+      border-radius: 16px;
+      font-size: clamp(11.5px, 3.15vw, 13px);
     }
   }
 
