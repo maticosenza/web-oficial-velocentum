@@ -46,8 +46,11 @@
     /* Fondo sólido. Sin `backdrop-filter`: la referencia no tiene
        una sola declaración de filtro en todo su CSS. */
     background: var(--fondo);
+    border: 1px solid rgb(20 16 36 / 0.1);
     border-radius: var(--r-pill);
-    box-shadow: 0 10px 30px rgb(20 16 36 / 0.12);
+    box-shadow:
+      0 3px 0 rgb(20 16 36 / 0.12),
+      0 14px 34px rgb(20 16 36 / 0.16);
   }
 
   .b0__marca {
@@ -85,7 +88,7 @@
     min-height: var(--control-min-height);
     padding-inline: var(--space-4);
     border-radius: var(--r-pill);
-    border: 1.5px solid var(--acento);
+    border: 2px solid var(--acento);
     background: transparent;
     color: var(--tinta);
     font-family: var(--font-texto);
@@ -103,6 +106,9 @@
       color var(--motion-hover) var(--motion-ease),
       transform var(--motion-hover) var(--motion-ease),
       box-shadow var(--motion-hover) var(--motion-ease);
+    box-shadow:
+      0 2px 0 color-mix(in srgb, var(--acento) 45%, var(--tinta)),
+      0 5px 12px rgb(20 16 36 / 0.1);
   }
 
   /* En hover el fondo se tiñe y el borde se funde con el relleno.
@@ -114,7 +120,9 @@
     color: var(--sobre);
     /* El mismo relieve que el resto de los botones del sitio. */
     transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgb(20 16 36 / 0.24);
+    box-shadow:
+      0 4px 0 rgb(20 16 36 / 0.88),
+      0 10px 20px rgb(20 16 36 / 0.2);
   }
 
   /* El activo se lee de `aria-current`, no de una clase: color y
@@ -124,6 +132,9 @@
     background: var(--acento);
     border-color: var(--acento);
     color: var(--sobre);
+    box-shadow:
+      0 3px 0 rgb(20 16 36 / 0.88),
+      0 9px 18px rgb(20 16 36 / 0.16);
     /* UN ESCALÓN MÁS QUE LOS INACTIVOS, Y NO POR jerarquía.
        Acá el texto deja de estar sobre el fondo de página y pasa a
        estar sobre el acento pleno. En Inicio y Contacto eso
@@ -190,7 +201,7 @@
        secundaria en avatar. Con el círculo de 44px la card queda
        horizontal y fina. */
     .b0__card {
-      gap: var(--space-2);
+      gap: var(--space-1);
       border-radius: var(--r-pill);
       padding: var(--space-2);
     }
@@ -264,8 +275,8 @@
     }
 
     .b0__link {
-      padding-inline: var(--space-2);
-      font-size: 13px;
+      padding-inline: var(--space-1);
+      font-size: clamp(12px, 3.25vw, 13px);
     }
   }
 
@@ -303,7 +314,7 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background: linear-gradient(180deg, #8ec5ff 0%, var(--cielo) 55%, #dceeff 100%);
+    background: linear-gradient(180deg, #72b0f7 0%, var(--cielo) 55%, #cde7ff 100%);
   }
 
   /* Nubes chicas sobre el cielo limpio. Son formas CSS, así que
@@ -460,10 +471,14 @@
      pareja para no cambiar el comportamiento de otros HeroSticky,
      como clientes+cierre. */
   @media (max-width: 809px) and (prefers-reduced-motion: no-preference) {
+    .home-hero-nube {
+      --borde-onda-alto: 64px;
+    }
+
     .home-hero-nube > .hero-sticky__hero {
       position: sticky;
       top: 0;
-      height: 100dvh;
+      height: 94dvh;
       min-height: 0;
     }
   }
@@ -585,65 +600,9 @@
     gap: var(--space-2);
   }
 
-  /* --- Los objetos --- */
-
-  .b1__objeto {
-    position: absolute;
-    /* Alineados al renglón 2, que es el del medio. */
-    top: 50%;
-    width: clamp(64px, 9vw, 120px);
-    height: auto;
-    pointer-events: none;
-    /* Nunca más de 6°. */
-    filter: drop-shadow(0 10px 24px rgb(20 16 36 / 0.18));
-  }
-
-  .b1__objeto--izq {
-    left: 10%;
-    transform: translate(-50%, -50%) rotate(-5deg);
-  }
-
-  .b1__objeto--der {
-    right: 10%;
-    transform: translate(50%, -50%) rotate(5deg);
-  }
-
-  /* En móvil NO pueden seguir flanqueando el renglón 2: a 390px el
-     titular ocupa casi todo el ancho y los objetos terminan
-     montados sobre las letras. El plan es explícito en que no
-     reemplazan ni tapan letras.
-     Se van a las esquinas, FUERA del alto del titular: uno arriba
-     a la izquierda y otro abajo a la derecha. Bajan ~35%, que es
-     lo que pide la guía de tamaños ópticos. */
   @media (max-width: 809px) {
-    .b1__objeto {
-      width: clamp(44px, 13vw, 68px);
-      top: auto;
-    }
-
-    .b1__objeto--izq {
-      top: 0;
-      left: 0;
-      transform: translate(-14%, -78%) rotate(-5deg);
-    }
-
-    .b1__objeto--der {
-      bottom: 0;
-      right: 0;
-      transform: translate(14%, 78%) rotate(5deg);
-    }
-
     .b1__nube {
-      top: 28%;
-      transform: scale(0.66);
-    }
-
-    .b1__nube--izq {
-      left: -3px;
-    }
-
-    .b1__nube--der {
-      right: -3px;
+      display: none;
     }
   }
 
@@ -678,6 +637,17 @@
     color: var(--tinta);
   }
 
+  .b1 .titular-letras {
+    color: var(--navy);
+  }
+
+  @media (max-width: 809px) {
+    .titular-letras {
+      font-size: clamp(42px, 13.2vw, 58px);
+      line-height: 0.93;
+    }
+  }
+
   /* CADA LÍNEA EN UN RENGLÓN, SIN EXCEPCIÓN.
      Partir el titular en un span por letra le da al navegador
      permiso para cortar entre dos letras cualesquiera: sin esto
@@ -690,7 +660,21 @@
   }
 
   .titular-letras__linea[data-marca="sí"] {
-    color: var(--marca);
+    color: var(--acento-2);
+  }
+
+  .b1__cta .boton {
+    border: 2px solid var(--tinta);
+    box-shadow:
+      0 4px 0 var(--tinta),
+      0 12px 24px rgb(20 16 36 / 0.18);
+  }
+
+  .b1__cta .boton:not(:disabled):not([aria-disabled="true"]):hover {
+    box-shadow:
+      0 6px 0 var(--tinta),
+      0 16px 30px rgb(20 16 36 / 0.22),
+      0 0 22px 2px color-mix(in srgb, var(--acento) 45%, transparent);
   }
 
   .titular-letras__letra {
@@ -775,7 +759,7 @@
      Una media query no suma especificidad: declarada antes de
      `.titular-letras`, la regla base la pisaba y el titular se
      quedaba en 101px. Verificado fallando. */
-  @media (max-height: 760px) {
+  @media (min-width: 810px) and (max-height: 760px) {
     /* Con el contenido centrado, achicar el padding de abajo no
        sirve: el centrado le devuelve la mitad. Lo que corre la
        aguja es bajar el ALTO TOTAL, y ahí manda el hueco entre

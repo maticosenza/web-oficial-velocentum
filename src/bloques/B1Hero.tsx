@@ -1,9 +1,9 @@
 /* ===========================================================
    B1 · HERO
 
-   Campo --cielo, titular condensado de tres líneas con la
-   tercera en --marca, bajada, CTA y dos objetos a los costados
-   de la línea 2.
+   Campo --cielo, titular condensado de tres líneas con la tercera
+   en bermellón y CTA. La composición se apoya en tipografía,
+   atmósfera y movimiento, sin objetos decorativos.
 
    LA ATMÓSFERA NO ES UN BLUR
    Verificado en la referencia: no hay una sola declaración de
@@ -38,9 +38,6 @@
    conserva es su propio hundimiento por `--cobertura`, que es otra
    cosa y sigue igual.
 
-   LOS OBJETOS NO REEMPLAZAN LETRAS
-   Van a los costados del renglón 2, no dentro de la palabra.
-   Máximo dos en el hero, y no más de 6° de rotación.
    =========================================================== */
 
 import { useRef, type CSSProperties } from "react";
@@ -111,26 +108,6 @@ export function B1Hero() {
         {/* Sin eyebrow. Estaba `EQUIPO DE CRECIMIENTO` y se sacó:
             el titular abre el hero solo y gana aire. */}
         <div className="b1__titular">
-          {/* Los objetos flanquean el renglón 2. Son decorativos:
-              el significado está en el texto, no en ellos. */}
-          <img
-            className="b1__objeto b1__objeto--izq"
-            src="/assets/foco.png"
-            alt=""
-            aria-hidden="true"
-            width={1254}
-            height={1254}
-            loading="eager"
-          />
-          <img
-            className="b1__objeto b1__objeto--der"
-            src="/assets/rayo.png"
-            alt=""
-            aria-hidden="true"
-            width={1254}
-            height={1254}
-            loading="eager"
-          />
           <TitularPorLetras
             lineas={[
               { texto: "ESTAMOS EN EL" },
