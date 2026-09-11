@@ -53,7 +53,7 @@ export const CASOS: Caso[] = [
     nombre: "Snake Store",
     rubro: "Moda",
     frase:
-      "Gestionamos Meta Ads y producimos contenido pensado para pauta, con una estrategia orientada a ampliar el alcance, mejorar el rendimiento y acompañar el crecimiento de las ventas.",
+      "Gestionamos Meta Ads y producimos contenido para pauta para ampliar el alcance, mejorar el rendimiento y sostener el crecimiento de ventas.",
     medio: {
       tipo: "video",
       archivo: "/assets/caso-snake-store.mp4",
@@ -64,21 +64,21 @@ export const CASOS: Caso[] = [
     nombre: "Carácter",
     rubro: "Productora",
     frase:
-      "Desarrollamos su sitio web y campañas de performance para presentar sus servicios con claridad, fortalecer su presencia digital y generar nuevas oportunidades comerciales.",
+      "Desarrollamos su sitio web y campañas de performance para presentar sus servicios con claridad y generar nuevas oportunidades comerciales.",
     medio: { tipo: "imagen", archivo: "/assets/caso-caracter.webp" },
   },
   {
     nombre: "Glam Ragazza",
     rubro: "Indumentaria",
     frase:
-      "Articulamos Paid Media con un sistema continuo de contenidos para sostener el crecimiento, ordenar la comunicación y construir una experiencia de marca consistente.",
+      "Integramos Paid Media y contenido continuo para ordenar la comunicación, fortalecer la marca y sostener su crecimiento.",
     medio: { tipo: "imagen", archivo: "/assets/caso-glam-ragazza.webp" },
   },
   {
     nombre: "Vinotique",
     rubro: "Gastronomía",
     frase:
-      "Redefinimos la estrategia de marca y desarrollamos una nueva web para comunicar su propuesta con claridad, transmitir confianza y acompañar cada etapa de la experiencia digital.",
+      "Redefinimos la estrategia de marca y desarrollamos una nueva web para comunicar su propuesta con claridad y acompañar la experiencia digital.",
     medio: {
       tipo: "video",
       archivo: "/assets/caso-vinotique.mp4",
@@ -89,7 +89,7 @@ export const CASOS: Caso[] = [
     nombre: "Ilsapore",
     rubro: "Gastronomía",
     frase:
-      "Creamos contenido y gestionamos sus redes para posicionar la marca, combinando comunicación orgánica y pauta orientada a generar nuevos pedidos mayoristas.",
+      "Creamos contenido y gestionamos redes y pauta para posicionar la marca y generar nuevos pedidos mayoristas.",
     medio: {
       tipo: "video",
       archivo: "/assets/caso-ilsapore.mp4",
@@ -100,21 +100,21 @@ export const CASOS: Caso[] = [
     nombre: "Armbruster",
     rubro: "Real Estate",
     frase:
-      "Diseñamos una estrategia integral de contenidos y campañas de performance para fortalecer su presencia digital y captar nuevas oportunidades comerciales.",
+      "Diseñamos contenidos y campañas de performance para fortalecer su presencia digital y captar nuevas oportunidades comerciales.",
     medio: { tipo: "imagen", archivo: "/assets/caso-armbruster.webp" },
   },
   {
     nombre: "Greenpac",
     rubro: "Agricultura",
     frase:
-      "Desarrollamos una web centrada en su propuesta de producto y campañas segmentadas por zona y perfil de productor para conectar con audiencias del sector agropecuario.",
+      "Desarrollamos una web de producto y campañas segmentadas para conectar con productores de distintas zonas.",
     medio: { tipo: "imagen", archivo: "/assets/caso-greenpac.webp" },
   },
   {
     nombre: "Comercial Pas",
     rubro: "Seguros",
     frase:
-      "Integramos sitio web, medición y campañas de performance para ordenar el recorrido digital, optimizar la captación y convertir el interés en consultas comerciales.",
+      "Integramos sitio web, medición y campañas de performance para ordenar el recorrido digital y convertir interés en consultas.",
     medio: { tipo: "imagen", archivo: "/assets/caso-comercial-pas.webp" },
   },
 ];
