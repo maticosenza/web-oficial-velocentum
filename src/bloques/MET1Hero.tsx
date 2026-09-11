@@ -54,10 +54,10 @@ export function MET1Hero() {
       <div className="met1__foto">
         <img
           className="met1__foto-img"
-          src="/assets/imagen-metodo.webp"
+          src="/assets/hero-metodo-desktop-v2.webp"
           alt=""
-          width={1690}
-          height={931}
+          width={1672}
+          height={941}
           fetchPriority="high"
           decoding="async"
         />

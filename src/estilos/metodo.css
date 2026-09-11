@@ -38,7 +38,7 @@
     display: block;
     width: 100%;
     height: 100%;
-    /* La imagen es 1690×931 (1.82:1) y el hero es 100dvh: la
+    /* La imagen es 1672×941 (1.78:1) y el hero es 100dvh: la
        proporción nunca coincide, así que hay recorte sí o sí.
        `cover` recorta, `contain` dejaría barras. */
     object-fit: cover;
@@ -93,9 +93,9 @@
     /* Dos renglones de 17 caracteres. El factor de esta fuente es
        ~6.95 veces el cuerpo para 16 caracteres, así que 17 pide un
        poco menos de cuerpo que el titular de la home. */
-    /* La escena tiene que respirar: antes el titular alcanzaba
-       132px y tapaba buena parte de los objetos en desktop. */
-    font-size: clamp(34px, 4.25vw, 60px);
+    /* La nueva escena deja el centro despejado: el titular puede
+       recuperar escala sin tapar los objetos de los extremos. */
+    font-size: clamp(48px, 5.5vw, 88px);
     /* 1.14 Y NO 0.98, POR LA TILDE DE «DESPUÉS»
 
        A 0.98 la tilde de la É del segundo renglón se metía dentro
