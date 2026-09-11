@@ -31,6 +31,7 @@ import type { CSSProperties } from "react";
 
 import { EnlaceConCortina } from "../componentes/RouteCurtain";
 import { Flecha } from "../componentes/Flecha";
+import { TextoBoton } from "../componentes/TextoBoton";
 
 export function MET1Hero() {
   return (
@@ -97,7 +98,7 @@ export function MET1Hero() {
               { "--acento": "var(--acento-2)", "--sobre": "var(--texto-sobre-2)" } as CSSProperties
             }
           >
-            Reservá tu análisis
+            <TextoBoton texto="Reservá tu análisis" />
             <Flecha />
           </EnlaceConCortina>
         </div>

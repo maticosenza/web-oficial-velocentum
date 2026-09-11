@@ -45,6 +45,7 @@ import { useRef, type CSSProperties } from "react";
 import { EnlaceConCortina } from "../componentes/RouteCurtain";
 import { TitularPorLetras } from "../componentes/TitularPorLetras";
 import { Flecha } from "../componentes/Flecha";
+import { TextoBoton } from "../componentes/TextoBoton";
 import { useParallaxDelHero } from "../lib/parallaxDelHero";
 
 export function B1Hero() {
@@ -138,7 +139,7 @@ export function B1Hero() {
               { "--acento": "var(--acento-1)", "--sobre": "var(--texto-sobre-1)" } as CSSProperties
             }
           >
-            Reservá tu análisis
+            <TextoBoton texto="Reservá tu análisis" />
             <Flecha />
           </EnlaceConCortina>
         </div>

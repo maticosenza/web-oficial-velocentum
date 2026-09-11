@@ -21,6 +21,7 @@ import { SeccionConBorde } from "../componentes/SectionEdge";
 import { Reveal } from "../componentes/Reveal";
 import { EnlaceConCortina } from "../componentes/RouteCurtain";
 import { Flecha } from "../componentes/Flecha";
+import { TextoBoton } from "../componentes/TextoBoton";
 
 export function B2QuienesSomos() {
   return (
@@ -59,7 +60,7 @@ export function B2QuienesSomos() {
           <Reveal indice={3}>
             <p className="b2__accion">
               <EnlaceConCortina to="/metodo" className="boton boton--contorno">
-                Cómo trabajamos
+                <TextoBoton texto="Cómo trabajamos" />
                 <Flecha />
               </EnlaceConCortina>
             </p>

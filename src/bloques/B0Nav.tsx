@@ -82,6 +82,7 @@ import { EnlaceConCortina } from "../componentes/RouteCurtain";
 import { useMedirNav } from "../lib/altoDeNav";
 import { useNavAlScrollear } from "../lib/navAlScrollear";
 import { PAGINAS } from "../lib/paginas";
+import { TextoBoton } from "../componentes/TextoBoton";
 
 export function B0Nav() {
   const rutaActual = useRouterState({ select: (s) => s.location.pathname });
@@ -142,7 +143,7 @@ export function B0Nav() {
                 {...(p.ruta === rutaActual ? { "aria-current": "page" as const } : {})}
                 style={{ "--acento": p.acento, "--sobre": p.sobre } as CSSProperties}
               >
-                {p.nombre}
+                <TextoBoton texto={p.nombre} />
               </EnlaceConCortina>
             </li>
           ))}

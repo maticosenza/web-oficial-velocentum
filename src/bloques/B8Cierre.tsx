@@ -49,6 +49,7 @@ import { SeccionConBorde } from "../componentes/SectionEdge";
 import { EnlaceConCortina } from "../componentes/RouteCurtain";
 import { Reveal } from "../componentes/Reveal";
 import { Flecha } from "../componentes/Flecha";
+import { TextoBoton } from "../componentes/TextoBoton";
 
 export function B8Cierre({
   titulo = "Hagamos crecer tu negocio.",
@@ -129,7 +130,7 @@ export function B8Cierre({
                 } as CSSProperties
               }
             >
-              Reservá tu análisis
+              <TextoBoton texto="Reservá tu análisis" />
               <Flecha />
             </EnlaceConCortina>
           </div>

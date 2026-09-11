@@ -98,6 +98,7 @@ import "react-day-picker/style.css";
 
 import { Reveal } from "../componentes/Reveal";
 import { Flecha } from "../componentes/Flecha";
+import { TextoBoton } from "../componentes/TextoBoton";
 import { horariosDeCalendly, reservarEnCalendly } from "../lib/calendly";
 import { guardarLead } from "../lib/leads";
 import {
@@ -428,7 +429,12 @@ export function CON1Flujo() {
 function Panel({ oculto }: { oculto: boolean }) {
   return (
     <div className="con1__panel" hidden={oculto}>
-      <img className="con1__marca-v" src="/assets/velocentum-v-bicolor-ui.svg" alt="" aria-hidden="true" />
+      <img
+        className="con1__marca-v"
+        src="/assets/velocentum-v-bicolor-ui.svg"
+        alt=""
+        aria-hidden="true"
+      />
       <Reveal indice={0}>
         <h1 id="con1-titulo" className="con1__titular">
           <span className="con1__titular-linea">Hablemos de</span>{" "}
@@ -478,7 +484,7 @@ function Botones({
     <div className="con1__botones">
       {atras ? (
         <button type="button" className="boton boton--contorno" onClick={atras}>
-          Atrás
+          <TextoBoton texto="Atrás" />
         </button>
       ) : null}
       <button
@@ -492,7 +498,7 @@ function Botones({
         }
         onClick={siguiente}
       >
-        {textoSiguiente}
+        <TextoBoton texto={textoSiguiente} />
         <Flecha />
       </button>
     </div>
@@ -606,7 +612,7 @@ function PasoDeDatos({
             onClick={atras}
             disabled={enviando}
           >
-            Atrás
+            <TextoBoton texto="Atrás" />
           </button>
           <button
             type="submit"
@@ -619,7 +625,7 @@ function PasoDeDatos({
               } as React.CSSProperties
             }
           >
-            {enviando ? "Guardando…" : "Elegí tu horario"}
+            <TextoBoton texto={enviando ? "Guardando…" : "Elegí tu horario"} />
             <Flecha />
           </button>
         </div>

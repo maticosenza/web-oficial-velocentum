@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { RouteCurtain } from "../componentes/RouteCurtain";
+import { TextoBoton } from "../componentes/TextoBoton";
 
 function NotFoundComponent() {
   return (
@@ -27,7 +28,7 @@ function NotFoundComponent() {
       {/* Enlace duro, no `EnlaceConCortina`: el 404 tiene que
           funcionar aunque se renderice fuera del proveedor. */}
       <a href="/" className="boton boton--marca">
-        Volver al inicio
+        <TextoBoton texto="Volver al inicio" />
       </a>
     </div>
   );
@@ -58,12 +59,12 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             reset();
           }}
         >
-          Reintentar
+          <TextoBoton texto="Reintentar" />
         </button>
         {/* Enlace duro a propósito: si el router está roto, una
             navegación de cliente no es de fiar. */}
         <a href="/" className="boton boton--contorno">
-          Volver al inicio
+          <TextoBoton texto="Volver al inicio" />
         </a>
       </div>
     </div>

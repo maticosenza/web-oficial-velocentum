@@ -82,6 +82,9 @@
   }
 
   .b0__link {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     display: inline-flex;
     align-items: center;
     /* El área táctil no se negocia. */
@@ -111,6 +114,30 @@
       0 5px 12px rgb(20 16 36 / 0.1);
   }
 
+  .b0__link::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    inset: -80% -40%;
+    background: linear-gradient(
+      110deg,
+      transparent 35%,
+      rgb(255 255 255 / 0.72) 50%,
+      transparent 65%
+    );
+    opacity: 0;
+    transform: translateX(-62%) rotate(8deg);
+    transition:
+      transform 520ms var(--motion-ease),
+      opacity var(--motion-hover) ease;
+    pointer-events: none;
+  }
+
+  .b0__link > * {
+    position: relative;
+    z-index: 1;
+  }
+
   /* En hover el fondo se tiñe y el borde se funde con el relleno.
      El texto pasa al par del acento: sin eso, tinta sobre azul o
      sobre violeta se cae por debajo del mínimo de contraste. */
@@ -122,7 +149,13 @@
     transform: translateY(-2px);
     box-shadow:
       0 4px 0 rgb(20 16 36 / 0.88),
-      0 10px 20px rgb(20 16 36 / 0.2);
+      0 10px 20px rgb(20 16 36 / 0.2),
+      0 0 24px 2px color-mix(in srgb, var(--acento) 58%, transparent);
+  }
+
+  .b0__link:hover::before {
+    opacity: 0.7;
+    transform: translateX(62%) rotate(8deg);
   }
 
   /* El activo se lee de `aria-current`, no de una clase: color y
@@ -164,6 +197,10 @@
 
     .b0__link:hover {
       transform: none;
+    }
+
+    .b0__link::before {
+      display: none;
     }
 
     /* El hook ya se abstiene de esconderlo; esto es la red por si
@@ -314,7 +351,7 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background: linear-gradient(180deg, #72b0f7 0%, var(--cielo) 55%, #cde7ff 100%);
+    background: linear-gradient(180deg, #5599ed 0%, var(--cielo) 55%, #c4e0ff 100%);
   }
 
   /* Nubes chicas sobre el cielo limpio. Son formas CSS, así que

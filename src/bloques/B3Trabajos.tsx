@@ -91,6 +91,7 @@ import { MedioDeCaso } from "../componentes/MedioDeCaso";
 import { EnlaceConCortina } from "../componentes/RouteCurtain";
 import { Reveal } from "../componentes/Reveal";
 import { Flecha } from "../componentes/Flecha";
+import { TextoBoton } from "../componentes/TextoBoton";
 import { useProgresoDeScroll } from "../lib/progresoDeScroll";
 
 /* La categoría dejó de ser marcador: es el rubro que definió
@@ -137,7 +138,7 @@ export function B3Trabajos() {
 
           <Reveal indice={1} className="b3__accion">
             <EnlaceConCortina to="/casos" className="boton boton--contorno">
-              Ver casos
+              <TextoBoton texto="Ver casos" />
               <Flecha />
             </EnlaceConCortina>
           </Reveal>

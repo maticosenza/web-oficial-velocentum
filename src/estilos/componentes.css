@@ -790,13 +790,16 @@
      ========================================================= */
 
   .boton {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: var(--space-2);
     min-height: var(--control-min-height);
     padding-inline: var(--space-4);
-    border: none;
+    border: 2px solid transparent;
     border-radius: var(--r-pill);
     font-family: var(--font-texto);
     font-size: inherit;
@@ -857,6 +860,22 @@
     .boton:not(:disabled):not([aria-disabled="true"]):hover {
       transform: none;
     }
+
+    .boton__texto-carril,
+    .boton .flecha {
+      transition: none;
+    }
+
+    .boton:hover .boton__texto-carril,
+    .b0__link:hover .boton__texto-carril,
+    .boton:hover .flecha {
+      transform: none;
+    }
+
+    .boton--relleno::before,
+    .boton--marca::before {
+      display: none;
+    }
   }
 
   /* Un SVG sin dimensiones toma el tamaño por defecto del
@@ -870,8 +889,13 @@
 
   /* El par texto-sobre-X, también acá. No es opcional. */
   .boton--marca {
+    --acento-interactivo: var(--marca);
     background: var(--marca);
     color: var(--texto-sobre-marca);
+    border-color: var(--tinta);
+    box-shadow:
+      0 4px 0 var(--tinta),
+      0 9px 18px rgb(20 16 36 / 0.16);
   }
 
   /* Relleno con el par pasado como datos, igual que las píldoras,
@@ -880,8 +904,13 @@
      hero es azul y el del cierre crema, y cada uno se decidió
      contra el fondo sobre el que se apoya. */
   .boton--relleno {
+    --acento-interactivo: var(--acento);
     background: var(--acento);
     color: var(--sobre);
+    border-color: var(--tinta);
+    box-shadow:
+      0 4px 0 var(--tinta),
+      0 9px 18px rgb(20 16 36 / 0.16);
   }
 
   /* EL GLOW DEL CTA, que el plan pedía desde el principio y estuvo
@@ -899,10 +928,81 @@
 
      Sólo `--relleno`: los de contorno son navegación secundaria y
      un halo los pondría a competir con el CTA. */
-  .boton--relleno:not(:disabled):not([aria-disabled="true"]):hover {
+  .boton--relleno:not(:disabled):not([aria-disabled="true"]):hover,
+  .boton--marca:not(:disabled):not([aria-disabled="true"]):hover {
     box-shadow:
-      0 8px 18px rgb(20 16 36 / 0.24),
-      0 0 22px 2px color-mix(in srgb, var(--acento) 60%, transparent);
+      0 5px 0 var(--tinta),
+      0 12px 22px rgb(20 16 36 / 0.24),
+      0 0 28px 3px color-mix(in srgb, var(--acento-interactivo) 66%, transparent);
+  }
+
+  /* Barrido claro interno: la referencia usa una capa blanca que
+     cruza el color al pasar el puntero. Queda recortada por la
+     píldora y no modifica el color base ni el contraste del texto. */
+  .boton--relleno::before,
+  .boton--marca::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    inset: -80% -35%;
+    background: linear-gradient(
+      110deg,
+      transparent 35%,
+      rgb(255 255 255 / 0.7) 50%,
+      transparent 65%
+    );
+    opacity: 0;
+    transform: translateX(-62%) rotate(8deg);
+    transition:
+      transform 520ms var(--motion-ease),
+      opacity var(--motion-hover) ease;
+    pointer-events: none;
+  }
+
+  .boton--relleno:not(:disabled):not([aria-disabled="true"]):hover::before,
+  .boton--marca:not(:disabled):not([aria-disabled="true"]):hover::before {
+    opacity: 0.72;
+    transform: translateX(62%) rotate(8deg);
+  }
+
+  .boton > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Dos copias visuales de la misma etiqueta dentro de una ventana
+     de una línea. La segunda vive en un pseudo-elemento, por eso el
+     lector de pantalla sigue anunciando el texto una sola vez. */
+  .boton__texto {
+    display: block;
+    height: 1.2em;
+    overflow: hidden;
+    line-height: 1.2;
+  }
+
+  .boton__texto-carril {
+    display: flex;
+    flex-direction: column;
+    transition: transform 420ms var(--motion-ease);
+  }
+
+  .boton__texto-linea {
+    display: block;
+    flex: none;
+    white-space: nowrap;
+  }
+
+  .boton:not(:disabled):not([aria-disabled="true"]):hover .boton__texto-carril,
+  .b0__link:hover .boton__texto-carril {
+    transform: translateY(-50%);
+  }
+
+  .boton .flecha {
+    transition: transform 420ms var(--motion-ease);
+  }
+
+  .boton:not(:disabled):not([aria-disabled="true"]):hover .flecha {
+    transform: translate(2px, -2px);
   }
 
   /* ⚠ ESTE BORDE ES ACCESIBILIDAD, NO DECORACIÓN.
@@ -917,13 +1017,22 @@
      Colgado de `--sobre` y no de un color escrito: si el par del
      botón cambia, el borde lo sigue y no se descalibra solo. */
   .boton--perfilado {
-    border: 1.5px solid var(--sobre);
+    border-color: var(--sobre);
   }
 
   .boton--contorno {
     background: transparent;
     color: currentColor;
-    border: 1.5px solid currentColor;
+    border-color: currentColor;
+    box-shadow:
+      0 3px 0 currentColor,
+      0 7px 14px rgb(20 16 36 / 0.1);
+  }
+
+  .boton--contorno:not(:disabled):not([aria-disabled="true"]):hover {
+    box-shadow:
+      0 4px 0 currentColor,
+      0 10px 18px rgb(20 16 36 / 0.18);
   }
 
   /* =========================================================

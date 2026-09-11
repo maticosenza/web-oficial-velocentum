@@ -46,6 +46,7 @@ import type { CSSProperties } from "react";
 import { SeccionConBorde } from "../componentes/SectionEdge";
 import { EnlaceConCortina } from "../componentes/RouteCurtain";
 import { Flecha } from "../componentes/Flecha";
+import { TextoBoton } from "../componentes/TextoBoton";
 import { PAGINAS } from "../lib/paginas";
 import { MAIL } from "../data/contacto";
 
@@ -127,7 +128,7 @@ export function B9Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {r.nombre}
+                  <TextoBoton texto={r.nombre} />
                   <Flecha />
                   <span className="solo-lectores">(se abre en una pestaña nueva)</span>
                 </a>
