@@ -83,8 +83,8 @@
 
   .con1__marca-v {
     top: 15%;
-    left: 69%;
-    width: clamp(48px, 7vw, 86px);
+    left: 73%;
+    width: clamp(44px, 5.5vw, 70px);
     transform: translateX(-50%);
     filter: drop-shadow(0 9px 18px rgb(0 0 0 / 0.18));
   }
