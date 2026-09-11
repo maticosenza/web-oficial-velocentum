@@ -1,53 +1,20 @@
 /* ===========================================================
    B6 · NUESTRO PROCESO
 
-   Titular centrado y cuatro tarjetas: número arriba, objeto
+   Titular centrado y tres tarjetas: número arriba, objeto
    grande al centro, título y bajada de dos líneas abajo.
    No se toca `/metodo`: acá va la versión corta.
 
-   TARJETAS DE COLOR PLENO, CON EL OBJETO EN UN CONTENEDOR CLARO
+   TARJETAS DE COLOR PLENO, CON OBJETOS 3D SOBRE ALFA REAL
    Cada tarjeta lleva un acento en el orden normal —1, 2, 3—
    con su `--texto-sobre-N`. Sin reordenar nada.
 
-   El objeto va adentro de un círculo claro, del mismo crema que
-   el fondo de la página. Eso es lo que resuelve el contraste, y
-   es la razón por la que los acentos pueden ir en orden:
+   Cada objeto combina volúmenes brillantes y piezas de cristal:
+   lente para diagnosticar, progresión para proyectar y flecha
+   para ejecutar. Los WebP conservan transparencia real y se
+   apoyan directamente sobre el campo de cada tarjeta.
 
-   Los objetos tienen color propio —foco azul, barras verde, rayo
-   amarillo— y sobre un campo de color se pelean con él. Medido,
-   el mejor reparto posible de acentos deja un peor par de 2.27,
-   porque estos acentos cambian de tono pero no de claridad; y con
-   el acento en orden, el foco azul cae sobre el azul y
-   directamente desaparece (1.00).
-
-   El contenedor saca el problema del medio: el objeto deja de
-   apoyarse en el color de la tarjeta y vuelve al crema, que es
-   donde ya se veía bien antes de que las tarjetas tuvieran
-   fondo. No agrega nada al plan: la spec de B6 ya pedía un
-   contenedor de 150×150, y sólo faltaba que tuviera color.
-
-   LOS OBJETOS VAN POR SIGNIFICADO, NO POR ADORNO
-   `01_sistema/identidad.md` le da un significado a cada uno:
-
-   | Objeto   | Significado            |
-   |----------|------------------------|
-   | Foco     | Entender, diagnosticar |
-   | Barras   | Medir y proyectar      |
-   | Conexión | Coordinar disciplinas  |
-   | Rayo     | Activar una prioridad  |
-
-   CON TRES PASOS, LOS TRES CIERRAN EXACTO
-   Analizamos → foco (entender, diagnosticar).
-   Proyectamos → barras (medir **y proyectar**).
-   Ejecutamos → rayo (activar una **prioridad**).
-
-   Con cuatro pasos esto no cerraba: `Medimos` y `Proyectamos` se
-   peleaban barras, y al que perdía le tocaba conexión, que no
-   significa proyectar. Al fusionarse en tres, cada objeto vuelve
-   a su significado y **conexión sale del bloque** — su lugar es
-   B2 y Contacto, según identidad.md.
-
-   Los cuatro objetos son decorativos: el significado está en el
+   Los tres objetos son decorativos: el significado está en el
    número, el título y la bajada, que son texto. Por eso van
    `aria-hidden` y con `alt` vacío.
 
@@ -76,6 +43,8 @@ type Paso = {
   titulo: string;
   bajada: string;
   objeto: string;
+  objetoAncho: number;
+  objetoAlto: number;
   acento: string;
   sobre: string;
 };
@@ -85,7 +54,9 @@ const PASOS: Paso[] = [
     n: "01",
     titulo: "Analizamos",
     bajada: "Qué vendés, a qué margen y dónde se frena el crecimiento.",
-    objeto: "/assets/foco.png",
+    objeto: "/assets/proceso-analizamos.webp",
+    objetoAncho: 1254,
+    objetoAlto: 1254,
     acento: "var(--acento-1)",
     sobre: "var(--texto-sobre-1)",
   },
@@ -93,7 +64,9 @@ const PASOS: Paso[] = [
     n: "02",
     titulo: "Proyectamos",
     bajada: "Qué pasa con tus números si se corrigen esas fugas.",
-    objeto: "/assets/barras.png",
+    objeto: "/assets/proceso-proyectamos.webp",
+    objetoAncho: 1254,
+    objetoAlto: 1254,
     acento: "var(--acento-2)",
     sobre: "var(--texto-sobre-2)",
   },
@@ -101,7 +74,9 @@ const PASOS: Paso[] = [
     n: "03",
     titulo: "Ejecutamos",
     bajada: "Un plan con presupuesto y prioridad, y lo ejecutamos.",
-    objeto: "/assets/rayo.png",
+    objeto: "/assets/proceso-ejecutamos.webp",
+    objetoAncho: 1536,
+    objetoAlto: 1024,
     acento: "var(--acento-3)",
     sobre: "var(--texto-sobre-3)",
   },
@@ -140,8 +115,8 @@ export function B6Proceso() {
                   src={p.objeto}
                   alt=""
                   aria-hidden="true"
-                  width={1254}
-                  height={1254}
+                  width={p.objetoAncho}
+                  height={p.objetoAlto}
                   loading="lazy"
                 />
               </div>

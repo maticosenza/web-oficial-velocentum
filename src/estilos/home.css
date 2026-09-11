@@ -1640,40 +1640,24 @@
     margin: 0;
   }
 
-  /* La caja sigue siendo de 150×150 y el objeto entra adentro, no
-     al revés: los PNG no tienen el mismo margen interno, y atarlos
-     a una caja fija es lo que hace que los tres se vean del mismo
-     tamaño en la fila. Sin fondo ni círculo: lo que despega al
-     objeto es su contorno. */
+  /* Los tres renders comparten una zona visual amplia. `contain`
+     conserva sus siluetas distintas —circular, vertical y
+     horizontal— mientras la caja común iguala su peso en la fila. */
   .b6-paso__objeto {
     display: grid;
     place-items: center;
-    width: 150px;
-    height: 150px;
+    width: clamp(190px, 16vw, 220px);
+    height: clamp(175px, 15vw, 205px);
   }
 
-  /* EL CONTORNO BLANCO GRUESO.
-     `border` no sirve: recorta un rectángulo, no la silueta de un
-     PNG. `drop-shadow` sí sigue el canal alfa, así que el anillo
-     se pega al borde real del objeto.
-
-     Van encadenados y con blur 0: cada uno se aplica al RESULTADO
-     del anterior, así que cuatro direcciones repetidas dos veces
-     expanden la silueta unos 6px de forma pareja, en vez de
-     dejar cuatro púas. Con blur daría un halo difuso; sin blur da
-     un anillo sólido que se lee como parte del objeto.
-
-     Es lo que despega el interior del fondo cuando los dos
-     comparten color — el rayo amarillo sobre la tarjeta verde es
-     el caso testigo. Por eso los acentos pueden seguir en orden
-     1→3 sin reordenar nada. */
+  /* Los nuevos WebP ya traen luz, profundidad y alfa real. No se
+     agrega el contorno blanco de los íconos anteriores: sería el
+     gesto de sticker que se decidió sacar. */
   .b6-paso__objeto img {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    filter: drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff)
-      drop-shadow(0 -3px 0 #fff) drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff)
-      drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff);
+    filter: none;
   }
 
   .b6-paso__titulo {
@@ -1697,15 +1681,14 @@
 
   @media (max-width: 809px) {
     .b6-paso__objeto {
-      width: 100px;
-      height: 100px;
-      padding: var(--space-3);
+      width: min(180px, 52vw);
+      height: min(170px, 49vw);
     }
 
     /* Apilada, la tarjeta cambia de proporción: a 390px mide unos
        358 de ancho y el alto lo fija la más alta de las tres. El
-       mordisco vertical se recalcula igual que arriba y baja a 22,
-       porque el objeto se achica a 100 y la tarjeta con él. */
+       mordisco vertical se mantiene en 22px; el nuevo objeto gana
+       escala dentro del aire antes ocupado por padding interno. */
     .b6-paso {
       --mordisco-v: 22px;
       padding: calc(var(--space-5) + var(--mordisco-v)) calc(var(--space-4) + 5.5%)
