@@ -680,7 +680,9 @@
   }
 
   .b1 .titular-letras {
-    color: var(--navy);
+    /* Negro pleno para que las dos primeras líneas conserven
+       toda su presencia sobre la zona clara del degradado. */
+    color: #000;
   }
 
   @media (max-width: 809px) {
