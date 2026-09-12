@@ -246,14 +246,18 @@ export function RouteCurtain({ children }: { children: ReactNode }) {
   );
 
   const ocupada = estado !== "idle";
+  /* Cuando la página nueva ya se está descubriendo, sus enlaces
+     vuelven a estar disponibles. Mantener `inert` durante toda la
+     salida de la cortina dejaba un intervalo visible de unos
+     300 ms en el que el primer click se perdía. */
+  const bloqueandoContenido = estado === "cubriendo" || estado === "tapado";
 
   return (
     <Contexto.Provider value={{ navegar, estado, ocupada }}>
-      {/* `inert` y no `pointer-events: none` en la cortina:
-          pointer-events por sí solo deja pasar los clicks a la
-          página tapada y además deja el foco alcanzable con Tab.
-          React 19 soporta `inert` como booleano. */}
-      <div inert={ocupada}>{children}</div>
+      {/* `inert` bloquea la página mientras la cortina la está
+          cubriendo o la tapa por completo. Al descubrir el destino
+          se retira para que lo que ya se ve también responda. */}
+      <div inert={bloqueandoContenido}>{children}</div>
 
       <div ref={cortinaRef} aria-hidden="true" className="cortina" />
 
@@ -282,7 +286,7 @@ export function EnlaceConCortina({
   children: ReactNode;
   className?: string;
 } & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href">) {
-  const { navegar } = useRouteCurtain();
+  const { navegar, ocupada } = useRouteCurtain();
 
   /* El spread va PRIMERO: así href y onClick no se pueden pisar
      desde afuera por accidente. */
@@ -295,6 +299,10 @@ export function EnlaceConCortina({
         resto.onClick?.(evento);
         if (esClickQueNoInterceptamos(evento)) return;
         if (resto.target === "_blank") return;
+        /* Si el destino ya apareció pero la cortina todavía está
+           terminando de salir, conservamos el comportamiento del
+           <a>: el navegador resuelve el click en vez de perderlo. */
+        if (ocupada) return;
         evento.preventDefault();
         void navegar(to);
       }}
