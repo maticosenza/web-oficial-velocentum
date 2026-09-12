@@ -107,6 +107,16 @@
     transform: translateY(-100%);
   }
 
+  /* En pantallas móviles de alta densidad, la unión exacta entre
+     la máscara y el fondo puede caer entre píxeles y dejar una
+     línea semitransparente. Un píxel de solape mantiene la onda
+     idéntica y cierra la costura contra su propia sección. */
+  @media (max-width: 809px) {
+    .borde-onda[data-borde="arriba"] {
+      transform: translateY(calc(-100% + 1px));
+    }
+  }
+
   /* Pie de tarjeta: la misma silueta, espejada en vertical. */
   .borde-onda[data-borde="abajo"] {
     bottom: 0;
