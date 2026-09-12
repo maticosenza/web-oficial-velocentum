@@ -117,6 +117,14 @@ const TOTAL_DE_PASOS = 4;
 /* Lo que se espera entre elegir y avanzar. Suficiente para ver la
    tarjeta marcada, corto como para no leerse como una demora. */
 const ESPERA_DEL_AUTOAVANCE = 250;
+const ERROR_EMAIL = "Revisá el email. Escribilo como nombre@empresa.com.";
+
+function esErrorDeEmail(error: unknown) {
+  if (!(error instanceof Error)) return false;
+  return /(?:email|correo).*(?:invalid|inválid|format|formato)|(?:invalid|inválid|format|formato).*(?:email|correo)/i.test(
+    error.message,
+  );
+}
 
 export function CON1Flujo() {
   const [paso, setPaso] = useState(1);
@@ -192,6 +200,19 @@ export function CON1Flujo() {
       if (!e[campo]) return e;
       const copia = { ...e };
       delete copia[campo];
+      return copia;
+    });
+  };
+
+  const validarCampo = (campoId: CampoId) => {
+    const campo = CAMPOS.find((item) => item.id === campoId);
+    if (!campo) return;
+    const error = errorDeCampo(campo, estado.datos[campoId]);
+    setErrores((actuales) => {
+      if (error) return { ...actuales, [campoId]: error };
+      if (!actuales[campoId]) return actuales;
+      const copia = { ...actuales };
+      delete copia[campoId];
       return copia;
     });
   };
@@ -306,6 +327,14 @@ export function CON1Flujo() {
       });
       setReservaLista(true);
     } catch (error) {
+      if (esErrorDeEmail(error)) {
+        setErrores((actuales) => ({ ...actuales, email: ERROR_EMAIL }));
+        setErrorReserva(null);
+        leadId.current = null;
+        irA(3);
+        window.setTimeout(() => campoRefs.current.email?.focus(), 0);
+        return;
+      }
       const detalle = error instanceof Error ? error.message : "Error desconocido.";
       setErrorReserva(`No pudimos reservar ese horario: ${detalle}`);
       await cargarHorarios();
@@ -403,6 +432,7 @@ export function CON1Flujo() {
             datos={estado.datos}
             errores={errores}
             escribir={escribir}
+            validar={validarCampo}
             atras={() => irA(2)}
             avanzar={avanzarDesdeDatos}
             enviando={enviando}
@@ -514,6 +544,7 @@ function PasoDeDatos({
   datos,
   errores,
   escribir,
+  validar,
   atras,
   avanzar,
   enviando,
@@ -525,6 +556,7 @@ function PasoDeDatos({
   datos: Record<CampoId, string>;
   errores: Partial<Record<CampoId, string>>;
   escribir: (campo: CampoId, valor: string) => void;
+  validar: (campo: CampoId) => void;
   atras: () => void;
   avanzar: () => void;
   enviando: boolean;
@@ -556,7 +588,10 @@ function PasoDeDatos({
           const error = errores[campo.id];
 
           return (
-            <div key={campo.id} className="con1-campo">
+            <div
+              key={campo.id}
+              className={["con1-campo", error && "con1-campo--error"].filter(Boolean).join(" ")}
+            >
               <label className="con1-campo__etiqueta" htmlFor={idCampo}>
                 {campo.etiqueta}
               </label>
@@ -576,10 +611,17 @@ function PasoDeDatos({
                 aria-invalid={error ? true : undefined}
                 aria-describedby={error ? idError : undefined}
                 onChange={(e) => escribir(campo.id, e.target.value)}
+                onBlur={() => {
+                  if (campo.id !== "email" || !datos.email.trim()) return;
+                  validar("email");
+                }}
               />
               {error ? (
-                <p id={idError} className="con1-campo__error">
-                  {error}
+                <p id={idError} className="con1-campo__error" role="alert">
+                  <span className="con1-campo__error-icono" aria-hidden="true">
+                    !
+                  </span>
+                  <span>{error}</span>
                 </p>
               ) : null}
             </div>

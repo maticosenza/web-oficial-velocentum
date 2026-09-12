@@ -450,12 +450,35 @@
      sea el único portador de la información. */
   .con1-campo__control[aria-invalid="true"] {
     border-color: var(--acento-2);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--acento-2) 14%, transparent);
   }
 
   .con1-campo__error {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
     margin: 0;
+    padding: 9px 11px;
+    border: 1px solid color-mix(in srgb, var(--acento-2) 30%, transparent);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--acento-2) 8%, var(--fondo));
     font-size: 14px;
+    line-height: 1.35;
     color: var(--acento-2);
+  }
+
+  .con1-campo__error-icono {
+    display: grid;
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--acento-2);
+    color: var(--texto-sobre-2);
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
   }
 
   /* En ventanas angostas de escritorio y tablets horizontales, los

@@ -171,13 +171,26 @@ export const CAMPOS: Campo[] = [
   },
 ];
 
-/* ⚠ REGEX LAXO A PROPÓSITO. Uno estricto rechaza direcciones
-   perfectamente válidas —subdominios largos, signos que el
-   estándar permite— y no atrapa las que de verdad importan, que
-   son las bien formadas y equivocadas. Acá sólo se pide que haya
-   algo, un arroba, algo, un punto y algo. Lo demás lo dice el
-   rebote del mail. */
-const EMAIL = /^\S+@\S+\.\S+$/;
+/* Calendly aplica una validación más estricta que el navegador y
+   que el chequeo anterior. Validamos la estructura completa antes
+   de mostrar horarios para que un error de formato vuelva al campo,
+   en vez de aparecer como una respuesta técnica en el calendario. */
+const LOCAL_EMAIL = /^[A-Z0-9.!#$%&'*+/=?^_`{|}~-]+$/i;
+const ETIQUETA_DOMINIO = /^[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?$/i;
+
+function emailValido(valor: string) {
+  if (valor.length > 254) return false;
+
+  const partes = valor.split("@");
+  if (partes.length !== 2) return false;
+
+  const [local, dominio] = partes;
+  if (!local || local.length > 64 || !LOCAL_EMAIL.test(local)) return false;
+  if (local.startsWith(".") || local.endsWith(".") || local.includes("..")) return false;
+
+  const etiquetas = dominio.split(".");
+  return etiquetas.length >= 2 && etiquetas.every((etiqueta) => ETIQUETA_DOMINIO.test(etiqueta));
+}
 
 /* Ocho dígitos es el piso de un número argentino sin
    característica. Se cuentan SÓLO los dígitos porque la gente lo
@@ -198,7 +211,7 @@ export function errorDeCampo(campo: Campo, valor: string): string | null {
     if (digitos < MINIMO_DE_DIGITOS) return campo.errorFormato ?? campo.errorVacio;
   }
 
-  if (campo.comprobacion === "email" && !EMAIL.test(limpio)) {
+  if (campo.comprobacion === "email" && !emailValido(limpio)) {
     return campo.errorFormato ?? campo.errorVacio;
   }
 
