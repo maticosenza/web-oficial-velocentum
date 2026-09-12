@@ -672,7 +672,10 @@
 
   @media (max-width: 809px) {
     .titular-letras {
-      font-size: clamp(48px, 15vw, 68px);
+      /* Ocupa alrededor del 85% del ancho útil entre 320 y 480px,
+         con la presencia del hero de referencia y sin partir la
+         línea más larga. */
+      font-size: clamp(70px, 22vw, 100px);
       line-height: 0.84;
     }
   }

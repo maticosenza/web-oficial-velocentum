@@ -252,7 +252,7 @@
     .met1__titular {
       /* Más presencia en mobile, conservando ambas líneas dentro
          del centro despejado de la imagen. */
-      font-size: clamp(44px, 12vw, 58px);
+      font-size: clamp(64px, 19vw, 88px);
       line-height: 1.1;
       white-space: nowrap;
     }
