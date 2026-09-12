@@ -651,7 +651,7 @@
   /* --- El titular por letras --- */
 
   .titular-letras {
-    font-family: "New Title", var(--font-display);
+    font-family: "New Title", sans-serif;
     font-weight: 700;
     /* La fuente de Lofty es más alta y angosta que Anton. Se
        aprovecha esa proporción para que el bloque ocupe más del

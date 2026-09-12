@@ -10,7 +10,10 @@
   font-family: "New Title";
   font-style: normal;
   font-weight: 700;
-  font-display: swap;
+  /* El H1 no debe aparecer primero en Anton y cambiar de forma.
+     La fuente pesa 17 KB y se precarga desde el head, así que el
+     breve período de bloqueo evita el FOUT sin demorar el hero. */
+  font-display: block;
   src: url(/fonts/new-title-bold.woff2) format("woff2");
 }
 

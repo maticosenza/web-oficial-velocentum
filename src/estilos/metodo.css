@@ -89,7 +89,7 @@
   }
 
   .met1__titular {
-    font-family: "New Title", var(--font-display);
+    font-family: "New Title", sans-serif;
     font-weight: 700;
     /* La nueva escena deja el centro despejado: el titular conserva
        su escala sin tapar los objetos de los extremos. */

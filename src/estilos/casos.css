@@ -28,7 +28,7 @@
   }
 
   .cas1__titular {
-    font-family: "New Title", var(--font-display);
+    font-family: "New Title", sans-serif;
     font-weight: 700;
     font-size: clamp(56px, 10vw, 148px);
     line-height: 1.05;
@@ -142,7 +142,7 @@
   }
 
   .cas2__pin-texto {
-    font-family: "New Title", var(--font-display);
+    font-family: "New Title", sans-serif;
     font-weight: 700;
     /* Grande de verdad: es la palabra que acompaña todo el
        recorrido. `min()` la ata al ancho para que no se corte en

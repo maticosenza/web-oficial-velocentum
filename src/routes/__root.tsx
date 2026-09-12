@@ -96,16 +96,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.png?v=2", type: "image/png" },
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
-      /* Las familias se usan arriba del pliegue: se
-         precargan para que el titular display no aparezca con
-         fuente de sistema y salte al cargar la real. */
-      {
-        rel: "preload",
-        href: "/fonts/new-title-bold.woff2",
-        as: "font",
-        type: "font/woff2",
-        crossOrigin: "anonymous",
-      },
+      /* Anton y Manrope siguen usándose arriba del pliegue en la
+         navegación y en las páginas que conservan su sistema. */
       {
         rel: "preload",
         href: "/fonts/anton-latin.woff2",
@@ -132,6 +124,16 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="es-AR">
       <head>
+        {/* Va físicamente antes de HeadContent porque el bundler
+            prioriza sus hojas de estilo sobre `links`. Así New
+            Title empieza a bajar antes de que el CSS la solicite. */}
+        <link
+          rel="preload"
+          href="/fonts/new-title-bold.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
         <HeadContent />
       </head>
       <body>
