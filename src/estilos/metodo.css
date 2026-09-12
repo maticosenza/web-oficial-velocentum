@@ -93,7 +93,10 @@
     font-weight: 700;
     /* La nueva escena deja el centro despejado: el titular conserva
        su escala sin tapar los objetos de los extremos. */
-    font-size: clamp(48px, 5.5vw, 88px);
+    /* New Title es bastante más angosta que Anton. Este cuerpo
+       recupera la autoridad visual del bloque sin invadir los
+       objetos laterales de la escena. */
+    font-size: clamp(64px, 7.5vw, 116px);
     /* Conserva el interlineado previo para que la É de «DESPUÉS»
        mantenga aire contra el primer renglón en todos los tamaños. */
     line-height: 1.14;
@@ -247,9 +250,9 @@
     }
 
     .met1__titular {
-      /* Una medida menor y un poco más tranquila que en desktop:
-         entra entre los dos grupos de objetos sin perder presencia. */
-      font-size: clamp(30px, 8vw, 38px);
+      /* Más presencia en mobile, conservando ambas líneas dentro
+         del centro despejado de la imagen. */
+      font-size: clamp(44px, 12vw, 58px);
       line-height: 1.1;
       white-space: nowrap;
     }

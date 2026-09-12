@@ -30,7 +30,7 @@
   .cas1__titular {
     font-family: "New Title", var(--font-display);
     font-weight: 700;
-    font-size: clamp(42px, 8.5vw, 116px);
+    font-size: clamp(56px, 10vw, 148px);
     line-height: 1.05;
     text-transform: uppercase;
     margin: 0;
@@ -52,7 +52,7 @@
          La medida anterior permitía una sola línea y la nueva
          familia, al ser más angosta, podía desbordar el viewport. */
       max-width: 15ch;
-      font-size: clamp(48px, 14vw, 64px);
+      font-size: clamp(64px, 19vw, 88px);
     }
   }
 
@@ -142,7 +142,8 @@
   }
 
   .cas2__pin-texto {
-    font-family: var(--font-display);
+    font-family: "New Title", var(--font-display);
+    font-weight: 700;
     /* Grande de verdad: es la palabra que acompaña todo el
        recorrido. `min()` la ata al ancho para que no se corte en
        ventanas angostas. */
