@@ -170,7 +170,17 @@ export function RouteCurtain({ children }: { children: ReactNode }) {
       /* Click repetido durante el cambio: se descarta. No se
          encola ni se cancela lo que ya está en curso. */
       if (estadoRef.current !== "idle") return;
-      if (destino === router.state.location.pathname) return;
+      if (destino === router.state.location.pathname) {
+        /* Los accesos del footer también funcionan cuando ya
+           estamos en esa página. En particular, Inicio deja de
+           ser un enlace sin efecto al pie de la Home y vuelve al
+           comienzo, respetando la preferencia de movimiento. */
+        window.scrollTo({
+          top: 0,
+          behavior: prefiereMenosMovimiento() ? "auto" : "smooth",
+        });
+        return;
+      }
 
       const cortina = cortinaRef.current;
 
