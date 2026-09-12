@@ -28,7 +28,8 @@
   }
 
   .cas1__titular {
-    font-family: var(--font-display);
+    font-family: "New Title", var(--font-display);
+    font-weight: 700;
     font-size: clamp(42px, 8.5vw, 116px);
     line-height: 1.05;
     text-transform: uppercase;
@@ -47,7 +48,10 @@
   @media (max-width: 809px) {
     .cas1__titular {
       width: 100%;
-      max-width: 46ch;
+      /* Conserva las dos líneas del header también con New Title.
+         La medida anterior permitía una sola línea y la nueva
+         familia, al ser más angosta, podía desbordar el viewport. */
+      max-width: 15ch;
       font-size: clamp(48px, 14vw, 64px);
     }
   }

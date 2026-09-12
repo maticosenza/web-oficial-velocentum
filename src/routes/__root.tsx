@@ -96,9 +96,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.png?v=2", type: "image/png" },
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
-      /* Las tres familias se usan arriba del pliegue: se
+      /* Las familias se usan arriba del pliegue: se
          precargan para que el titular display no aparezca con
          fuente de sistema y salte al cargar la real. */
+      {
+        rel: "preload",
+        href: "/fonts/new-title-bold.woff2",
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "anonymous",
+      },
       {
         rel: "preload",
         href: "/fonts/anton-latin.woff2",

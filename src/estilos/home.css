@@ -651,28 +651,13 @@
   /* --- El titular por letras --- */
 
   .titular-letras {
-    font-family: var(--font-display);
-    /* MEDIDO, NO ESTIMADO.
-       La línea más larga —`NEGOCIO DE HACER`— ocupa 6.949 veces
-       el cuerpo, con esta fuente y este `letter-spacing`. De ahí
-       salen los tres números:
-
-       · Tope 138px. El máximo que entra sería 168 —la caja de
-         contenido son 1168px— y llegó a estar en 160, al 95% de
-         la caja. Se bajó: a ese tamaño el titular pesaba
-         demasiado en desktop. A 138 ocupa el 82%, que deja aire
-         a los costados y sigue siendo el elemento dominante.
-       · 11vw en vez de 12.2, para que los anchos intermedios
-         bajen en la misma proporción y no haya un salto entre el
-         tramo escalado y el topeado.
-       · Mínimo 40px. A 320px el mínimo toma el relevo y el texto
-         ocupa el 97% de la caja: es el punto más justo del rango
-         y no desborda.
-
-       Si el copy crece, estos números bajan: el factor 6.949 es
-       de ESTE titular. */
-    font-size: clamp(40px, 11vw, 138px);
-    line-height: 0.95;
+    font-family: "New Title", var(--font-display);
+    font-weight: 700;
+    /* La fuente de Lofty es más alta y angosta que Anton. Se
+       aprovecha esa proporción para que el bloque ocupe más del
+       hero sin partir ninguna de sus tres líneas. */
+    font-size: clamp(48px, 11.8vw, 160px);
+    line-height: 0.82;
     text-transform: uppercase;
     letter-spacing: 0.01em;
     margin: 0;
@@ -687,8 +672,8 @@
 
   @media (max-width: 809px) {
     .titular-letras {
-      font-size: clamp(42px, 13.2vw, 58px);
-      line-height: 0.93;
+      font-size: clamp(48px, 15vw, 68px);
+      line-height: 0.84;
     }
   }
 
@@ -814,18 +799,11 @@
       padding-top: calc(var(--alto-nav, 96px) + var(--space-4));
     }
 
-    /* NO SUBE CON EL DE ARRIBA, Y ES A PROPÓSITO.
-       Este tope es el que evita que el hero se corte en ventanas
-       bajas, y 96px es el valor con el que se midió que entraba:
-       a 654px de alto quedaban 23px de holgura entre el CTA y la
-       onda. El titular ocupa 2,85 veces su cuerpo en tres
-       renglones, así que subirlo a 112 se comería esos 23px y
-       volvería a cortar.
-
-       Se deja en 96 hasta poder medirlo de nuevo en una ventana
-       baja de verdad. */
+    /* New Title ocupa bastante menos alto por cuerpo que Anton.
+       Ya no hace falta reducir el H1 a 96px: puede conservar la
+       misma escala fluida también en notebooks de poca altura. */
     .titular-letras {
-      font-size: clamp(40px, 7.4vw, 96px);
+      font-size: clamp(48px, 11.8vw, 160px);
     }
   }
 

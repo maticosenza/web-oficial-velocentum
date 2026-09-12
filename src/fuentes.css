@@ -1,10 +1,19 @@
 /* ===========================================================
    TIPOGRAFÍAS AUTOALOJADAS
-   Anton (display) · Manrope (texto) · Geist Mono (etiquetas)
+   New Title (heroes) · Anton (display) · Manrope (texto) · Geist Mono (etiquetas)
    Subsets latin + latin-ext. Descargadas de Google Fonts,
    servidas desde /public/fonts: sin pedidos a terceros.
    NO editar a mano: se regenera con scripts/fuentes.py
    =========================================================== */
+/* Hero display — Fontshare, misma familia de la referencia Lofty. */
+@font-face {
+  font-family: "New Title";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(/fonts/new-title-bold.woff2) format("woff2");
+}
+
 /* latin-ext */
 @font-face {
   font-family: "Anton";
