@@ -94,7 +94,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "icon", href: "/favicon.png?v=2", type: "image/png" },
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
       /* Las tres familias se usan arriba del pliegue: se
          precargan para que el titular display no aparezca con

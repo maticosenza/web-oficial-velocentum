@@ -16,13 +16,13 @@ import { CursorPropio } from "../componentes/CursorPropio";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Velocentum · Crecimiento con control" },
+      { title: "Velocentum · Estrategia y contenido" },
       {
         name: "description",
         content:
           "Estrategia, contenido, pauta y conversión en un solo equipo, para tiendas de e-commerce que ya venden.",
       },
-      { property: "og:title", content: "Velocentum · Crecimiento con control" },
+      { property: "og:title", content: "Velocentum · Estrategia y contenido" },
       {
         property: "og:description",
         content:
