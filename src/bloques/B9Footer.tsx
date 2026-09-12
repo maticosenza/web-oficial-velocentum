@@ -96,21 +96,17 @@ export function B9Footer() {
                   archivo de marca es un lienzo de 2117×743 con la
                   palabra adentro ocupando 1925×291: más de un
                   tercio del alto es transparente, así que la caja
-                  medía mucho más que la palabra y el wordmark se
-                  veía chico al lado de la V por más ancho que se le
-                  diera. `-tight` es el MISMO PNG con los píxeles
-                  transparentes recortados —umbral de alfa 16, que
-                  es lo que hace falta para ignorar el ruido casi
-                  invisible del lienzo, más cuatro píxeles de
-                  margen—, sin redimensionar ni redibujar nada. El
-                  original queda intacto y se sigue usando donde
-                  haga falta el encuadre con aire. */}
+                  medía mucho más que la palabra. `-tight.webp`
+                  recorta ese aire y entrega 768×119, resolución
+                  suficiente para el ancho óptico del footer incluso
+                  en pantallas de alta densidad. El original queda
+                  intacto. */}
               <img
                 className="b9__logotipo"
-                src="/assets/velocentum-logotipo-blanco-tight.png"
+                src="/assets/velocentum-logotipo-blanco-tight.webp"
                 alt="Velocentum"
-                width={1933}
-                height={299}
+                width={768}
+                height={119}
                 loading="lazy"
               />
               <a className="b9__mail" href={`mailto:${MAIL}`}>

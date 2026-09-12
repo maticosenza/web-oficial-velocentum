@@ -58,7 +58,7 @@
      una franja. */
   .con1__panel {
     position: relative;
-    background: var(--navy) url("/assets/contacto-cta-escena.png") left center / auto 100% no-repeat;
+    background: var(--navy) url("/assets/contacto-cta-escena.webp") left center / auto 100% no-repeat;
     color: var(--fondo);
     border-radius: var(--r-card);
     padding: var(--space-5);
@@ -197,7 +197,7 @@
       min-height: 0;
       aspect-ratio: 1.78;
       padding: var(--space-5);
-      background: var(--navy) url("/assets/contacto-cta-escena.png") center / cover no-repeat;
+      background: var(--navy) url("/assets/contacto-cta-escena.webp") center / cover no-repeat;
     }
 
     .con1__titular {

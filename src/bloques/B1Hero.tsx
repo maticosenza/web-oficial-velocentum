@@ -95,10 +95,11 @@ export function B1Hero() {
                 falta tocar nada más. */}
             <img
               className="b1__mancha-img"
-              src="/assets/hero-mancha-referencia.png"
+              src="/assets/hero-mancha-referencia.webp"
               alt=""
               width={2396}
               height={1013}
+              fetchPriority="high"
               decoding="async"
             />
           </div>

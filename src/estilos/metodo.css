@@ -240,7 +240,7 @@
        abajo. Así no hay ni mosaicos ni costuras entre recortes. */
     .met1__foto {
       inset: 0;
-      background: #0d204c url("/assets/hero-metodo-mobile.png") center / cover no-repeat;
+      background: #0d204c url("/assets/hero-metodo-mobile.webp") center / cover no-repeat;
     }
 
     .met1__foto-img {

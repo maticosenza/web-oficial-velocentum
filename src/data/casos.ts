@@ -56,7 +56,7 @@ export const CASOS: Caso[] = [
       "Gestionamos Meta Ads y producimos contenido para pauta para ampliar el alcance, mejorar el rendimiento y sostener el crecimiento de ventas.",
     medio: {
       tipo: "video",
-      archivo: "/assets/caso-snake-store.mp4",
+      archivo: "/assets/caso-snake-store-optimized.mp4",
       poster: "/assets/caso-snake-store-poster.webp",
     },
   },

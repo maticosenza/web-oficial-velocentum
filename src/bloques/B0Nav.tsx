@@ -124,10 +124,10 @@ export function B0Nav() {
               cuarto de aire. Ver el propio archivo. */}
           <img
             className="b0__logotipo"
-            src="/assets/velocentum-logotipo-negro.png"
+            src="/assets/velocentum-logotipo-negro-tight.webp"
             alt="Velocentum"
-            width={2117}
-            height={743}
+            width={768}
+            height={119}
           />
           <span className="b0__isotipo" aria-hidden="true">
             <img src="/assets/velocentum-v-bicolor-ui.svg" alt="" width={997} height={841} />

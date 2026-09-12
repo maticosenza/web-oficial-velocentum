@@ -75,7 +75,7 @@ const PASOS: Paso[] = [
     titulo: ["Revisamos tu", "ecosistema completo"],
     bajada:
       "No solo la pauta: qué vendés y a qué precio, cómo llega la gente y qué encuentra cuando llega.",
-    objeto: "/assets/conexion.png",
+    objeto: "/assets/conexion.webp",
     acento: "var(--acento-1)",
     sobre: "var(--texto-sobre-1)",
   },
@@ -84,7 +84,7 @@ const PASOS: Paso[] = [
     titulo: ["Diagnosticamos tu", "cuello de botella"],
     bajada:
       "“No vendo lo suficiente” nunca es un solo problema. Al separarlo aparecen tres o cuatro frentes, y siempre hay uno que pesa más.",
-    objeto: "/assets/foco.png",
+    objeto: "/assets/foco.webp",
     acento: "var(--acento-2)",
     sobre: "var(--texto-sobre-2)",
   },
@@ -93,7 +93,7 @@ const PASOS: Paso[] = [
     titulo: ["Proyectamos qué", "pasa si se corrige"],
     bajada:
       "Con tus números reales, una proyección a 90 días. No promesas: un rango con supuestos explícitos y su inversión.",
-    objeto: "/assets/barras.png",
+    objeto: "/assets/barras.webp",
     acento: "var(--acento-3)",
     sobre: "var(--texto-sobre-3)",
   },
@@ -102,7 +102,7 @@ const PASOS: Paso[] = [
     titulo: ["Ejecutamos el", "plan de acción"],
     bajada:
       "No activamos todo junto. Primero lo que más pesa, y qué tiene que estar resuelto antes de escalar.",
-    objeto: "/assets/rayo.png",
+    objeto: "/assets/rayo.webp",
     acento: "var(--acento-4)",
     sobre: "var(--texto-sobre-4)",
   },
@@ -140,8 +140,8 @@ export function MET3Pasos() {
                   src={p.objeto}
                   alt=""
                   aria-hidden="true"
-                  width={1254}
-                  height={1254}
+                  width={512}
+                  height={512}
                   loading="lazy"
                 />
               </div>
