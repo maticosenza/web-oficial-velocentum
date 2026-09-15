@@ -21,10 +21,19 @@ const cors = {
 
 type CalendlyResource = { uri: string };
 type CalendlyLocation = { kind: string };
+type CalendlyCustomQuestion = {
+  name: string;
+  type?: string;
+  position?: number;
+  enabled?: boolean;
+  required?: boolean;
+  answer_choices?: string[];
+};
 type CalendlyEventType = {
   uri: string;
   scheduling_url: string;
   locations?: CalendlyLocation[];
+  custom_questions?: CalendlyCustomQuestion[];
 };
 
 function json(body: unknown, status = 200) {
@@ -70,6 +79,160 @@ async function eventTypeUri(key: EventKey) {
   );
   if (!eventType) throw new Error(`No se encontró el evento "${key}" en Calendly.`);
   return eventType;
+}
+
+// ---------------------------------------------------------------------------
+// Respuestas obligatorias del evento e-commerce.
+// El texto y la posición de cada pregunta se toman SIEMPRE de la configuración
+// real del event type en Calendly; acá sólo declaramos qué campo del cliente
+// responde a qué pregunta, en orden de especificidad para el emparejado.
+// ---------------------------------------------------------------------------
+type CampoEcommerce = {
+  campo: string;
+  patron: RegExp;
+  max: number;
+  obligatorio: boolean;
+  telefono?: boolean;
+};
+
+const CAMPOS_ECOMMERCE: CampoEcommerce[] = [
+  { campo: "nombre_tienda", patron: /nombre|marca/i, max: 160, obligatorio: true },
+  { campo: "instagram", patron: /instagram|\big\b|@|redes/i, max: 160, obligatorio: true },
+  {
+    campo: "whatsapp",
+    patron: /whats|tel[eé]fono|celular|phone|m[oó]vil/i,
+    max: 32,
+    obligatorio: true,
+    telefono: true,
+  },
+  {
+    campo: "facturacion_mensual",
+    patron: /factur|ingres|ventas|revenue|mensual/i,
+    max: 120,
+    obligatorio: true,
+  },
+  { campo: "rol", patron: /rol|cargo|puesto|funci[oó]n/i, max: 120, obligatorio: true },
+  {
+    campo: "tienda_online_activa",
+    patron: /tienda|online|shop|vend[eé]s|e-?commerce/i,
+    max: 120,
+    obligatorio: true,
+  },
+  {
+    campo: "comentario",
+    patron: /coment|contanos|cu[eé]nt|detalle|objetivo|algo m[aá]s/i,
+    max: 1000,
+    obligatorio: false,
+  },
+];
+
+function textoDe(valor: unknown) {
+  return typeof valor === "string" ? valor.trim() : "";
+}
+
+/** Normaliza un número a E.164 (Argentina por defecto). */
+function aE164(valor: string) {
+  const limpio = valor.replace(/[^\d+]/g, "");
+  let digitos = limpio.startsWith("+")
+    ? limpio.slice(1).replace(/\D/g, "")
+    : limpio.replace(/\D/g, "");
+  const teniaMas = limpio.startsWith("+");
+  if (!teniaMas) {
+    if (digitos.startsWith("00")) digitos = digitos.slice(2);
+    else if (!digitos.startsWith("54")) {
+      // número local argentino: se quita el 0 de larga distancia y el 15 del
+      // móvil, y se agrega el 9 que exige E.164 para celulares argentinos.
+      const local = digitos.replace(/^0/, "").replace(/^(\d{2,4})15(\d{6,8})$/, "$1$2");
+      digitos = local.length === 10 ? `549${local}` : `54${local}`;
+    }
+  }
+  if (!/^[1-9]\d{7,14}$/.test(digitos)) return null;
+  return `+${digitos}`;
+}
+
+type Respuesta = { question: string; answer: string; position: number };
+
+/** Empareja los campos declarados con las preguntas reales del event type. */
+function armarRespuestas(
+  eventType: CalendlyEventType,
+  entrada: Record<string, unknown>,
+): { respuestas: Respuesta[]; telefono: string | null; telefonoRequerido: boolean } | { error: string } {
+  const preguntas = (eventType.custom_questions ?? []).filter(
+    (pregunta) => pregunta.enabled !== false && typeof pregunta.name === "string",
+  );
+  const usadas = new Set<CalendlyCustomQuestion>();
+  const respuestas: Respuesta[] = [];
+  let telefono: string | null = null;
+  let telefonoRequerido = false;
+
+  for (const campo of CAMPOS_ECOMMERCE) {
+    const pregunta = preguntas.find(
+      (candidata) => !usadas.has(candidata) && campo.patron.test(candidata.name),
+    );
+    const valorCrudo = textoDe(entrada[campo.campo]);
+
+    if (!pregunta) {
+      // La pregunta no existe en el evento: el dato se ignora sin romper nada.
+      if (valorCrudo && campo.obligatorio) continue;
+      continue;
+    }
+    usadas.add(pregunta);
+
+    const requerida = pregunta.required === true || campo.obligatorio;
+    if (!valorCrudo) {
+      if (requerida) return { error: `Falta el campo obligatorio "${campo.campo}".` };
+      continue;
+    }
+    if (valorCrudo.length > campo.max) {
+      return { error: `El campo "${campo.campo}" supera ${campo.max} caracteres.` };
+    }
+
+    let valor = valorCrudo;
+    const opciones = pregunta.answer_choices ?? [];
+    if (opciones.length > 0) {
+      const elegida = opciones.find(
+        (opcion) => opcion.trim().toLowerCase() === valorCrudo.toLowerCase(),
+      );
+      if (!elegida) {
+        return {
+          error: `El campo "${campo.campo}" debe ser uno de: ${opciones.join(" | ")}.`,
+        };
+      }
+      valor = elegida;
+    }
+    if (campo.telefono) {
+      const normalizado = aE164(valorCrudo);
+      if (!normalizado) return { error: `El campo "${campo.campo}" no es un teléfono válido.` };
+      valor = normalizado;
+      telefono = normalizado;
+      telefonoRequerido = pregunta.type === "phone_number";
+    }
+
+    respuestas.push({
+      question: pregunta.name,
+      answer: valor,
+      position: typeof pregunta.position === "number" ? pregunta.position : respuestas.length,
+    });
+  }
+
+  // Cualquier pregunta obligatoria del evento que no hayamos podido responder
+  // debe fallar de forma explícita en lugar de que Calendly rechace la reserva.
+  const sinResponder = preguntas.find(
+    (pregunta) => pregunta.required === true && !usadas.has(pregunta),
+  );
+  if (sinResponder) {
+    return { error: `El evento pide una respuesta no soportada: "${sinResponder.name}".` };
+  }
+
+  respuestas.sort((a, b) => a.position - b.position);
+  return { respuestas, telefono, telefonoRequerido };
+}
+
+// Protección simple contra dobles reservas (misma instancia, 10 minutos).
+const reservas = new Map<string, { vence: number; promesa: Promise<{ uri: string | null }> }>();
+function limpiarReservas() {
+  const ahora = Date.now();
+  for (const [clave, valor] of reservas) if (valor.vence <= ahora) reservas.delete(clave);
 }
 
 Deno.serve(async (request) => {
@@ -118,18 +281,59 @@ Deno.serve(async (request) => {
         return fail("Datos de contacto inválidos.");
       const eventType = await eventTypeUri(eventKey);
       const location = eventType.locations?.length === 1 ? eventType.locations[0] : undefined;
-      const result = (await calendly("/invitees", {
-        method: "POST",
-        body: JSON.stringify({
-          event_type: eventType.uri,
-          start_time: new Date(startTime).toISOString(),
-          invitee: { name, email, timezone },
-          // Calendly exige que una reserva indique la ubicación cuando
-          // el tipo de evento tiene una sola ubicación configurada.
-          ...(location ? { location } : {}),
-        }),
-      })) as { resource?: CalendlyResource };
-      return json({ uri: result.resource?.uri ?? null });
+
+      let respuestas: Respuesta[] = [];
+      let telefono: string | null = null;
+      let telefonoRequerido = false;
+      if (eventKey === "ecommerce") {
+        const entrada =
+          typeof body.ecommerce_answers === "object" && body.ecommerce_answers !== null
+            ? (body.ecommerce_answers as Record<string, unknown>)
+            : {};
+        const armado = armarRespuestas(eventType, entrada);
+        if ("error" in armado) return fail(armado.error);
+        respuestas = armado.respuestas;
+        telefono = armado.telefono;
+        telefonoRequerido = armado.telefonoRequerido;
+      }
+
+      const idempotencia =
+        typeof body.idempotency_key === "string" && body.idempotency_key.trim().length > 0
+          ? body.idempotency_key.trim().slice(0, 200)
+          : `${eventKey}|${new Date(startTime).toISOString()}|${email.toLowerCase()}`;
+      limpiarReservas();
+      const existente = reservas.get(idempotencia);
+      if (existente) return json(await existente.promesa);
+
+      const promesa = (async () => {
+        const result = (await calendly("/invitees", {
+          method: "POST",
+          body: JSON.stringify({
+            event_type: eventType.uri,
+            start_time: new Date(startTime).toISOString(),
+            invitee: {
+              name,
+              email,
+              timezone,
+              // Sólo se envía cuando el evento pide el teléfono como pregunta
+              // de tipo phone_number (recordatorio por SMS).
+              ...(telefonoRequerido && telefono ? { text_reminder_number: telefono } : {}),
+            },
+            // Calendly exige que una reserva indique la ubicación cuando
+            // el tipo de evento tiene una sola ubicación configurada.
+            ...(location ? { location } : {}),
+            ...(respuestas.length > 0 ? { questions_and_answers: respuestas } : {}),
+          }),
+        })) as { resource?: CalendlyResource };
+        return { uri: result.resource?.uri ?? null };
+      })();
+      reservas.set(idempotencia, { vence: Date.now() + 10 * 60_000, promesa });
+      try {
+        return json(await promesa);
+      } catch (error) {
+        reservas.delete(idempotencia);
+        throw error;
+      }
     }
 
     return fail("Acción inválida.");
