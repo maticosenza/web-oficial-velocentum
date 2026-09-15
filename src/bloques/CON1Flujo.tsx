@@ -764,9 +764,10 @@ function PasoDelCalendario({
                 <DayPicker
                   mode="single"
                   locale={es}
-                  {...(fechaElegida ? { selected: fechaElegida } : {})}
-                  {...(primerDia ? { defaultMonth: primerDia, startMonth: primerDia } : {})}
-                  {...(ultimoDia ? { endMonth: ultimoDia } : {})}
+                  selected={fechaElegida}
+                  defaultMonth={primerDia}
+                  startMonth={primerDia}
+                  endMonth={ultimoDia}
                   showOutsideDays
                   disabled={(fecha) => !horariosPorDia.has(claveDeFecha(fecha))}
                   onSelect={(fecha) => {
@@ -828,7 +829,7 @@ function claveDeFecha(fecha: Date) {
 
 function fechaDesdeClave(clave: string) {
   const [anio, mes, dia] = clave.split("-").map(Number);
-  if (anio === undefined || mes === undefined || dia === undefined) return new Date(NaN);
+  
   return new Date(anio, mes - 1, dia);
 }
 
