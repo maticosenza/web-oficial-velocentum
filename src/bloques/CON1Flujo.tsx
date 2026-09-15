@@ -285,12 +285,7 @@ export function CON1Flujo() {
     const serializado = respuestasSerializables(estado);
     const [respuestaRubro, respuestaObjetivo] = serializado.respuestas;
 
-    if (
-      !respuestaRubro ||
-      !respuestaObjetivo ||
-      !respuestaRubro.respuesta ||
-      !respuestaObjetivo.respuesta
-    ) {
+    if (!respuestaRubro.respuesta || !respuestaObjetivo.respuesta) {
       setErrorEnvio("Elegí tu rubro y objetivo antes de continuar.");
       return;
     }
