@@ -78,6 +78,8 @@ Deno.serve(async (request) => {
 
   try {
     const body = (await request.json()) as Record<string, unknown>;
+    const eventKey = eventKeyDe(body);
+    if (!eventKey) return fail("Evento inválido.");
 
     if (body.action === "availability") {
       const start = typeof body.start_time === "string" ? new Date(body.start_time) : null;
@@ -95,7 +97,7 @@ Deno.serve(async (request) => {
         return fail("El rango máximo es de 31 días.");
       }
       const query = new URLSearchParams({
-        event_type: (await eventTypeUri()).uri,
+        event_type: (await eventTypeUri(eventKey)).uri,
         start_time: start.toISOString(),
         end_time: end.toISOString(),
       });
