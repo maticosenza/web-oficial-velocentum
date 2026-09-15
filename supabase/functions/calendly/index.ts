@@ -56,7 +56,7 @@ async function calendly(path: string, init: RequestInit = {}) {
   return response.json();
 }
 
-async function eventTypeUri() {
+async function eventTypeUri(key: EventKey) {
   const me = (await calendly("/users/me")) as { resource?: CalendlyResource };
   const user = me.resource?.uri;
   if (!user) throw new Error("No se encontró el usuario de Calendly.");
@@ -64,11 +64,11 @@ async function eventTypeUri() {
   const types = (await calendly(`/event_types?user=${encodeURIComponent(user)}&active=true`)) as {
     collection?: CalendlyEventType[];
   };
-  const expected = EVENT_URL.replace(/\/$/, "");
+  const expected = EVENT_URLS[key].replace(/\/$/, "");
   const eventType = types.collection?.find(
     (type) => type.scheduling_url.replace(/\/$/, "") === expected,
   );
-  if (!eventType) throw new Error("No se encontró el evento Análisis de negocio en Calendly.");
+  if (!eventType) throw new Error(`No se encontró el evento "${key}" en Calendly.`);
   return eventType;
 }
 
