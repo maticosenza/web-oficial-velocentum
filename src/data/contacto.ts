@@ -185,7 +185,7 @@ function emailValido(valor: string) {
   if (partes.length !== 2) return false;
 
   const [local, dominio] = partes;
-  if (!local || local.length > 64 || !LOCAL_EMAIL.test(local)) return false;
+  if (!local || !dominio || local.length > 64 || !LOCAL_EMAIL.test(local)) return false;
   if (local.startsWith(".") || local.endsWith(".") || local.includes("..")) return false;
 
   const etiquetas = dominio.split(".");
