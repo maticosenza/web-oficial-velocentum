@@ -140,10 +140,10 @@ function aE164(valor: string) {
   if (!teniaMas) {
     if (digitos.startsWith("00")) digitos = digitos.slice(2);
     else if (!digitos.startsWith("54")) {
-      // número local argentino: se quita el 0 de larga distancia y el 15 del móvil
-      let local = digitos.replace(/^0/, "");
-      local = local.replace(/^(\d{2,4})15(\d{6,8})$/, "$1$2");
-      digitos = `54${local}`;
+      // número local argentino: se quita el 0 de larga distancia y el 15 del
+      // móvil, y se agrega el 9 que exige E.164 para celulares argentinos.
+      const local = digitos.replace(/^0/, "").replace(/^(\d{2,4})15(\d{6,8})$/, "$1$2");
+      digitos = local.length === 10 ? `549${local}` : `54${local}`;
     }
   }
   if (!/^[1-9]\d{7,14}$/.test(digitos)) return null;
