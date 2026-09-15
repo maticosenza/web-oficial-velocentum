@@ -829,7 +829,6 @@ function claveDeFecha(fecha: Date) {
 
 function fechaDesdeClave(clave: string) {
   const [anio, mes, dia] = clave.split("-").map(Number);
-  
   return new Date(anio, mes - 1, dia);
 }
 
