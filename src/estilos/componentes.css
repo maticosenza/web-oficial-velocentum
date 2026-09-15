@@ -818,7 +818,7 @@
     cursor: pointer;
   }
 
-  /* El texto del botón no se parte: "Reservá tu análisis" en tres
+  /* El texto del botón no se parte: "Revisemos tu caso" en tres
      renglones deja de leerse como una acción. */
   .boton {
     white-space: nowrap;

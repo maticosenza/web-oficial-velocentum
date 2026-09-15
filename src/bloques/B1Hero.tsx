@@ -138,7 +138,7 @@ export function B1Hero() {
               { "--acento": "var(--acento-1)", "--sobre": "var(--texto-sobre-1)" } as CSSProperties
             }
           >
-            <TextoBoton texto="Reservá tu análisis" />
+            <TextoBoton texto="Revisemos tu caso" />
             <Flecha />
           </EnlaceConCortina>
         </div>

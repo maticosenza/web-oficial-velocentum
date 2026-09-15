@@ -130,7 +130,7 @@ export function B8Cierre({
                 } as CSSProperties
               }
             >
-              <TextoBoton texto="Reservá tu análisis" />
+              <TextoBoton texto="Revisemos tu caso" />
               <Flecha />
             </EnlaceConCortina>
           </div>

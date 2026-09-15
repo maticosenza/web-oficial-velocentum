@@ -98,7 +98,7 @@ export function MET1Hero() {
               { "--acento": "var(--acento-2)", "--sobre": "var(--texto-sobre-2)" } as CSSProperties
             }
           >
-            <TextoBoton texto="Reservá tu análisis" />
+            <TextoBoton texto="Revisemos tu caso" />
             <Flecha />
           </EnlaceConCortina>
         </div>
