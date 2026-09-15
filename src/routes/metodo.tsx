@@ -4,6 +4,7 @@ import { B0Nav } from "../bloques/B0Nav";
 import { MET1Hero } from "../bloques/MET1Hero";
 import { MET2SobreNosotros } from "../bloques/MET2SobreNosotros";
 import { MET3Pasos } from "../bloques/MET3Pasos";
+import { MET4Sistemas } from "../bloques/MET4Sistemas";
 import { B8Cierre } from "../bloques/B8Cierre";
 import { B9Footer } from "../bloques/B9Footer";
 import { CursorPropio } from "../componentes/CursorPropio";
@@ -42,9 +43,10 @@ function Metodo() {
       <MET1Hero />
       <MET2SobreNosotros />
       <MET3Pasos />
+      <MET4Sistemas />
 
-      {/* MET-4 es el mismo componente que B8, con otro copy.
-          ⚠ LA SPEC DE MET-4 PEDÍA SÓLO TITULAR Y CTA, Y ESO QUEDÓ
+      {/* MET-5 es el mismo componente que B8, con otro copy.
+          ⚠ LA SPEC DEL CIERRE PEDÍA SÓLO TITULAR Y CTA, Y ESO QUEDÓ
           DEROGADO: los tres cierres llevan bajada. Ésta retoma el
           titular del hero de Método —primero entender, después
           proponer— y lo dice desde la llamada. El eyebrow sí sigue
@@ -56,7 +58,7 @@ function Metodo() {
         centrado
       />
 
-      {/* MET-5 es idéntico al footer de la home, con Método en su
+      {/* MET-6 es idéntico al footer de la home, con Método en su
           color. Eso sale solo de `lib/paginas.ts`. */}
       <B9Footer />
     </>
