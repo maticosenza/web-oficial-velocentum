@@ -1,6 +1,19 @@
 const CALENDLY_PAT = Deno.env.get("CALENDLY_PAT");
 const CALENDLY_API = "https://api.calendly.com";
-const EVENT_URL = "https://calendly.com/matias-velocentum/analisis-de-negocio";
+const EVENT_URLS: Record<string, string> = {
+  business: "https://calendly.com/matias-velocentum/analisis-de-negocio",
+  ecommerce: "https://calendly.com/matias-velocentum/30min",
+};
+type EventKey = keyof typeof EVENT_URLS;
+
+function eventKeyDe(body: Record<string, unknown>): EventKey | null {
+  if (body.event_key === undefined || body.event_key === null || body.event_key === "") {
+    return "business";
+  }
+  return typeof body.event_key === "string" && body.event_key in EVENT_URLS
+    ? (body.event_key as EventKey)
+    : null;
+}
 const cors = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
