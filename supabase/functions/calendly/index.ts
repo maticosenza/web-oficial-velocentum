@@ -1,6 +1,19 @@
 const CALENDLY_PAT = Deno.env.get("CALENDLY_PAT");
 const CALENDLY_API = "https://api.calendly.com";
-const EVENT_URL = "https://calendly.com/matias-velocentum/analisis-de-negocio";
+const EVENT_URLS: Record<string, string> = {
+  business: "https://calendly.com/matias-velocentum/analisis-de-negocio",
+  ecommerce: "https://calendly.com/matias-velocentum/30min",
+};
+type EventKey = keyof typeof EVENT_URLS;
+
+function eventKeyDe(body: Record<string, unknown>): EventKey | null {
+  if (body.event_key === undefined || body.event_key === null || body.event_key === "") {
+    return "business";
+  }
+  return typeof body.event_key === "string" && body.event_key in EVENT_URLS
+    ? (body.event_key as EventKey)
+    : null;
+}
 const cors = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -43,7 +56,7 @@ async function calendly(path: string, init: RequestInit = {}) {
   return response.json();
 }
 
-async function eventTypeUri() {
+async function eventTypeUri(key: EventKey) {
   const me = (await calendly("/users/me")) as { resource?: CalendlyResource };
   const user = me.resource?.uri;
   if (!user) throw new Error("No se encontró el usuario de Calendly.");
@@ -51,11 +64,11 @@ async function eventTypeUri() {
   const types = (await calendly(`/event_types?user=${encodeURIComponent(user)}&active=true`)) as {
     collection?: CalendlyEventType[];
   };
-  const expected = EVENT_URL.replace(/\/$/, "");
+  const expected = EVENT_URLS[key].replace(/\/$/, "");
   const eventType = types.collection?.find(
     (type) => type.scheduling_url.replace(/\/$/, "") === expected,
   );
-  if (!eventType) throw new Error("No se encontró el evento Análisis de negocio en Calendly.");
+  if (!eventType) throw new Error(`No se encontró el evento "${key}" en Calendly.`);
   return eventType;
 }
 
@@ -65,6 +78,8 @@ Deno.serve(async (request) => {
 
   try {
     const body = (await request.json()) as Record<string, unknown>;
+    const eventKey = eventKeyDe(body);
+    if (!eventKey) return fail("Evento inválido.");
 
     if (body.action === "availability") {
       const start = typeof body.start_time === "string" ? new Date(body.start_time) : null;
@@ -82,7 +97,7 @@ Deno.serve(async (request) => {
         return fail("El rango máximo es de 31 días.");
       }
       const query = new URLSearchParams({
-        event_type: (await eventTypeUri()).uri,
+        event_type: (await eventTypeUri(eventKey)).uri,
         start_time: start.toISOString(),
         end_time: end.toISOString(),
       });
@@ -101,7 +116,7 @@ Deno.serve(async (request) => {
       if (Number.isNaN(new Date(startTime).valueOf())) return fail("Horario inválido.");
       if (name.length < 2 || !/^\S+@\S+\.\S+$/.test(email))
         return fail("Datos de contacto inválidos.");
-      const eventType = await eventTypeUri();
+      const eventType = await eventTypeUri(eventKey);
       const location = eventType.locations?.length === 1 ? eventType.locations[0] : undefined;
       const result = (await calendly("/invitees", {
         method: "POST",
