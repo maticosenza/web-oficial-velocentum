@@ -1,5 +1,5 @@
 /* ===========================================================
-   LA MANCHA DEL HERO — flotación autónoma y cursor con inercia.
+   LA MANCHA DEL HERO — flotación autónoma.
 
    Escribe cuatro números en el hero y el CSS los reparte. No
    mueve nada por sí mismo: decide, y la hoja dibuja.
@@ -8,9 +8,9 @@
    `--mancha-rot`                inclinación, en grados
    `--mancha-escala`             escala, sin unidad
 
-   TRES MOVIMIENTOS QUE SE SUMAN, EN TRES CAPAS DISTINTAS
-   Este hook resuelve dos de los tres. El tercero —el ascenso por
-   scroll— vive en CSS y se alimenta de `--cobertura`, que publica
+   DOS MOVIMIENTOS QUE SE SUMAN, EN CAPAS DISTINTAS
+   Este hook resuelve la flotación. El ascenso por scroll vive en
+   CSS y se alimenta de `--cobertura`, que publica
    `HeroSticky`. Cada movimiento tiene su propio envoltorio en el
    DOM justamente para que CSS y JS nunca escriban el mismo
    `transform`: si compartieran elemento, el último en escribir
@@ -29,21 +29,10 @@
    velocidad. Acá avanza 0.9 por segundo, que es lo mismo a 60Hz y
    sigue siendo lo mismo a 120.
 
-   B · CURSOR CON INERCIA
-   El objetivo se calcula contra el rectángulo de `.b1`, no contra
-   la ventana: lo que importa es dónde está el puntero respecto
-   del hero. Y se mide contra el rectángulo ESTABLE, o sea el del
-   contenedor sin animar — medirlo contra la capa que ya se mueve
-   sería realimentar el movimiento con su propio resultado.
-
-   Fuera del hero, o fuera del radio de influencia, el objetivo
-   decae a cero en vez de cortarse: la mancha vuelve sola, sin
-   saltos, y la flotación sigue corriendo por debajo.
-
-   LAS TASAS TAMBIÉN SE NORMALIZAN POR TIEMPO. El original
-   interpolaba el 50% de la diferencia por tick y decaía al 90%
-   por tick. Ambas cosas dependen de la frecuencia de cuadro, así
-   que acá se convierten a su equivalente por segundo.
+   B · SIN RESPUESTA AL CURSOR
+   El movimiento es ambiental y no depende de dónde esté el
+   puntero. En desktop tiene un recorrido apenas mayor; en mobile
+   conserva las amplitudes anteriores.
 
    CUÁNDO SE PAUSA, Y POR QUÉ NO ALCANZA CON `IntersectionObserver`
    El hero es `sticky`: mientras B2 lo tapa sigue intersectando, o
@@ -61,28 +50,18 @@
      sin definir y el CSS cae en sus respaldos. La textura queda
      quieta en un encuadre legible. Se reacciona si la preferencia
      cambia en caliente.
-   - Sin `(hover: hover) and (pointer: fine)`: no se escucha
-     `pointermove`. En táctil no hay cursor que seguir, y la
-     flotación sigue corriendo igual.
+   No se registra ningún listener de puntero.
    =========================================================== */
 
 import { useEffect, type RefObject } from "react";
 
 /* --- Flotación --- */
 const FASE_POR_SEGUNDO = 0.9;
-const FLOTAR_X = 45; // px
-const FLOTAR_Y = 27; // px
-const FLOTAR_ROT = 3; // grados
-const FLOTAR_ESCALA = 0.03; // 1 ± esto
+const FLOTACION_MOVIL = { x: 45, y: 27, rotacion: 3, escala: 0.03 };
+const FLOTACION_DESKTOP = { x: 60, y: 36, rotacion: 3.4, escala: 0.035 };
 
-/* --- Cursor --- */
-const FUERZA = 300; // px a fondo de escala
-const RADIO = 600; // px de influencia desde el centro del hero
-const ACERCARSE_POR_TICK = 0.5; // a 60Hz
-const DECAER_POR_TICK = 0.9; // a 60Hz
-
-/* Cada cuántos cuadros se refrescan el rectángulo del hero y la
-   cobertura. Son lecturas de layout: no hacen falta por cuadro. */
+/* Cada cuántos cuadros se refresca la cobertura. La lectura de
+   estilos no hace falta en cada cuadro. */
 const CADA = 12;
 /* Desde acá se considera al hero tapado por B2. */
 const TAPADO = 0.985;
@@ -93,7 +72,7 @@ export function useParallaxDelHero(ref: RefObject<HTMLElement | null>) {
     if (!nodo) return;
 
     const mqReduce = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const mqPuntero = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const mqDesktop = window.matchMedia("(min-width: 810px)");
 
     let cuadro = 0;
     let limpiarActivo: (() => void) | null = null;
@@ -106,16 +85,6 @@ export function useParallaxDelHero(ref: RefObject<HTMLElement | null>) {
       let ultimo = 0;
       let cuenta = 0;
 
-      let objetivoX = 0;
-      let objetivoY = 0;
-      let x = 0;
-      let y = 0;
-
-      let punteroX = 0;
-      let punteroY = 0;
-      let hayPuntero = false;
-
-      let caja = nodo.getBoundingClientRect();
       let tapado = false;
       let visible = true;
 
@@ -130,10 +99,8 @@ export function useParallaxDelHero(ref: RefObject<HTMLElement | null>) {
         const dt = ultimo ? Math.min((ahora - ultimo) / 1000, 0.1) : 0;
         ultimo = ahora;
 
-        /* Lecturas de layout espaciadas: no hacen falta por cuadro
-           y forzarían un recálculo de estilo cada vez. */
+        /* Lectura de estilos espaciada: no hace falta por cuadro. */
         if (cuenta % CADA === 0) {
-          caja = nodo.getBoundingClientRect();
           tapado = leerCobertura() >= TAPADO;
         }
         cuenta++;
@@ -143,33 +110,11 @@ export function useParallaxDelHero(ref: RefObject<HTMLElement | null>) {
         if (!tapado) {
           fase += FASE_POR_SEGUNDO * dt;
 
-          if (hayPuntero && caja.width > 0 && caja.height > 0) {
-            const cx = caja.left + caja.width / 2;
-            const cy = caja.top + caja.height / 2;
-            const dx = punteroX - cx;
-            const dy = punteroY - cy;
-            /* Fuera del radio de influencia el objetivo se apaga,
-               aunque el puntero siga dentro del hero. */
-            if (Math.hypot(dx, dy) <= RADIO) {
-              objetivoX = (dx / caja.width) * FUERZA;
-              objetivoY = (dy / caja.height) * FUERZA;
-            } else {
-              objetivoX *= Math.pow(DECAER_POR_TICK, dt * 60);
-              objetivoY *= Math.pow(DECAER_POR_TICK, dt * 60);
-            }
-          } else {
-            objetivoX *= Math.pow(DECAER_POR_TICK, dt * 60);
-            objetivoY *= Math.pow(DECAER_POR_TICK, dt * 60);
-          }
-
-          const acercar = 1 - Math.pow(1 - ACERCARSE_POR_TICK, dt * 60);
-          x += (objetivoX - x) * acercar;
-          y += (objetivoY - y) * acercar;
-
-          const fx = Math.sin(fase * 1.3) * FLOTAR_X + x;
-          const fy = Math.cos(fase * 0.9) * FLOTAR_Y + y;
-          const rot = Math.sin(fase * 0.7) * FLOTAR_ROT;
-          const esc = 1 + Math.sin(fase * 0.5) * FLOTAR_ESCALA;
+          const amplitud = mqDesktop.matches ? FLOTACION_DESKTOP : FLOTACION_MOVIL;
+          const fx = Math.sin(fase * 1.3) * amplitud.x;
+          const fy = Math.cos(fase * 0.9) * amplitud.y;
+          const rot = Math.sin(fase * 0.7) * amplitud.rotacion;
+          const esc = 1 + Math.sin(fase * 0.5) * amplitud.escala;
 
           nodo.style.setProperty("--mancha-x", `${fx.toFixed(2)}px`);
           nodo.style.setProperty("--mancha-y", `${fy.toFixed(2)}px`);
@@ -192,21 +137,6 @@ export function useParallaxDelHero(ref: RefObject<HTMLElement | null>) {
         cuadro = 0;
       };
 
-      const alMover = (e: PointerEvent) => {
-        punteroX = e.clientX;
-        punteroY = e.clientY;
-        /* Sólo cuenta mientras el puntero está sobre el hero. */
-        hayPuntero =
-          e.clientX >= caja.left &&
-          e.clientX <= caja.right &&
-          e.clientY >= caja.top &&
-          e.clientY <= caja.bottom;
-      };
-
-      const alSalir = () => {
-        hayPuntero = false;
-      };
-
       const alCambiarVisibilidad = () => {
         if (document.visibilityState === "hidden") frenar();
         else arrancar();
@@ -222,11 +152,6 @@ export function useParallaxDelHero(ref: RefObject<HTMLElement | null>) {
       );
       observador.observe(nodo);
 
-      if (mqPuntero.matches) {
-        window.addEventListener("pointermove", alMover, { passive: true });
-        document.addEventListener("pointerleave", alSalir);
-        window.addEventListener("blur", alSalir);
-      }
       document.addEventListener("visibilitychange", alCambiarVisibilidad);
 
       arrancar();
@@ -234,9 +159,6 @@ export function useParallaxDelHero(ref: RefObject<HTMLElement | null>) {
       return () => {
         frenar();
         observador.disconnect();
-        window.removeEventListener("pointermove", alMover);
-        document.removeEventListener("pointerleave", alSalir);
-        window.removeEventListener("blur", alSalir);
         document.removeEventListener("visibilitychange", alCambiarVisibilidad);
         for (const v of ["--mancha-x", "--mancha-y", "--mancha-rot", "--mancha-escala"]) {
           nodo.style.removeProperty(v);

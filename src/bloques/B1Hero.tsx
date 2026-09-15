@@ -24,9 +24,7 @@
    A · flota sola, sin cursor y sin scroll, mientras el hero se
        vea. Cuatro osciladores de períodos distintos, así el
        recorrido no se lee como un loop corto.
-   B · sigue al cursor con inercia, y vuelve sola al centro
-       cuando el puntero se va.
-   C · asciende hasta -400px con el progreso de `--cobertura`, y
+   B · asciende hasta -400px con el progreso de `--cobertura`, y
        vuelve al subir. Eso vive en CSS, no en el hook.
 
    Los degradados de colores que simulaban esta misma mancha se
@@ -34,7 +32,7 @@
    fondo anterior queda sólo el campo azul.
 
    SE MUEVE EL FONDO Y NADA MÁS
-   Ni el cursor ni la flotación tocan el texto. Lo que el texto sí
+   La flotación no toca el texto. Lo que el texto sí
    conserva es su propio hundimiento por `--cobertura`, que es otra
    cosa y sigue igual.
 
@@ -81,7 +79,7 @@ export function B1Hero() {
 
           · `__mancha`         encuadre fijo. No se mueve nunca.
           · `__mancha-scroll`  asciende con `--cobertura`, en CSS.
-          · `__mancha-flotar`  flotación y cursor, desde el hook.
+          · `__mancha-flotar`  flotación autónoma, desde el hook.
 
           Decorativa entera: `aria-hidden`, `alt` vacío y sin
           eventos de puntero. */}

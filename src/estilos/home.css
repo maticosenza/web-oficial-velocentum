@@ -461,8 +461,7 @@
     --mancha-centro: 80%;
     /* Cuánto tiene que sobrar por debajo del hero, contado desde
        el 85% del alto de la textura. Cubre el peor caso simultáneo
-       de movimiento: cursor 150px, flotación 27 y la rotación de
-       3°, que a media ventana de 1920 baja la arista otros 50. */
+       de movimiento: flotación, escala y rotación. */
     --mancha-margen: 200px;
 
     /* El ancho de la referencia, con el piso que mantiene el
@@ -499,9 +498,8 @@
      altura, detrás del CTA— y el desborde lateral sigue siendo de
      500px por lado, así que tampoco aparece un borde recto.
 
-     El margen también baja: sin cursor —el hook no escucha sin
-     `(hover: hover)`— ni ascenso por scroll, lo único que mueve el
-     borde es la flotación y la escala, unos 38px. */
+     El margen también baja: sin ascenso por scroll, lo único que
+     mueve el borde es la flotación y la escala, unos 38px. */
   @media (max-width: 809.98px) {
     .b1__mancha {
       --mancha-margen: 40px;
@@ -552,7 +550,7 @@
     }
   }
 
-  /* LA MANCHA · 3 de 3 — FLOTACIÓN Y CURSOR.
+  /* LA MANCHA · 3 de 3 — FLOTACIÓN AUTÓNOMA.
      Los cuatro valores los escribe el hook. Los respaldos son
      neutros, así que sin JS —o con movimiento reducido— la
      textura queda quieta y legible en su encuadre. */
