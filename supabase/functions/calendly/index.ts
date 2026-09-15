@@ -116,7 +116,7 @@ Deno.serve(async (request) => {
       if (Number.isNaN(new Date(startTime).valueOf())) return fail("Horario inválido.");
       if (name.length < 2 || !/^\S+@\S+\.\S+$/.test(email))
         return fail("Datos de contacto inválidos.");
-      const eventType = await eventTypeUri();
+      const eventType = await eventTypeUri(eventKey);
       const location = eventType.locations?.length === 1 ? eventType.locations[0] : undefined;
       const result = (await calendly("/invitees", {
         method: "POST",
