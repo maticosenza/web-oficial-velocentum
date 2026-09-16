@@ -808,6 +808,41 @@
     }
   }
 
+  /* LANDSCAPE BAJO · TELÉFONOS GIRADOS Y TABLETS HORIZONTALES
+     A partir de 810px entra la composición desktop, pero en un
+     teléfono horizontal el alto real puede quedar entre 390 y
+     430px. Escalar el H1 sólo por ancho lo llevaba a ~110px: la
+     tercera línea y el CTA quedaban debajo de la onda.
+
+     Esta corrección responde al alto y a la orientación. Conserva
+     controles de 48px, compacta únicamente el aire vertical y
+     reduce la onda sin cambiar su forma. Portrait y desktop de
+     altura normal no entran en esta regla. */
+  @media (orientation: landscape) and (max-height: 600px) {
+    .home-hero-nube {
+      --borde-onda-alto: clamp(40px, 12dvh, 56px);
+    }
+
+    .b0 {
+      padding-block: var(--space-1);
+    }
+
+    .b0__card {
+      padding-block: var(--space-1);
+    }
+
+    .b1__contenido {
+      gap: var(--space-2);
+      padding-block: 0;
+      padding-top: calc(var(--alto-nav, 72px) + var(--space-2));
+    }
+
+    .b1 .titular-letras {
+      font-size: clamp(52px, 16dvh, 76px);
+      line-height: 0.8;
+    }
+  }
+
   /* =========================================================
      B2 · QUIÉNES SOMOS
      ========================================================= */
