@@ -162,7 +162,19 @@ export function B9Footer() {
             <span className="b9__firma-iso" aria-hidden="true">
               <img src="/assets/velocentum-v-bicolor-ui.svg" alt="" width={997} height={841} />
             </span>
-            velocentum
+
+            {/* El wordmark reemplaza al texto plano de la firma: la
+                misma identidad del bloque grande, en miniatura. El
+                `alt` lleva el nombre y el isotipo ya es decorativo,
+                así que el conjunto anuncia "Velocentum" una sola vez. */}
+            <img
+              className="b9__firma-wordmark"
+              src="/assets/velocentum-logotipo-blanco-tight.webp"
+              alt="Velocentum"
+              width={768}
+              height={119}
+              loading="lazy"
+            />
           </p>
 
           {/* El año está escrito, no calculado: un `getFullYear()`
