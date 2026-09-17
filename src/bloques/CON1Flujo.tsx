@@ -459,6 +459,20 @@ export function CON1Flujo() {
 function Panel({ oculto }: { oculto: boolean }) {
   return (
     <div className="con1__panel" hidden={oculto}>
+      <picture className="con1__escena" aria-hidden="true">
+        <source
+          media="(max-width: 809px)"
+          srcSet="/assets/contacto-cta-escena-mobile.webp"
+        />
+        <img
+          src="/assets/contacto-cta-escena.webp"
+          alt=""
+          width={1672}
+          height={941}
+          fetchPriority="high"
+          decoding="async"
+        />
+      </picture>
       <img
         className="con1__marca-v"
         src="/assets/velocentum-v-bicolor-ui.svg"
