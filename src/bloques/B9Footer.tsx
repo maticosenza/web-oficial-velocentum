@@ -149,20 +149,30 @@ export function B9Footer() {
         {/* Barra de cierre: línea fina arriba, firma a la
             izquierda y la línea legal a la derecha.
 
-            La palabra va como TEXTO y no como el logotipo: el
-            wordmark ya está arriba, y repetirlo acá lo
-            convertiría en decoración. Acá es una firma, no una
-            marca.
+            La firma va con la identidad oficial: la V bicolor más
+            el wordmark blanco en miniatura, no texto plano.
 
-            El isotipo es decorativo —`aria-hidden`— porque la
-            palabra de al lado ya dice el nombre; si no, un lector
-            leería "Velocentum velocentum". */}
+            El isotipo es decorativo —`aria-hidden`— y el `alt` del
+            wordmark lleva el nombre, así que el conjunto se anuncia
+            una sola vez. */}
         <div className="b9__barra">
           <p className="b9__firma">
             <span className="b9__firma-iso" aria-hidden="true">
               <img src="/assets/velocentum-v-bicolor-ui.svg" alt="" width={997} height={841} />
             </span>
-            velocentum
+
+            {/* El wordmark reemplaza al texto plano de la firma: la
+                misma identidad del bloque grande, en miniatura. El
+                `alt` lleva el nombre y el isotipo ya es decorativo,
+                así que el conjunto anuncia "Velocentum" una sola vez. */}
+            <img
+              className="b9__firma-wordmark"
+              src="/assets/velocentum-logotipo-blanco-tight.webp"
+              alt="Velocentum"
+              width={768}
+              height={119}
+              loading="lazy"
+            />
           </p>
 
           {/* El año está escrito, no calculado: un `getFullYear()`
