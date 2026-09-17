@@ -2265,8 +2265,19 @@
     align-items: center;
     gap: var(--space-2);
     margin: 0;
-    font-weight: 700;
-    font-size: 16px;
+  }
+
+  /* El wordmark de la firma. Mantiene la proporción original del
+     archivo (768×119) con `object-fit: contain` y ancho automático:
+     nunca se deforma. La altura lo escala a la V de al lado —12px
+     contra los 27px de la V— para que el conjunto se lea como una
+     sola marca y siga siendo más chico que la palabra del bloque
+     superior. */
+  .b9__firma-wordmark {
+    display: block;
+    width: auto;
+    height: 12px;
+    object-fit: contain;
   }
 
   /* Mismo tratamiento que el isotipo grande, en chico: la V sola
