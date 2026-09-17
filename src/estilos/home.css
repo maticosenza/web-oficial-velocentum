@@ -2380,5 +2380,12 @@
     .b9__firma-iso img {
       width: 25px;
     }
+
+    /* La firma se achica con la barra: el wordmark baja a 11px
+       para seguir la V (25px) con la misma proporción que en
+       desktop. */
+    .b9__firma-wordmark {
+      height: 11px;
+    }
   }
 }
