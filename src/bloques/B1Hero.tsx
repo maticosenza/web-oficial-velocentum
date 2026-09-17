@@ -97,17 +97,21 @@ export function B1Hero() {
                 La variante de 1200px conserva alfa y proporción
                 (1200×507 contra 2396×1013), así que la apariencia y
                 el movimiento no cambian. */}
-            <img
-              className="b1__mancha-img"
-              src="/assets/hero-mancha-referencia.webp"
-              srcSet="/assets/hero-mancha-referencia-mobile.webp 1200w, /assets/hero-mancha-referencia.webp 2396w"
-              sizes="(max-width: 809px) 1200px, 2396px"
-              alt=""
-              width={2396}
-              height={1013}
-              fetchPriority="high"
-              decoding="async"
-            />
+            <picture>
+              <source
+                media="(max-width: 809px)"
+                srcSet="/assets/hero-mancha-referencia-mobile.webp"
+              />
+              <img
+                className="b1__mancha-img"
+                src="/assets/hero-mancha-referencia.webp"
+                alt=""
+                width={2396}
+                height={1013}
+                fetchPriority="high"
+                decoding="async"
+              />
+            </picture>
           </div>
         </div>
       </div>
