@@ -14,3 +14,5 @@ User-agent: *
 Allow: /
 # Páginas de prueba de componentes (F0). No forman parte del sitio.
 Disallow: /pruebas/
+
+Sitemap: https://velocentum.com/sitemap.xml
