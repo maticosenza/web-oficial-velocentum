@@ -216,13 +216,18 @@
     /* La escena móvil se compone como una única imagen vertical,
        con aire real para el titular y objetos continuos arriba y
        abajo. Así no hay ni mosaicos ni costuras entre recortes. */
+    /* ⚠ ACÁ NO VA `background-image`, Y ES UNA DECISIÓN DE
+       RENDIMIENTO. Antes la escena vertical se pintaba como fondo
+       CSS y el `<img>` se ocultaba: el teléfono terminaba bajando
+       las DOS imágenes, la de desktop por el `<img>` del HTML y la
+       vertical por esta regla. Ahora la elección la hace un
+       `<picture>` en `MET1Hero.tsx` —una sola descarga— y acá queda
+       nada más que el color de respaldo. El encuadre es idéntico:
+       `center / cover` del fondo equivale al `object-fit: cover` +
+       `object-position: center` del `<img>`. */
     .met1__foto {
       inset: 0;
-      background: #0d204c url("/assets/hero-metodo-mobile.webp") center / cover no-repeat;
-    }
-
-    .met1__foto-img {
-      display: none;
+      background: #0d204c;
     }
 
     /* Sin velo y sin scrim: el titular ya no está sobre la foto
