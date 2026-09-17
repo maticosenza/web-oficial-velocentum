@@ -51,16 +51,30 @@ export function MET1Hero() {
           `width` y `height` son los del archivo: reservan la
           proporción y evitan que el hero salte al cargarla. El
           recorte real lo hace `object-fit: cover`. */}
+      {/* ⚠ UN `<picture>`, Y NO DOS IMÁGENES SUPERPUESTAS.
+          Antes la escena vertical entraba por `background-image` en
+          el breakpoint móvil mientras este `<img>` se ocultaba: el
+          teléfono bajaba las dos, ~166 KB para mostrar una. El
+          `<source>` deja que el navegador elija UNA, con la misma
+          condición que usa el CSS (`max-width: 809px` y proporción
+          vertical, para que el lienzo angosto del preview no active
+          por error la escena de teléfono). */}
       <div className="met1__foto">
-        <img
-          className="met1__foto-img"
-          src="/assets/hero-metodo-desktop-v2.webp"
-          alt=""
-          width={1672}
-          height={941}
-          fetchPriority="high"
-          decoding="async"
-        />
+        <picture>
+          <source
+            media="(max-width: 809px) and (max-aspect-ratio: 3 / 4)"
+            srcSet="/assets/hero-metodo-mobile.webp"
+          />
+          <img
+            className="met1__foto-img"
+            src="/assets/hero-metodo-desktop-v2.webp"
+            alt=""
+            width={1672}
+            height={941}
+            fetchPriority="high"
+            decoding="async"
+          />
+        </picture>
       </div>
 
       {/* La tinta. Capa aparte de la foto: se puede ajustar sin

@@ -31,9 +31,46 @@
    arrancar un video solo.
    =========================================================== */
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { Medio } from "../data/casos";
+
+/* CUÁNTO ANTES SE EMPIEZA A BAJAR EL ARCHIVO.
+   500px por arriba y por abajo del viewport: alcanza para que el
+   medio esté listo cuando entra en cuadro, y no tanto como para
+   volver a bajar media lista de una. */
+const MARGEN_CERCANIA = "500px 0px";
+
+/* `loading="lazy"` y `preload="none"` son PISTAS, no garantías: el
+   navegador igual adelanta lo que cree cercano, y en Casos eso
+   significaba bajar el primer MP4 (~449 KB) y varias imágenes antes
+   de que nadie las vea. Así que el `src` directamente no existe
+   hasta que el elemento se acerca. La caja ya está reservada por el
+   `aspect-ratio` del CSS, así que no hay salto ni hueco. */
+function useCercaDelViewport(prioritario: boolean) {
+  const ref = useRef<HTMLElement | null>(null);
+  const [cerca, setCerca] = useState(prioritario);
+
+  useEffect(() => {
+    if (prioritario) return;
+    const el = ref.current;
+    if (!el) return;
+
+    const observador = new IntersectionObserver(
+      ([e]) => {
+        if (e?.isIntersecting) {
+          setCerca(true);
+          observador.disconnect();
+        }
+      },
+      { rootMargin: MARGEN_CERCANIA },
+    );
+    observador.observe(el);
+    return () => observador.disconnect();
+  }, [prioritario]);
+
+  return { ref, cerca };
+}
 
 export function MedioDeCaso({
   medio,
@@ -46,10 +83,11 @@ export function MedioDeCaso({
   prioritario?: boolean;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
+  const { ref: refCercania, cerca } = useCercaDelViewport(prioritario);
 
   useEffect(() => {
     const v = ref.current;
-    if (!v) return;
+    if (!v || !cerca) return;
 
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     let enCuadro = false;
@@ -80,26 +118,30 @@ export function MedioDeCaso({
       mq.removeEventListener("change", decidir);
       v.pause();
     };
-  }, [medio]);
+  }, [medio, cerca]);
 
   if (medio.tipo === "imagen") {
     return (
       <img
+        ref={refCercania as React.RefObject<HTMLImageElement>}
         className={className}
-        src={medio.archivo}
+        {...(cerca ? { src: medio.archivo } : {})}
         alt=""
         loading={prioritario ? "eager" : "lazy"}
         decoding="async"
+        fetchPriority={prioritario ? "high" : "low"}
       />
     );
   }
 
   return (
     <video
-      ref={ref}
+      ref={(nodo) => {
+        ref.current = nodo;
+        refCercania.current = nodo;
+      }}
       className={className}
-      src={medio.archivo}
-      poster={medio.poster}
+      {...(cerca ? { src: medio.archivo, poster: medio.poster } : {})}
       muted
       loop
       playsInline

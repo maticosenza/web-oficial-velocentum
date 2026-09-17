@@ -91,9 +91,17 @@ export function B1Hero() {
                 probar el encuadre y el movimiento. Cuando exista
                 la textura propia, se cambia esta ruta y no hace
                 falta tocar nada más. */}
+            {/* Dos variantes del MISMO encuadre: el teléfono no
+                necesita 2396px de ancho para una mancha difusa, y
+                bajar 171 KB en la primera pantalla se paga en LCP.
+                La variante de 1200px conserva alfa y proporción
+                (1200×507 contra 2396×1013), así que la apariencia y
+                el movimiento no cambian. */}
             <img
               className="b1__mancha-img"
               src="/assets/hero-mancha-referencia.webp"
+              srcSet="/assets/hero-mancha-referencia-mobile.webp 1200w, /assets/hero-mancha-referencia.webp 2396w"
+              sizes="(max-width: 809px) 1200px, 2396px"
               alt=""
               width={2396}
               height={1013}
