@@ -65,7 +65,7 @@
    color que ya está a la vista.
    =========================================================== */
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import "lenis/dist/lenis.css";
 
 import { CASOS_EN_LA_HOME, type Medio } from "../data/casos";
@@ -147,6 +147,121 @@ function useScrollSuaveDeTrabajos() {
   }, []);
 }
 
+/* La referencia no enlaza el transform directamente al scroll: filtra
+   el progreso con un resorte sobreamortiguado (damping 60, stiffness
+   500, mass 1). Esa amortiguacion es la diferencia entre una card que
+   cruza la pantalla de costado y una que parece ganar profundidad al
+   entrar. El loop existe solo cerca de esta seccion, lee primero las
+   cuatro cajas quietas y escribe despues sus capas transformadas. */
+function useMovimientoAmortiguadoDeTrabajos() {
+  const referencia = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const seccion = referencia.current;
+    const media = window.matchMedia(
+      "(min-width: 600px) and (prefers-reduced-motion: no-preference)",
+    );
+    if (!seccion) return;
+
+    let desactivar = () => {};
+
+    const activar = () => {
+      const piezas = Array.from(seccion.querySelectorAll<HTMLElement>(".b3-trabajo"));
+      const moviles = piezas.map((pieza) => pieza.querySelector<HTMLElement>(".b3-trabajo__movil"));
+      const estados = piezas.map(() => ({ valor: 0, velocidad: 0 }));
+      let cuadro = 0;
+      let anterior = performance.now();
+      let visible = false;
+
+      const progresoDe = (rect: DOMRect) => {
+        const recorrido = Math.min(window.innerHeight, rect.height);
+        return Math.max(0, Math.min(1, (window.innerHeight - rect.top) / recorrido));
+      };
+
+      const colocar = (indice: number, progreso: number) => {
+        const movil = moviles[indice];
+        if (!movil) return;
+
+        const direccion = indice % 2 === 0 ? -1 : 1;
+        const restante = 1 - progreso;
+        const x = direccion * 180 * restante;
+        const rotacion = direccion * 10 * restante;
+        const escala = 0.8 + 0.2 * progreso;
+        movil.style.transform = `translate3d(${x}px, 0, 0) rotate(${rotacion}deg) scale(${escala})`;
+      };
+
+      const animar = (ahora: number) => {
+        if (!visible) {
+          cuadro = 0;
+          return;
+        }
+
+        const dt = Math.min((ahora - anterior) / 1000, 1 / 30);
+        anterior = ahora;
+        const objetivos = piezas.map((pieza) => progresoDe(pieza.getBoundingClientRect()));
+
+        objetivos.forEach((objetivo, indice) => {
+          const estado = estados[indice];
+          const aceleracion = (objetivo - estado.valor) * 500 - estado.velocidad * 60;
+          estado.velocidad += aceleracion * dt;
+          estado.valor += estado.velocidad * dt;
+
+          if (Math.abs(objetivo - estado.valor) < 0.0005 && Math.abs(estado.velocidad) < 0.005) {
+            estado.valor = objetivo;
+            estado.velocidad = 0;
+          }
+
+          colocar(indice, Math.max(0, Math.min(1, estado.valor)));
+        });
+
+        cuadro = requestAnimationFrame(animar);
+      };
+
+      const observador = new IntersectionObserver(
+        ([entrada]) => {
+          visible = entrada.isIntersecting;
+          if (!visible || cuadro) return;
+
+          const objetivos = piezas.map((pieza) => progresoDe(pieza.getBoundingClientRect()));
+          objetivos.forEach((objetivo, indice) => {
+            estados[indice].valor = objetivo;
+            estados[indice].velocidad = 0;
+            colocar(indice, objetivo);
+          });
+          anterior = performance.now();
+          cuadro = requestAnimationFrame(animar);
+        },
+        { rootMargin: "100% 0px" },
+      );
+
+      seccion.classList.add("b3--movimiento-amortiguado");
+      observador.observe(seccion);
+
+      return () => {
+        observador.disconnect();
+        cancelAnimationFrame(cuadro);
+        seccion.classList.remove("b3--movimiento-amortiguado");
+        moviles.forEach((movil) => movil?.style.removeProperty("transform"));
+      };
+    };
+
+    const sincronizar = () => {
+      desactivar();
+      desactivar = media.matches ? activar() : () => {};
+    };
+
+    media.addEventListener("change", sincronizar);
+    sincronizar();
+
+    return () => {
+      media.removeEventListener("change", sincronizar);
+      desactivar();
+    };
+  }, []);
+
+  return referencia;
+}
+
 /** Indice par -> columna izquierda -> entra por la izquierda. */
 function direccionDe(indice: number): number {
   return indice % 2 === 0 ? -1 : 1;
@@ -154,9 +269,10 @@ function direccionDe(indice: number): number {
 
 export function B3Trabajos() {
   useScrollSuaveDeTrabajos();
+  const referencia = useMovimientoAmortiguadoDeTrabajos();
 
   return (
-    <section className="b3" aria-labelledby="b3-titulo">
+    <section ref={referencia} className="b3" aria-labelledby="b3-titulo">
       <div className="b3__contenido contenido">
         {/* Titular y botón comparten línea de base, como en la
             referencia. No es `align-items: center`: el botón se

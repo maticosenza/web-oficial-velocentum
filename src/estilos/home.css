@@ -1191,6 +1191,17 @@
     }
   }
 
+  /* Desde tablet el progreso pasa por el mismo resorte que usa la
+     referencia. La clase se agrega solo cuando el controlador esta
+     listo; hasta entonces queda el fallback nativo de arriba. */
+  @media (min-width: 600px) and (prefers-reduced-motion: no-preference) {
+    .b3--movimiento-amortiguado .b3-trabajo__movil {
+      animation: none;
+      will-change: transform;
+      backface-visibility: hidden;
+    }
+  }
+
   @keyframes b3-entrada-suave {
     from {
       transform: translate3d(calc(var(--dir, -1) * var(--b3-entrada-x)), 0, 0)
