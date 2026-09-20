@@ -19,6 +19,15 @@ export const Route = createFileRoute("/contacto")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [
+      {
+        rel: "preload",
+        as: "image",
+        href: "/assets/contacto-cta-escena-mobile.webp",
+        media: "(max-width: 809px)",
+        fetchPriority: "high",
+      },
+    ],
   }),
   component: Contacto,
 });
