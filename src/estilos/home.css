@@ -550,6 +550,17 @@
     }
   }
 
+  /* En telefono la textura queda completamente fija. No alcanza con
+     detener la flotacion interior: el contenedor tambien heredaba el
+     ascenso ligado al scroll y obligaba a recomponer un PNG grande en
+     cada cuadro. La onda del borde sigue haciendo la transicion entre
+     secciones; la imagen de fondo ya no participa del scroll. */
+  @media (max-width: 599px), (max-height: 599px) and (hover: none) {
+    .b1__mancha-scroll {
+      transform: none;
+    }
+  }
+
   /* LA MANCHA · 3 de 3 — FLOTACIÓN AUTÓNOMA.
      Los cuatro valores los escribe el hook. Los respaldos son
      neutros, así que sin JS —o con movimiento reducido— la
@@ -570,11 +581,10 @@
     }
   }
 
-  /* En telefono la textura acompana el ascenso de la onda, pero no
-     flota dentro de ella. Asi se conserva la transicion que abre la
-     segunda seccion sin mantener otra animacion infinita mientras el
-     usuario hace scroll. */
-  @media (max-width: 809px) {
+  /* En telefono tampoco flota la capa interior. La textura completa
+     queda inmovil mientras la onda independiente abre la segunda
+     seccion. */
+  @media (max-width: 599px), (max-height: 599px) and (hover: none) {
     .b1__mancha-flotar {
       animation: none;
       transform: none;
@@ -1150,9 +1160,13 @@
     will-change: auto;
   }
 
-  /* Lofty usa un recorrido largo con una correccion lateral pequena.
-     Esta linea de tiempo es nativa: Safari la resuelve en el compositor
-     y no necesita ejecutar JavaScript por cada cuadro de scroll. */
+  /* La referencia de Lofty parte en +/-180px, escala .8 y +/-10deg.
+     La profundidad que se percibe como un desplazamiento hacia atras
+     viene sobre todo de esa escala. La fase `entry` hace que la pieza
+     llegue a reposo al terminar de entrar en pantalla, con el mismo
+     recorrido largo y reversible al subir o bajar. La linea de tiempo
+     es nativa: Safari la resuelve en el compositor sin ejecutar JS en
+     cada cuadro de scroll. */
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
       .b3-trabajo__movil {
@@ -1161,20 +1175,17 @@
         animation-fill-mode: both;
         animation-timing-function: linear;
         animation-timeline: --entrada-trabajo;
-        animation-range: entry 0% cover 62%;
+        animation-range: entry 0% entry 100%;
         will-change: transform;
+        backface-visibility: hidden;
       }
     }
   }
 
   @keyframes b3-entrada-suave {
     from {
-      transform: translate3d(
-          calc(var(--dir, -1) * clamp(26px, 5vw, 64px)),
-          clamp(14px, 2vw, 22px),
-          0
-        )
-        rotate(calc(var(--dir, -1) * 1.8deg)) scale(0.985);
+      transform: translate3d(calc(var(--dir, -1) * 180px), 0, 0)
+        rotate(calc(var(--dir, -1) * 10deg)) scale(0.8);
     }
 
     to {
