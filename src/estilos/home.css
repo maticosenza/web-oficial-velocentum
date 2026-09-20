@@ -560,6 +560,31 @@
     will-change: transform;
   }
 
+  /* En táctil no corre el bucle JS del hero. La textura conserva
+     vida con una animación larga aplicada directamente a su capa;
+     transform queda en el compositor y no invalida los estilos de
+     todo el hero durante el scroll. */
+  @media (prefers-reduced-motion: no-preference) and (hover: none) {
+    .b1__mancha-flotar {
+      animation: mancha-flotar-tactil 18s ease-in-out infinite alternate;
+    }
+  }
+
+  @keyframes mancha-flotar-tactil {
+    0% {
+      transform: translate3d(-22px, 12px, 0) rotate(-1.2deg) scale(0.985);
+    }
+    35% {
+      transform: translate3d(18px, -14px, 0) rotate(1.1deg) scale(1.012);
+    }
+    70% {
+      transform: translate3d(34px, 8px, 0) rotate(2deg) scale(1.025);
+    }
+    100% {
+      transform: translate3d(-10px, -18px, 0) rotate(-0.7deg) scale(1.005);
+    }
+  }
+
   .b1__mancha-img {
     display: block;
     width: 100%;
@@ -569,6 +594,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     .b1__mancha-flotar {
+      animation: none;
       will-change: auto;
     }
   }
@@ -888,7 +914,7 @@
       /* En teléfono el contenido ya entra holgado antes de llegar
          al ticker; reducir el recorrido evita el vacío entre el
          CTA y la franja de capacidades. */
-      min-height: 64dvh;
+      min-height: 52dvh;
     }
 
     .b2__contenido {
@@ -1097,11 +1123,12 @@
     transform: translateX(calc((1 - var(--progreso, 1)) * var(--dir, -1) * 62%))
       rotate(calc((1 - var(--progreso, 1)) * var(--dir, -1) * 5deg))
       scale(calc(1 - (1 - var(--progreso, 1)) * 0.08));
-    /* El progreso cambia durante el scroll, pero el transform no
-       tiene por qué copiar cada píxel de ese cambio. Una transición
-       corta conserva la respuesta inmediata y suma la inercia suave
-       que hace que la entrada se perciba continua en 60 Hz. */
-    transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    /* El progreso ya se agrupa en requestAnimationFrame. Agregarle
+       una transición hacía que cada valor nuevo reiniciara otros
+       220ms de interpolación: la card quedaba siempre atrás del
+       dedo. Sin transición responde al cuadro actual, como la
+       referencia de Lofty. */
+    transition: none;
     will-change: transform;
   }
 
