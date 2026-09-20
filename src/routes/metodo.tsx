@@ -30,6 +30,13 @@ export const Route = createFileRoute("/metodo")({
         media: "(max-width: 809px) and (max-aspect-ratio: 3 / 4)",
         fetchPriority: "high",
       },
+      {
+        rel: "preload",
+        as: "image",
+        href: "/assets/hero-metodo-desktop-v2.webp",
+        media: "(min-width: 810px), (min-aspect-ratio: 751 / 1000)",
+        fetchPriority: "high",
+      },
     ],
   }),
   component: Metodo,

@@ -30,7 +30,8 @@
    Comercial PAS usa un lienzo 3:4 que mantiene completa la foto
    original y extiende únicamente cielo y pavimento. */
 export type Medio =
-  { tipo: "imagen"; archivo: string } | { tipo: "video"; archivo: string; poster: string };
+  | { tipo: "imagen"; archivo: string; archivoAvif?: string }
+  | { tipo: "video"; archivo: string; poster: string };
 
 export type Caso = {
   /** Nombre del cliente, como se muestra. */
@@ -56,7 +57,7 @@ export const CASOS: Caso[] = [
       "Gestionamos Meta Ads y producimos contenido para pauta para ampliar el alcance, mejorar el rendimiento y sostener el crecimiento de ventas.",
     medio: {
       tipo: "video",
-      archivo: "/assets/caso-snake-store-optimized.mp4",
+      archivo: "/assets/caso-snake-store-v2.mp4",
       poster: "/assets/caso-snake-store-poster.webp",
     },
   },
@@ -65,14 +66,22 @@ export const CASOS: Caso[] = [
     rubro: "Productora",
     frase:
       "Desarrollamos su sitio web y campañas de performance para presentar sus servicios con claridad y generar nuevas oportunidades comerciales.",
-    medio: { tipo: "imagen", archivo: "/assets/caso-caracter.webp" },
+    medio: {
+      tipo: "imagen",
+      archivo: "/assets/caso-caracter.webp",
+      archivoAvif: "/assets/caso-caracter.avif",
+    },
   },
   {
     nombre: "Glam Ragazza",
     rubro: "Indumentaria",
     frase:
       "Integramos Paid Media y contenido continuo para ordenar la comunicación, fortalecer la marca y sostener su crecimiento.",
-    medio: { tipo: "imagen", archivo: "/assets/caso-glam-ragazza.webp" },
+    medio: {
+      tipo: "imagen",
+      archivo: "/assets/caso-glam-ragazza.webp",
+      archivoAvif: "/assets/caso-glam-ragazza.avif",
+    },
   },
   {
     nombre: "Vinotique",
@@ -81,7 +90,7 @@ export const CASOS: Caso[] = [
       "Redefinimos la estrategia de marca y desarrollamos una nueva web para comunicar su propuesta con claridad y acompañar la experiencia digital.",
     medio: {
       tipo: "video",
-      archivo: "/assets/caso-vinotique.mp4",
+      archivo: "/assets/caso-vinotique-v2.mp4",
       poster: "/assets/caso-vinotique-poster.webp",
     },
   },
@@ -101,21 +110,33 @@ export const CASOS: Caso[] = [
     rubro: "Real Estate",
     frase:
       "Diseñamos contenidos y campañas de performance para fortalecer su presencia digital y captar nuevas oportunidades comerciales.",
-    medio: { tipo: "imagen", archivo: "/assets/caso-armbruster.webp" },
+    medio: {
+      tipo: "imagen",
+      archivo: "/assets/caso-armbruster.webp",
+      archivoAvif: "/assets/caso-armbruster.avif",
+    },
   },
   {
     nombre: "Greenpac",
     rubro: "Agricultura",
     frase:
       "Desarrollamos una web de producto y campañas segmentadas para conectar con productores de distintas zonas.",
-    medio: { tipo: "imagen", archivo: "/assets/caso-greenpac.webp" },
+    medio: {
+      tipo: "imagen",
+      archivo: "/assets/caso-greenpac.webp",
+      archivoAvif: "/assets/caso-greenpac.avif",
+    },
   },
   {
     nombre: "Comercial Pas",
     rubro: "Seguros",
     frase:
       "Integramos sitio web, medición y campañas de performance para ordenar el recorrido digital y convertir interés en consultas.",
-    medio: { tipo: "imagen", archivo: "/assets/caso-comercial-pas.webp" },
+    medio: {
+      tipo: "imagen",
+      archivo: "/assets/caso-comercial-pas.webp",
+      archivoAvif: "/assets/caso-comercial-pas.avif",
+    },
   },
 ];
 

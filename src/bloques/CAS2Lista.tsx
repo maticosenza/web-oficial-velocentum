@@ -105,6 +105,7 @@ export function CAS2Lista() {
                     className="cas-caso__medio"
                     medio={caso.medio}
                     prioritario={i === 0}
+                    bufferAnticipado
                     /* Prepara aproximadamente el caso siguiente sin
                        descargar la lista completa al abrir la pagina. */
                     margenCercania="125% 0px"

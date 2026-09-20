@@ -31,6 +31,7 @@ import {
 } from "react";
 
 import { duracionDeToken, textoDeToken, prefiereMenosMovimiento } from "../lib/tokens";
+import { precargarImagenesDeRuta } from "../lib/precargarRuta";
 
 type Estado = "idle" | "cubriendo" | "tapado" | "descubriendo";
 
@@ -72,6 +73,7 @@ function conTiempoMaximo(promesa: Promise<unknown>, ms: number): Promise<unknown
 
 type ContextoCortina = {
   navegar: (destino: string) => void;
+  preparar: (destino: string) => void;
   estado: Estado;
   ocupada: boolean;
 };
@@ -165,11 +167,21 @@ export function RouteCurtain({ children }: { children: ReactNode }) {
     enfocarContenido(destino);
   }, [estado, enfocarContenido]);
 
+  const preparar = useCallback(
+    (destino: string) => {
+      if (destino === router.state.location.pathname) return;
+      precargarImagenesDeRuta(destino);
+      void router.preloadRoute({ to: destino });
+    },
+    [router],
+  );
+
   const navegar = useCallback(
     async (destino: string) => {
       /* Click repetido durante el cambio: se descarta. No se
          encola ni se cancela lo que ya está en curso. */
       if (estadoRef.current !== "idle") return;
+      preparar(destino);
       if (destino === router.state.location.pathname) {
         /* Los accesos del footer también funcionan cuando ya
            estamos en esa página. En particular, Inicio deja de
@@ -242,7 +254,7 @@ export function RouteCurtain({ children }: { children: ReactNode }) {
         navegacionPropiaRef.current = false;
       }
     },
-    [router, setEstado, enfocarContenido],
+    [router, setEstado, enfocarContenido, preparar],
   );
 
   const ocupada = estado !== "idle";
@@ -253,7 +265,7 @@ export function RouteCurtain({ children }: { children: ReactNode }) {
   const bloqueandoContenido = estado === "cubriendo" || estado === "tapado";
 
   return (
-    <Contexto.Provider value={{ navegar, estado, ocupada }}>
+    <Contexto.Provider value={{ navegar, preparar, estado, ocupada }}>
       {/* `inert` bloquea la página mientras la cortina la está
           cubriendo o la tapa por completo. Al descubrir el destino
           se retira para que lo que ya se ve también responda. */}
@@ -286,7 +298,7 @@ export function EnlaceConCortina({
   children: ReactNode;
   className?: string;
 } & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href">) {
-  const { navegar, ocupada } = useRouteCurtain();
+  const { navegar, preparar, ocupada } = useRouteCurtain();
 
   /* El spread va PRIMERO: así href y onClick no se pueden pisar
      desde afuera por accidente. */
@@ -295,6 +307,18 @@ export function EnlaceConCortina({
       {...resto}
       href={to}
       className={className}
+      onPointerEnter={(evento) => {
+        resto.onPointerEnter?.(evento);
+        preparar(to);
+      }}
+      onPointerDown={(evento) => {
+        resto.onPointerDown?.(evento);
+        preparar(to);
+      }}
+      onFocus={(evento) => {
+        resto.onFocus?.(evento);
+        preparar(to);
+      }}
       onClick={(evento) => {
         resto.onClick?.(evento);
         if (esClickQueNoInterceptamos(evento)) return;
