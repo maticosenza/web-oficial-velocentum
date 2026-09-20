@@ -1184,6 +1184,24 @@
         will-change: transform;
         backface-visibility: hidden;
       }
+
+      /* `entry 100%` dura exactamente el alto de la card. En
+         telefono son unos 442px y ahi el movimiento quedo bien;
+         las cards de tablet y desktop son mas altas, por eso la
+         misma animacion se estiraba y parecia otra. Estos porcentajes
+         llevan los tres tamanos al mismo recorrido visible, cerca de
+         442px, sin tocar la version mobile aprobada. */
+      @media (min-width: 600px) and (max-width: 809px) {
+        .b3-trabajo__movil {
+          animation-range: entry 0% entry 82%;
+        }
+      }
+
+      @media (min-width: 810px) {
+        .b3-trabajo__movil {
+          animation-range: entry 0% entry 62%;
+        }
+      }
     }
   }
 
