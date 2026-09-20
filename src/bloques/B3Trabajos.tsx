@@ -190,7 +190,14 @@ function Trabajo({
      Se cambia acá y no en el hook: el valor por defecto lo
      comparten B4 y B1, y esto es una decisión de ESTE bloque. */
   const ref = useRef<HTMLElement>(null);
-  useProgresoDeScroll(ref, { recorrido: 0.72 });
+  useProgresoDeScroll(ref, {
+    recorrido: 0.72,
+    /* En teléfono la entrada natural del documento es más fluida,
+       especialmente con ahorro de batería. El gesto lateral se
+       conserva desde tablet, donde hay dos columnas que realmente
+       pueden cerrarse hacia el centro. */
+    media: "(min-width: 600px)",
+  });
 
   return (
     <article ref={ref} className="b3-trabajo">

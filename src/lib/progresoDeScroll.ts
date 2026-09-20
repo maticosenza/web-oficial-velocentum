@@ -79,6 +79,8 @@ export function useProgresoDeScroll(
   opciones: {
     activo?: boolean;
     recorrido?: number;
+    /** Sólo registra el cálculo cuando esta media query coincide. */
+    media?: string;
     /**
      * Dónde escribir el valor, si no es el elemento medido.
      *
@@ -94,7 +96,7 @@ export function useProgresoDeScroll(
     variable?: string;
   } = {},
 ) {
-  const { activo = true, recorrido = 0.6, destino, variable = "--progreso" } = opciones;
+  const { activo = true, recorrido = 0.6, media, destino, variable = "--progreso" } = opciones;
 
   useEffect(() => {
     const elemento = ref.current;
@@ -109,7 +111,7 @@ export function useProgresoDeScroll(
        entrada de B3—. Un consumidor donde 1 signifique lo
        contrario, como la cobertura de B1, no puede apoyarse en
        esto: tiene que apagar su regla con la media query. */
-    if (!activo || prefiereMenosMovimiento()) {
+    if (!activo || prefiereMenosMovimiento() || (media && !window.matchMedia(media).matches)) {
       donde.style.setProperty(variable, "1");
       return;
     }
@@ -139,5 +141,5 @@ export function useProgresoDeScroll(
       observador.disconnect();
       anotados.delete(anotado);
     };
-  }, [ref, activo, recorrido, destino, variable]);
+  }, [ref, activo, recorrido, media, destino, variable]);
 }
