@@ -152,7 +152,10 @@ export function B3Trabajos() {
               rubro={caso.rubro}
               medio={caso.medio}
               direccion={direccionDe(i)}
-              prioritario={i === 0}
+              /* Trabajos queda debajo del hero, Quiénes somos y
+                 la banda de capacidades. Precargar su primer video
+                 compite con la primera pantalla sin aportar nada. */
+              prioritario={false}
             />
           ))}
         </div>
@@ -177,22 +180,17 @@ function Trabajo({
   /* El hook mide la capa de afuera, que no se mueve. Ver la nota
      de arriba: medir la capa transformada traba el bloque.
 
-     ⚠ `recorrido: 1.15` Y NO EL 0.6 POR DEFECTO. El recorrido es la
+     `recorrido: 0.72`. El recorrido es la
      porción de ventana que la tarjeta sube mientras el progreso va
-     de 0 a 1: con 0.6 la entrada se consumía en unos 470px de
-     scroll y las piezas ya estaban derechas antes de terminar de
-     aparecer. Con 1.15, la apertura dura un poco más de una
-     ventana y se asienta al final, sin el corte seco del vínculo
-     uno-a-uno con el scroll.
-
-     El 15% adicional conserva la tarjeta visible cuando completa
-     el gesto y funciona igual en móvil y escritorio. El remate
-     suave se completa con la transición de transform de la pieza.
+     de 0 a 1. El 1.15 anterior necesitaba más de una pantalla y,
+     sumado a una transición CSS de 220ms, hacía que la pieza
+     persiguiera al scroll. A 0.72 se completa cuando la card llega
+     a su zona de lectura y responde uno-a-uno al gesto.
 
      Se cambia acá y no en el hook: el valor por defecto lo
      comparten B4 y B1, y esto es una decisión de ESTE bloque. */
   const ref = useRef<HTMLElement>(null);
-  useProgresoDeScroll(ref, { recorrido: 1.15 });
+  useProgresoDeScroll(ref, { recorrido: 0.72 });
 
   return (
     <article ref={ref} className="b3-trabajo">

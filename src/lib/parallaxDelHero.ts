@@ -31,8 +31,9 @@
 
    B · SIN RESPUESTA AL CURSOR
    El movimiento es ambiental y no depende de dónde esté el
-   puntero. En desktop tiene un recorrido apenas mayor; en mobile
-   conserva las amplitudes anteriores.
+   puntero. Con puntero fino corre este controlador. En táctil la
+   hoja de estilos reproduce una deriva equivalente directamente
+   en el compositor, sin escrituras de JS por cuadro.
 
    CUÁNDO SE PAUSA, Y POR QUÉ NO ALCANZA CON `IntersectionObserver`
    El hero es `sticky`: mientras B2 lo tapa sigue intersectando, o
@@ -57,7 +58,6 @@ import { useEffect, type RefObject } from "react";
 
 /* --- Flotación --- */
 const FASE_POR_SEGUNDO = 0.9;
-const FLOTACION_MOVIL = { x: 45, y: 27, rotacion: 3, escala: 0.03 };
 const FLOTACION_DESKTOP = { x: 60, y: 36, rotacion: 3.4, escala: 0.035 };
 
 /* Cada cuántos cuadros se refresca la cobertura. La lectura de
@@ -72,7 +72,11 @@ export function useParallaxDelHero(ref: RefObject<HTMLElement | null>) {
     if (!nodo) return;
 
     const mqReduce = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const mqDesktop = window.matchMedia("(min-width: 810px)");
+    /* En pantallas táctiles la misma flotación vive como keyframes
+       CSS sobre la capa transformada. Es una animación de compositor:
+       evita escribir cuatro custom properties en el hero en cada
+       refresco de una pantalla de 120 Hz mientras el usuario scrollea. */
+    const mqPunteroFino = window.matchMedia("(hover: hover) and (pointer: fine)");
 
     let cuadro = 0;
     let limpiarActivo: (() => void) | null = null;
@@ -110,7 +114,7 @@ export function useParallaxDelHero(ref: RefObject<HTMLElement | null>) {
         if (!tapado) {
           fase += FASE_POR_SEGUNDO * dt;
 
-          const amplitud = mqDesktop.matches ? FLOTACION_DESKTOP : FLOTACION_MOVIL;
+          const amplitud = FLOTACION_DESKTOP;
           const fx = Math.sin(fase * 1.3) * amplitud.x;
           const fy = Math.cos(fase * 0.9) * amplitud.y;
           const rot = Math.sin(fase * 0.7) * amplitud.rotacion;
@@ -167,7 +171,7 @@ export function useParallaxDelHero(ref: RefObject<HTMLElement | null>) {
     };
 
     const evaluarPreferencia = () => {
-      if (mqReduce.matches) {
+      if (mqReduce.matches || !mqPunteroFino.matches) {
         limpiarActivo?.();
         limpiarActivo = null;
         return;
@@ -177,9 +181,11 @@ export function useParallaxDelHero(ref: RefObject<HTMLElement | null>) {
 
     evaluarPreferencia();
     mqReduce.addEventListener("change", evaluarPreferencia);
+    mqPunteroFino.addEventListener("change", evaluarPreferencia);
 
     return () => {
       mqReduce.removeEventListener("change", evaluarPreferencia);
+      mqPunteroFino.removeEventListener("change", evaluarPreferencia);
       limpiarActivo?.();
       limpiarActivo = null;
     };
