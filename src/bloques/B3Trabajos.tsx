@@ -65,6 +65,9 @@
    color que ya está a la vista.
    =========================================================== */
 
+import { useEffect } from "react";
+import "lenis/dist/lenis.css";
+
 import { CASOS_EN_LA_HOME, type Medio } from "../data/casos";
 import { MedioDeCaso } from "../componentes/MedioDeCaso";
 import { EnlaceConCortina } from "../componentes/RouteCurtain";
@@ -97,12 +100,61 @@ import { TextoBoton } from "../componentes/TextoBoton";
    columna izquierda, 1 y 3 en la derecha. */
 const PIEZAS = CASOS_EN_LA_HOME;
 
+/* Lofty amortigua el scroll con Lenis. En mobile dejamos el gesto
+   nativo de iOS, que ya tiene la inercia aprobada y evita trabajo
+   extra en el dispositivo mas sensible. Desde tablet, Lenis suaviza
+   la rueda/trackpad para que las dos cards de una fila no parezcan
+   abrirse de golpe hacia los costados. Se carga en un chunk aparte y
+   solo mientras la Home esta montada. */
+function useScrollSuaveDeTrabajos() {
+  useEffect(() => {
+    const media = window.matchMedia(
+      "(min-width: 600px) and (prefers-reduced-motion: no-preference)",
+    );
+    let instancia: { destroy: () => void } | null = null;
+    let version = 0;
+
+    const sincronizar = async () => {
+      const estaVersion = ++version;
+
+      if (!media.matches) {
+        instancia?.destroy();
+        instancia = null;
+        return;
+      }
+
+      const { default: Lenis } = await import("lenis");
+      if (estaVersion !== version || !media.matches) return;
+
+      instancia?.destroy();
+      instancia = new Lenis({
+        autoRaf: true,
+        autoToggle: true,
+        anchors: true,
+        smoothWheel: true,
+      });
+    };
+
+    const alCambiar = () => void sincronizar();
+    media.addEventListener("change", alCambiar);
+    void sincronizar();
+
+    return () => {
+      version += 1;
+      media.removeEventListener("change", alCambiar);
+      instancia?.destroy();
+    };
+  }, []);
+}
+
 /** Indice par -> columna izquierda -> entra por la izquierda. */
 function direccionDe(indice: number): number {
   return indice % 2 === 0 ? -1 : 1;
 }
 
 export function B3Trabajos() {
+  useScrollSuaveDeTrabajos();
+
   return (
     <section className="b3" aria-labelledby="b3-titulo">
       <div className="b3__contenido contenido">
