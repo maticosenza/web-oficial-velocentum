@@ -47,12 +47,16 @@ const MARGEN_CERCANIA = "500px 0px";
    de que nadie las vea. Así que el `src` directamente no existe
    hasta que el elemento se acerca. La caja ya está reservada por el
    `aspect-ratio` del CSS, así que no hay salto ni hueco. */
-function useCercaDelViewport(prioritario: boolean) {
+function useCercaDelViewport(
+  prioritario: boolean,
+  anticipado: boolean,
+  margenCercania: string,
+) {
   const ref = useRef<HTMLElement | null>(null);
-  const [cerca, setCerca] = useState(prioritario);
+  const [cerca, setCerca] = useState(prioritario || anticipado);
 
   useEffect(() => {
-    if (prioritario) return;
+    if (prioritario || anticipado) return;
     const el = ref.current;
     if (!el) return;
 
@@ -63,11 +67,11 @@ function useCercaDelViewport(prioritario: boolean) {
           observador.disconnect();
         }
       },
-      { rootMargin: MARGEN_CERCANIA },
+      { rootMargin: margenCercania },
     );
     observador.observe(el);
     return () => observador.disconnect();
-  }, [prioritario]);
+  }, [prioritario, anticipado, margenCercania]);
 
   return { ref, cerca };
 }
@@ -77,13 +81,23 @@ export function MedioDeCaso({
   className,
   /** El primero de la lista precarga; el resto no. */
   prioritario = false,
+  /** Permite anticipar una galeria animada sin volver eager toda la pagina. */
+  margenCercania = MARGEN_CERCANIA,
+  /** Carga desde el montaje con prioridad baja; útil para contenido bajo el hero. */
+  anticipado = false,
 }: {
   medio: Medio;
   className?: string;
   prioritario?: boolean;
+  margenCercania?: string;
+  anticipado?: boolean;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
-  const { ref: refCercania, cerca } = useCercaDelViewport(prioritario);
+  const { ref: refCercania, cerca } = useCercaDelViewport(
+    prioritario,
+    anticipado,
+    margenCercania,
+  );
 
   useEffect(() => {
     const v = ref.current;
@@ -127,7 +141,7 @@ export function MedioDeCaso({
         className={className}
         {...(cerca ? { src: medio.archivo } : {})}
         alt=""
-        loading={prioritario ? "eager" : "lazy"}
+        loading={prioritario || anticipado ? "eager" : "lazy"}
         decoding="async"
         fetchPriority={prioritario ? "high" : "low"}
       />
@@ -145,7 +159,7 @@ export function MedioDeCaso({
       muted
       loop
       playsInline
-      preload={prioritario ? "metadata" : "none"}
+      preload={prioritario || anticipado ? "metadata" : "none"}
       aria-hidden="true"
       tabIndex={-1}
     />

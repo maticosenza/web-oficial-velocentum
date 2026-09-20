@@ -224,7 +224,7 @@
      falta ~440px contra los 358 de una pantalla de 390. Y el
      wordmark no se reemplaza por la V, porque identidad.md es
      explícito: "palabra completa en el nav". */
-  @media (max-width: 809px) {
+  @media (max-width: 599px) {
     .b0 {
       padding: var(--space-2) var(--page-gutter);
     }
@@ -567,6 +567,18 @@
   @media (prefers-reduced-motion: no-preference) and (hover: none) {
     .b1__mancha-flotar {
       animation: mancha-flotar-tactil 18s ease-in-out infinite alternate;
+    }
+  }
+
+  /* En telefono la textura acompana el ascenso de la onda, pero no
+     flota dentro de ella. Asi se conserva la transicion que abre la
+     segunda seccion sin mantener otra animacion infinita mientras el
+     usuario hace scroll. */
+  @media (max-width: 809px) {
+    .b1__mancha-flotar {
+      animation: none;
+      transform: none;
+      will-change: auto;
     }
   }
 
@@ -1119,6 +1131,11 @@
        token: la franja tiene que continuar el color del campo, no
        parecerse. Un solo lugar para cambiarlo. */
     --b3-campo: color-mix(in srgb, var(--cielo) 45%, var(--fondo));
+    /* La linea de tiempo se mide en la celda quieta; la capa hija es
+       la que se transforma. Asi el movimiento no altera su propia
+       referencia y vuelve naturalmente al scrollear hacia arriba. */
+    view-timeline-name: --entrada-trabajo;
+    view-timeline-axis: block;
   }
 
   /* Capa 2: la que se mueve.
@@ -1128,16 +1145,41 @@
      EL FALLBACK ES 1: sin JS, o antes de hidratar, la tarjeta está
      derecha y centrada. Nunca fuera de cuadro. */
   .b3-trabajo__movil {
-    transform: translateX(calc((1 - var(--progreso, 1)) * var(--dir, -1) * 62%))
-      rotate(calc((1 - var(--progreso, 1)) * var(--dir, -1) * 5deg))
-      scale(calc(1 - (1 - var(--progreso, 1)) * 0.08));
-    /* El progreso ya se agrupa en requestAnimationFrame. Agregarle
-       una transición hacía que cada valor nuevo reiniciara otros
-       220ms de interpolación: la card quedaba siempre atrás del
-       dedo. Sin transición responde al cuadro actual, como la
-       referencia de Lofty. */
+    transform: none;
     transition: none;
-    will-change: transform;
+    will-change: auto;
+  }
+
+  /* Lofty usa un recorrido largo con una correccion lateral pequena.
+     Esta linea de tiempo es nativa: Safari la resuelve en el compositor
+     y no necesita ejecutar JavaScript por cada cuadro de scroll. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .b3-trabajo__movil {
+        animation-name: b3-entrada-suave;
+        animation-duration: 1ms;
+        animation-fill-mode: both;
+        animation-timing-function: linear;
+        animation-timeline: --entrada-trabajo;
+        animation-range: entry 0% cover 62%;
+        will-change: transform;
+      }
+    }
+  }
+
+  @keyframes b3-entrada-suave {
+    from {
+      transform: translate3d(
+          calc(var(--dir, -1) * clamp(26px, 5vw, 64px)),
+          clamp(14px, 2vw, 22px),
+          0
+        )
+        rotate(calc(var(--dir, -1) * 1.8deg)) scale(0.985);
+    }
+
+    to {
+      transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+    }
   }
 
   .b3-trabajo__medio {
