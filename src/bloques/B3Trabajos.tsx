@@ -18,8 +18,8 @@
    La dirección se deriva del índice y no se escribe a mano, así
    no puede quedar desalineada de la columna que le toca.
 
-   No hace falta escalonar nada: `useProgresoDeScroll` mide por
-   elemento, así que la fila de abajo arranca sola cuando le toca
+   No hace falta escalonar nada: cada celda publica su propia view
+   timeline, así que la fila de abajo arranca sola cuando le toca
    entrar en cuadro. La repetición se lee como ritmo.
 
    ES UN VALOR CONTINUO, NO UN REVEAL
@@ -27,14 +27,12 @@
    interpolados contra el progreso de scroll. Reveal es otra
    cosa —dispara una vez y se queda— y acá el movimiento tiene
    que deshacerse si el usuario scrollea para arriba. Por eso va
-   `useProgresoDeScroll`, el mismo primitivo que usa el giro de
-   las tarjetas de B4.
+   una view timeline nativa. Safari la resuelve en el compositor,
+   responde al gesto sin perseguirlo y revierte al subir.
 
-   EL FALLBACK DE `--progreso` ES 1, NO 0
-   `var(--progreso, 1)` en el CSS. Si el JS no corre —o antes de
-   hidratar— las tarjetas se quedan en su estado FINAL: derechas
-   y centradas. Nunca fuera de cuadro. El estado sin JS tiene que
-   ser el visible, nunca el escondido.
+   EL FALLBACK ES EL ESTADO FINAL
+   Si el navegador no soporta scroll timelines, las tarjetas se
+   quedan derechas y centradas. Nunca fuera de cuadro.
 
    LA CAPA QUE SE MIDE NO ES LA QUE SE MUEVE
    Dos capas, igual que el `hueco`/`giro` de ServiceStack. La de
@@ -43,25 +41,8 @@
 
    Dos razones, con distinto grado de evidencia:
 
-   1. `[VERIFICADO]` `useProgresoDeScroll` decide con
-      `getBoundingClientRect()`, que en un elemento transformado
-      devuelve la caja YA rotada y escalada, no la de layout. Se
-      ve midiendo las tarjetas de B4, que sí tienen el giro en el
-      elemento medido: el marco de 279px de ancho se lee 304
-      mientras la tarjeta está rotada. Con `translateX` de 62% y
-      `scale` la desviación es mucho mayor, y la medición pasaría
-      a depender de su propio resultado.
-
-   2. `[PRECAUCIÓN, no observado]` A `--progreso: 0` la tarjeta
-      queda corrida 62% hacia afuera, fuera de `.b3`, que tiene
-      `overflow-x: clip`. El IntersectionObserver tiene en cuenta
-      el recorte de los ancestros, así que podría darla por no
-      visible y dejar de anotarla — y sin recalcular se quedaría
-      en 0 para siempre. No lo vi pasar; separar las capas lo
-      vuelve imposible, así que no hace falta averiguarlo.
-
-   Con la celda de afuera quieta, el observer siempre ve algo que
-   no se mueve ni se recorta, y la medición no se muerde la cola.
+   Con la celda de afuera quieta, la timeline siempre mide algo que
+   no se mueve ni se recorta y no se muerde la cola.
 
    LAS TARJETAS NO SON ENLACES, Y POR ESO NO TIENEN HOVER
    El plan pide "hover con estado propio", pero eso presupone que
@@ -84,15 +65,12 @@
    color que ya está a la vista.
    =========================================================== */
 
-import { useRef } from "react";
-
 import { CASOS_EN_LA_HOME, type Medio } from "../data/casos";
 import { MedioDeCaso } from "../componentes/MedioDeCaso";
 import { EnlaceConCortina } from "../componentes/RouteCurtain";
 import { Reveal } from "../componentes/Reveal";
 import { Flecha } from "../componentes/Flecha";
 import { TextoBoton } from "../componentes/TextoBoton";
-import { useProgresoDeScroll } from "../lib/progresoDeScroll";
 
 /* La categoría dejó de ser marcador: es el rubro que definió
    Matías, el mismo que se muestra en `/casos`. Sale de
@@ -177,30 +155,8 @@ function Trabajo({
   direccion: number;
   prioritario: boolean;
 }) {
-  /* El hook mide la capa de afuera, que no se mueve. Ver la nota
-     de arriba: medir la capa transformada traba el bloque.
-
-     `recorrido: 0.72`. El recorrido es la
-     porción de ventana que la tarjeta sube mientras el progreso va
-     de 0 a 1. El 1.15 anterior necesitaba más de una pantalla y,
-     sumado a una transición CSS de 220ms, hacía que la pieza
-     persiguiera al scroll. A 0.72 se completa cuando la card llega
-     a su zona de lectura y responde uno-a-uno al gesto.
-
-     Se cambia acá y no en el hook: el valor por defecto lo
-     comparten B4 y B1, y esto es una decisión de ESTE bloque. */
-  const ref = useRef<HTMLElement>(null);
-  useProgresoDeScroll(ref, {
-    recorrido: 0.72,
-    /* En teléfono la entrada natural del documento es más fluida,
-       especialmente con ahorro de batería. El gesto lateral se
-       conserva desde tablet, donde hay dos columnas que realmente
-       pueden cerrarse hacia el centro. */
-    media: "(min-width: 600px)",
-  });
-
   return (
-    <article ref={ref} className="b3-trabajo">
+    <article className="b3-trabajo">
       {/* Capa 2: la que se mueve. El medio, el festón y el pie van
           adentro, así entran como una sola pieza. */}
       <div className="b3-trabajo__movil" style={{ "--dir": direccion } as React.CSSProperties}>
@@ -213,7 +169,17 @@ function Trabajo({
             el hilo que cose el sitio, y el borde de abajo del
             video es la nube. La máscara vive en el CSS. */}
         <div className="b3-trabajo__medio">
-          <MedioDeCaso className="b3-trabajo__pieza" medio={medio} prioritario={prioritario} />
+          <MedioDeCaso
+            className="b3-trabajo__pieza"
+            medio={medio}
+            prioritario={prioritario}
+            anticipado
+            /* En mobile una pasada rapida llegaba a la tarjeta antes
+               que su poster/video. Se anticipa solamente esta galeria:
+               sigue fuera de la carga critica del hero, pero ya esta
+               lista cuando empieza el movimiento. */
+            margenCercania="850px 0px"
+          />
         </div>
 
         {/* Categoría chica arriba, nombre grande abajo. */}
