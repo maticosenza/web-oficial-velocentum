@@ -47,11 +47,7 @@ const MARGEN_CERCANIA = "500px 0px";
    de que nadie las vea. Así que el `src` directamente no existe
    hasta que el elemento se acerca. La caja ya está reservada por el
    `aspect-ratio` del CSS, así que no hay salto ni hueco. */
-function useCercaDelViewport(
-  prioritario: boolean,
-  anticipado: boolean,
-  margenCercania: string,
-) {
+function useCercaDelViewport(prioritario: boolean, anticipado: boolean, margenCercania: string) {
   const ref = useRef<HTMLElement | null>(null);
   const [cerca, setCerca] = useState(prioritario || anticipado);
 
@@ -93,11 +89,7 @@ export function MedioDeCaso({
   anticipado?: boolean;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
-  const { ref: refCercania, cerca } = useCercaDelViewport(
-    prioritario,
-    anticipado,
-    margenCercania,
-  );
+  const { ref: refCercania, cerca } = useCercaDelViewport(prioritario, anticipado, margenCercania);
 
   useEffect(() => {
     const v = ref.current;
@@ -155,7 +147,11 @@ export function MedioDeCaso({
         refCercania.current = nodo;
       }}
       className={className}
-      {...(cerca ? { src: medio.archivo, poster: medio.poster } : {})}
+      {...(cerca ? { src: medio.archivo } : {})}
+      /* Los tres posters juntos pesan apenas 124 KB. Dejarlos siempre
+         disponibles evita que un caso muestre el campo vacio mientras
+         espera al observer; el MP4 sigue cargando solo al acercarse. */
+      poster={medio.poster}
       muted
       loop
       playsInline

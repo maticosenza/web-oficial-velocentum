@@ -22,6 +22,15 @@ export const Route = createFileRoute("/metodo")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [
+      {
+        rel: "preload",
+        as: "image",
+        href: "/assets/hero-metodo-mobile.webp",
+        media: "(max-width: 809px) and (max-aspect-ratio: 3 / 4)",
+        fetchPriority: "high",
+      },
+    ],
   }),
   component: Metodo,
 });

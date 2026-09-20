@@ -1141,6 +1141,11 @@
        token: la franja tiene que continuar el color del campo, no
        parecerse. Un solo lugar para cambiarlo. */
     --b3-campo: color-mix(in srgb, var(--cielo) 45%, var(--fondo));
+    /* Una sola geometria para telefono, tablet y escritorio. Son
+       los valores medidos en Lofty; ningun breakpoint los redefine. */
+    --b3-entrada-x: 180px;
+    --b3-entrada-rotacion: 10deg;
+    --b3-entrada-escala: 0.8;
     /* La linea de tiempo se mide en la celda quieta; la capa hija es
        la que se transforma. Asi el movimiento no altera su propia
        referencia y vuelve naturalmente al scrollear hacia arriba. */
@@ -1184,8 +1189,8 @@
 
   @keyframes b3-entrada-suave {
     from {
-      transform: translate3d(calc(var(--dir, -1) * 180px), 0, 0)
-        rotate(calc(var(--dir, -1) * 10deg)) scale(0.8);
+      transform: translate3d(calc(var(--dir, -1) * var(--b3-entrada-x)), 0, 0)
+        rotate(calc(var(--dir, -1) * var(--b3-entrada-rotacion))) scale(var(--b3-entrada-escala));
     }
 
     to {
@@ -1253,7 +1258,7 @@
       top left,
       bottom left;
     mask-size:
-      100% calc(100% - var(--borde-onda-alto)),
+      100% calc(100% - var(--borde-onda-alto) + 2px),
       100% var(--borde-onda-alto);
     mask-repeat: no-repeat, no-repeat;
     mask-mode: alpha, alpha;

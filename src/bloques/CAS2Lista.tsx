@@ -105,6 +105,9 @@ export function CAS2Lista() {
                     className="cas-caso__medio"
                     medio={caso.medio}
                     prioritario={i === 0}
+                    /* Prepara aproximadamente el caso siguiente sin
+                       descargar la lista completa al abrir la pagina. */
+                    margenCercania="125% 0px"
                   />
                 }
                 texto={<p className="cas-caso__frase">{caso.frase}</p>}
