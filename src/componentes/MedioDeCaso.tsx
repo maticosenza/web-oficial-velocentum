@@ -81,12 +81,15 @@ export function MedioDeCaso({
   margenCercania = MARGEN_CERCANIA,
   /** Carga desde el montaje con prioridad baja; útil para contenido bajo el hero. */
   anticipado = false,
+  /** Permite llenar el buffer al acercarse; se usa en la lista larga de Casos. */
+  bufferAnticipado = false,
 }: {
   medio: Medio;
   className?: string;
   prioritario?: boolean;
   margenCercania?: string;
   anticipado?: boolean;
+  bufferAnticipado?: boolean;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
   const { ref: refCercania, cerca } = useCercaDelViewport(prioritario, anticipado, margenCercania);
@@ -128,15 +131,20 @@ export function MedioDeCaso({
 
   if (medio.tipo === "imagen") {
     return (
-      <img
-        ref={refCercania as React.RefObject<HTMLImageElement>}
-        className={className}
-        {...(cerca ? { src: medio.archivo } : {})}
-        alt=""
-        loading={prioritario || anticipado ? "eager" : "lazy"}
-        decoding="async"
-        fetchPriority={prioritario ? "high" : "low"}
-      />
+      <picture>
+        {medio.archivoAvif ? (
+          <source type="image/avif" {...(cerca ? { srcSet: medio.archivoAvif } : {})} />
+        ) : null}
+        <img
+          ref={refCercania as React.RefObject<HTMLImageElement>}
+          className={className}
+          {...(cerca ? { src: medio.archivo } : {})}
+          alt=""
+          loading={prioritario || anticipado ? "eager" : "lazy"}
+          decoding="async"
+          fetchPriority={prioritario ? "high" : cerca ? "auto" : "low"}
+        />
+      </picture>
     );
   }
 
@@ -155,7 +163,12 @@ export function MedioDeCaso({
       muted
       loop
       playsInline
-      preload={prioritario || anticipado ? "metadata" : "none"}
+      /* Cuando el observer ya lo considero cercano, `auto` permite
+         llenar el buffer antes de que la animacion lo muestre. Con
+         `none` el src existia pero la descarga empezaba al entrar. */
+      preload={
+        prioritario || (cerca && bufferAnticipado) ? "auto" : anticipado ? "metadata" : "none"
+      }
       aria-hidden="true"
       tabIndex={-1}
     />

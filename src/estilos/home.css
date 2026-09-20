@@ -1346,6 +1346,10 @@
     object-fit: cover;
   }
 
+  .b3-trabajo__medio > picture {
+    display: contents;
+  }
+
   /* El festón ya reserva su alto por debajo: la regla de
      `componentes.css` le pone `margin-bottom` a quien lo contiene.
      Acá sólo va el aire entre el festón y el texto del pie. */

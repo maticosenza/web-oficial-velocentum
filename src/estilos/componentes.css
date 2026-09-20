@@ -566,6 +566,12 @@
     will-change: transform;
   }
 
+  /* `<picture>` decide AVIF/WebP pero no agrega una caja propia:
+     el medio conserva exactamente la geometria previa. */
+  .scroll-medio__interior > picture {
+    display: contents;
+  }
+
   /* Las columnas laterales acompañan con desplazamiento. NO
      escalan: escalar texto lo desenfoca en el camino y le rompe el
      tamaño a quien tiene zoom.

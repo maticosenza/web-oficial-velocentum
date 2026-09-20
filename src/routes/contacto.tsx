@@ -27,6 +27,13 @@ export const Route = createFileRoute("/contacto")({
         media: "(max-width: 809px)",
         fetchPriority: "high",
       },
+      {
+        rel: "preload",
+        as: "image",
+        href: "/assets/contacto-cta-escena.webp",
+        media: "(min-width: 810px)",
+        fetchPriority: "high",
+      },
     ],
   }),
   component: Contacto,
