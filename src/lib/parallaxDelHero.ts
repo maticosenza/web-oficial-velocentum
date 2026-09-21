@@ -56,6 +56,8 @@
 
 import { useEffect, type RefObject } from "react";
 
+import { esSafariDeEscritorio } from "./navegador";
+
 /* --- Flotación --- */
 const FASE_POR_SEGUNDO = 0.9;
 const FLOTACION_DESKTOP = { x: 60, y: 36, rotacion: 3.4, escala: 0.035 };
@@ -77,6 +79,16 @@ export function useParallaxDelHero(ref: RefObject<HTMLElement | null>) {
        evita escribir cuatro custom properties en el hero en cada
        refresco de una pantalla de 120 Hz mientras el usuario scrollea. */
     const mqPunteroFino = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+    /* Safari paga caro cuatro escrituras de custom properties por cuadro,
+       sobre todo mientras también está resolviendo sticky y video. Allí la
+       misma deriva vive como keyframes en el compositor. */
+    if (esSafariDeEscritorio() && !mqReduce.matches) {
+      nodo.dataset.motorMancha = "compositor";
+      return () => {
+        delete nodo.dataset.motorMancha;
+      };
+    }
 
     let cuadro = 0;
     let limpiarActivo: (() => void) | null = null;
