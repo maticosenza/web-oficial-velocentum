@@ -125,9 +125,11 @@ export function useProgresoDeScroll(
       ([entrada]) => {
         if (entrada?.isIntersecting) {
           anotados.add(anotado);
+          donde.dataset.scrollActivo = "sí";
           calcular(anotado);
         } else {
           anotados.delete(anotado);
+          delete donde.dataset.scrollActivo;
         }
       },
       { rootMargin: "100% 0px" },
@@ -140,6 +142,7 @@ export function useProgresoDeScroll(
     return () => {
       observador.disconnect();
       anotados.delete(anotado);
+      delete donde.dataset.scrollActivo;
     };
   }, [ref, activo, recorrido, media, destino, variable]);
 }

@@ -271,7 +271,7 @@ export function RouteCurtain({ children }: { children: ReactNode }) {
           se retira para que lo que ya se ve también responda. */}
       <div inert={bloqueandoContenido}>{children}</div>
 
-      <div ref={cortinaRef} aria-hidden="true" className="cortina" />
+      <div ref={cortinaRef} aria-hidden="true" className="cortina" data-estado={estado} />
 
       <p aria-live="polite" className="solo-lectores">
         {anuncio}

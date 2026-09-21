@@ -224,53 +224,23 @@
     z-index: calc(var(--capa, 0) + 100);
   }
 
-  /* LA SALIDA: lo que le hace la tarjeta SIGUIENTE a ésta.
-     `--salida` va de 0 —la siguiente todavía asomando por el pie
-     de la ventana— a 1 —la siguiente casi en su posición fijada—,
-     y lo escribe `ServiceStack` midiendo a la siguiente, no a
-     ésta: una vez fijada, ésta ya no tiene progreso propio que
-     leer.
-
-     Sube 70, se inclina 4° y se achica un 4%. Con `center top`
-     como origen, el borde de arriba —que es lo único que queda
-     asomando detrás de la que la tapa— se mueve poco y el giro se
-     lee en las esquinas, que es donde tiene que leerse.
-
-     El signo lo pone `--salida-dir`, que alterna con el índice.
-
-     ⚠ EL ARRANQUE SE CORRE 35%, Y SIN ESO NO HAY PAUSA.
-     El hook empieza a contar cuando el borde de la siguiente toca
-     el pie de la ventana, y con estas medidas —tarjetas de 490,
-     506 de paso, ventana de 765— la siguiente ya está a 622px del
-     tope en el momento en que ÉSTA se fija. O sea: la de atrás
-     empezaría a irse antes de haber terminado de llegar, y el
-     bloque no tendría el tiempo quieto que la referencia sí
-     tiene.
-
-     `--s` remapea: los primeros 35% del recorrido crudo no mueven
-     nada y el resto se estira hasta 1. Medido, eso deja a la
-     tarjeta fijada, recta y quieta durante ~84px de scroll antes
-     de empezar a inclinarse, y la salida termina justo cuando la
-     siguiente se clava en su offset.
-
-     Capa aparte del giro de entrada a propósito: son dos
-     transformaciones con distinto origen temporal, y una sola
-     declaración `transform` no puede llevar las dos — la segunda
-     pisa a la primera entera. */
+  /* La salida reproduce el hundimiento de la referencia: escala
+     hasta .7 y gira 10°. El componente escribe el transform
+     directo para que WebKit lo resuelva en compositor. */
   .pila-sticky__salida {
-    --s: clamp(0, calc((var(--salida, 0) - 0.35) / 0.65), 1);
-    transform: translateY(calc(var(--s) * -70px))
-      rotate(calc(var(--s) * var(--salida-dir, 1) * 4deg)) scale(calc(1 - var(--s) * 0.04));
-    transform-origin: center top;
-    will-change: transform;
+    transform: none;
+    transform-origin: center center;
+    perspective: 1200px;
   }
 
-  /* El giro de entrada va en su propia capa: un `transform`
-     genera contexto de apilado y pelearía con el z-index
-     creciente del apilado. */
+  /* La entrada va de y:20/scale:.9 a su estado final. */
   .pila-sticky__giro {
-    transform: rotate(calc((1 - var(--progreso, 1)) * var(--pila-angulo, 4deg)));
-    transform-origin: center top;
+    transform: none;
+    transform-origin: center center;
+  }
+
+  .pila-sticky[data-movimiento="activo"] .pila-sticky__salida,
+  .pila-sticky[data-movimiento="activo"] .pila-sticky__giro {
     will-change: transform;
   }
 
@@ -289,18 +259,7 @@
       top: auto;
     }
 
-    .pila-sticky__giro {
-      transform: none;
-      will-change: auto;
-    }
-
-    /* ⚠ ESTA REGLA ES OBLIGATORIA, NO UNA PRECAUCIÓN. Con
-       movimiento reducido el hook no mide: escribe el valor FINAL,
-       que para todos sus consumidores es 1. Para `--salida`, 1
-       significa «ya se fue»: sin esto, las tarjetas de atrás
-       quedarían inclinadas, subidas y encogidas de entrada, que es
-       exactamente lo contrario de lo que la preferencia pide. El
-       propio hook documenta esta trampa. */
+    .pila-sticky__giro,
     .pila-sticky__salida {
       transform: none;
       will-change: auto;
@@ -557,13 +516,13 @@
     overflow: hidden;
     border-radius: var(--r-media);
     transform: scale(calc(1 - (1 - var(--progreso, 1)) * var(--scroll-media-contraccion, 0.3)));
-    will-change: transform;
+    will-change: auto;
   }
 
   /* La imagen se desamplía hacia 1 mientras el marco se abre. */
   .scroll-medio__interior {
     transform: scale(calc(1 + (1 - var(--progreso, 1)) * var(--scroll-media-zoom-extra, 0.3)));
-    will-change: transform;
+    will-change: auto;
   }
 
   /* `<picture>` decide AVIF/WebP pero no agrega una caja propia:
@@ -584,6 +543,13 @@
   .scroll-medio__izquierda,
   .scroll-medio__texto {
     transform: translateX(calc((1 - var(--progreso, 1)) * var(--entra-desde, -1) * 47px));
+    will-change: auto;
+  }
+
+  .scroll-medio[data-scroll-activo="sí"] .scroll-medio__marco,
+  .scroll-medio[data-scroll-activo="sí"] .scroll-medio__interior,
+  .scroll-medio[data-scroll-activo="sí"] .scroll-medio__izquierda,
+  .scroll-medio[data-scroll-activo="sí"] .scroll-medio__texto {
     will-change: transform;
   }
 
@@ -757,6 +723,10 @@
     transform: scaleY(0);
     transform-origin: bottom;
     pointer-events: none;
+    will-change: auto;
+  }
+
+  .cortina:not([data-estado="idle"]) {
     will-change: transform;
   }
 

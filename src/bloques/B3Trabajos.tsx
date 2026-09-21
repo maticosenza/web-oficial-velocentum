@@ -74,6 +74,7 @@ import { EnlaceConCortina } from "../componentes/RouteCurtain";
 import { Reveal } from "../componentes/Reveal";
 import { Flecha } from "../componentes/Flecha";
 import { TextoBoton } from "../componentes/TextoBoton";
+import { esSafariDeEscritorio } from "../lib/navegador";
 
 /* La categoría dejó de ser marcador: es el rubro que definió
    Matías, el mismo que se muestra en `/casos`. Sale de
@@ -104,17 +105,6 @@ const PIEZAS = CASOS_EN_LA_HOME;
    desde Safari 26, puede resolver la view timeline directamente en el
    compositor. Evitamos detectar iPhone/iPad: mobile conserva exactamente
    el camino actual. Los otros motores tampoco entran en esta excepción. */
-function esSafariDeEscritorio() {
-  if (typeof navigator === "undefined") return false;
-
-  const agente = navigator.userAgent;
-  const esSafari =
-    /Safari\//.test(agente) && !/(?:Chrome|Chromium|CriOS|Edg|OPR|FxiOS)\//.test(agente);
-  const tienePunteroFino = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-
-  return esSafari && tienePunteroFino;
-}
-
 /* Lofty amortigua el scroll con Lenis. En mobile dejamos el gesto
    nativo de iOS, que ya tiene la inercia aprobada y evita trabajo
    extra en el dispositivo mas sensible. Desde tablet, Lenis suaviza
@@ -128,9 +118,7 @@ function useScrollSuaveDeTrabajos() {
        Chrome/Firefox y mobile siguen recorriendo el camino anterior. */
     if (esSafariDeEscritorio()) return;
 
-    const media = window.matchMedia(
-      "(min-width: 600px) and (prefers-reduced-motion: no-preference)",
-    );
+    const media = window.matchMedia("(prefers-reduced-motion: no-preference)");
     let instancia: { destroy: () => void } | null = null;
     let version = 0;
 
@@ -183,25 +171,15 @@ function useMovimientoAmortiguadoDeTrabajos() {
     );
     if (!seccion) return;
 
-    /* En Safari moderno, la animación declarada abajo con
-       `animation-timeline` corre en el compositor. No la reemplazamos por
-       el resorte JS, que leería cuatro cajas y escribiría cuatro transforms
-       en cada cuadro. El fallback JS se conserva para Safari antiguo. */
-    if (esSafariDeEscritorio() && CSS.supports("animation-timeline: view()")) {
-      seccion.dataset.motorMovimiento = "compositor";
-      return () => {
-        delete seccion.dataset.motorMovimiento;
-      };
-    }
-
     let desactivar = () => {};
 
     const activar = () => {
       const piezas = Array.from(seccion.querySelectorAll<HTMLElement>(".b3-trabajo"));
       const moviles = piezas.map((pieza) => pieza.querySelector<HTMLElement>(".b3-trabajo__movil"));
       const estados = piezas.map(() => ({ valor: 0, velocidad: 0 }));
+      const objetivos = piezas.map(() => 0);
       let cuadro = 0;
-      let anterior = performance.now();
+      let anterior = 0;
       let visible = false;
 
       const progresoDe = (rect: DOMRect) => {
@@ -221,15 +199,23 @@ function useMovimientoAmortiguadoDeTrabajos() {
         movil.style.transform = `translate3d(${x}px, 0, 0) rotate(${rotacion}deg) scale(${escala})`;
       };
 
+      const medir = () => {
+        if (!visible) return;
+        piezas.forEach((pieza, indice) => {
+          objetivos[indice] = progresoDe(pieza.getBoundingClientRect());
+        });
+        if (!cuadro) cuadro = requestAnimationFrame(animar);
+      };
+
       const animar = (ahora: number) => {
         if (!visible) {
           cuadro = 0;
           return;
         }
 
-        const dt = Math.min((ahora - anterior) / 1000, 1 / 30);
+        const dt = anterior ? Math.min((ahora - anterior) / 1000, 1 / 30) : 1 / 60;
         anterior = ahora;
-        const objetivos = piezas.map((pieza) => progresoDe(pieza.getBoundingClientRect()));
+        let moviendose = false;
 
         objetivos.forEach((objetivo, indice) => {
           const estado = estados[indice];
@@ -240,38 +226,55 @@ function useMovimientoAmortiguadoDeTrabajos() {
           if (Math.abs(objetivo - estado.valor) < 0.0005 && Math.abs(estado.velocidad) < 0.005) {
             estado.valor = objetivo;
             estado.velocidad = 0;
+          } else {
+            moviendose = true;
           }
 
           colocar(indice, Math.max(0, Math.min(1, estado.valor)));
         });
 
-        cuadro = requestAnimationFrame(animar);
+        if (moviendose) {
+          cuadro = requestAnimationFrame(animar);
+        } else {
+          cuadro = 0;
+          anterior = 0;
+        }
       };
 
       const observador = new IntersectionObserver(
         ([entrada]) => {
           visible = entrada.isIntersecting;
-          if (!visible || cuadro) return;
+          seccion.dataset.movimiento = visible ? "activo" : "inactivo";
+          if (!visible) {
+            if (cuadro) cancelAnimationFrame(cuadro);
+            cuadro = 0;
+            anterior = 0;
+            return;
+          }
 
-          const objetivos = piezas.map((pieza) => progresoDe(pieza.getBoundingClientRect()));
-          objetivos.forEach((objetivo, indice) => {
+          piezas.forEach((pieza, indice) => {
+            const objetivo = progresoDe(pieza.getBoundingClientRect());
+            objetivos[indice] = objetivo;
             estados[indice].valor = objetivo;
             estados[indice].velocidad = 0;
             colocar(indice, objetivo);
           });
-          anterior = performance.now();
-          cuadro = requestAnimationFrame(animar);
         },
         { rootMargin: "100% 0px" },
       );
 
       seccion.classList.add("b3--movimiento-amortiguado");
       observador.observe(seccion);
+      window.addEventListener("scroll", medir, { passive: true });
+      window.addEventListener("resize", medir);
 
       return () => {
         observador.disconnect();
+        window.removeEventListener("scroll", medir);
+        window.removeEventListener("resize", medir);
         cancelAnimationFrame(cuadro);
         seccion.classList.remove("b3--movimiento-amortiguado");
+        delete seccion.dataset.movimiento;
         moviles.forEach((movil) => movil?.style.removeProperty("transform"));
       };
     };

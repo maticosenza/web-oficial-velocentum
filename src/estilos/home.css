@@ -607,6 +607,29 @@
     }
   }
 
+  /* En Safari de escritorio la deriva se mantiene en el compositor. El
+     recorrido conserva la amplitud desktop pero evita escrituras JS a 120 Hz. */
+  @media (prefers-reduced-motion: no-preference) {
+    .b1[data-motor-mancha="compositor"] .b1__mancha-flotar {
+      animation: mancha-flotar-safari 18s ease-in-out infinite alternate;
+    }
+  }
+
+  @keyframes mancha-flotar-safari {
+    0% {
+      transform: translate3d(-42px, 24px, 0) rotate(-2deg) scale(0.985);
+    }
+    35% {
+      transform: translate3d(34px, -28px, 0) rotate(1.8deg) scale(1.018);
+    }
+    70% {
+      transform: translate3d(56px, 18px, 0) rotate(3deg) scale(1.03);
+    }
+    100% {
+      transform: translate3d(-22px, -32px, 0) rotate(-1.2deg) scale(1.008);
+    }
+  }
+
   .b1__mancha-img {
     display: block;
     width: 100%;
@@ -1194,11 +1217,14 @@
   /* Desde tablet el progreso pasa por el mismo resorte que usa la
      referencia. La clase se agrega solo cuando el controlador esta
      listo; hasta entonces queda el fallback nativo de arriba. */
-  @media (min-width: 600px) and (prefers-reduced-motion: no-preference) {
+  @media (prefers-reduced-motion: no-preference) {
     .b3--movimiento-amortiguado .b3-trabajo__movil {
       animation: none;
-      will-change: transform;
       backface-visibility: hidden;
+    }
+
+    .b3--movimiento-amortiguado[data-movimiento="activo"] .b3-trabajo__movil {
+      will-change: transform;
     }
   }
 
