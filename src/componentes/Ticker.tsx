@@ -79,6 +79,7 @@ export function Ticker({
   velocidad?: number;
   className?: string;
 }) {
+  const tickerRef = useRef<HTMLElement>(null);
   const pistaRef = useRef<HTMLDivElement>(null);
   const [reducido, setReducido] = useState(false);
 
@@ -111,8 +112,27 @@ export function Ticker({
     return () => mq.removeEventListener("change", leer);
   }, []);
 
+  /* Safari sigue ejecutando animaciones CSS aunque estén muy lejos
+     del viewport. La Home tiene dos pistas y once píldoras flotando;
+     pausarlas fuera de cuadro evita trabajo durante el resto del
+     recorrido sin cambiar la fase al volver. */
+  useEffect(() => {
+    const ticker = tickerRef.current;
+    if (!ticker) return;
+
+    const observador = new IntersectionObserver(
+      ([entrada]) => {
+        ticker.dataset.enViewport = entrada?.isIntersecting ? "sí" : "no";
+      },
+      { rootMargin: "25% 0px" },
+    );
+    observador.observe(ticker);
+    return () => observador.disconnect();
+  }, []);
+
   return (
     <section
+      ref={tickerRef}
       className={["ticker", className].filter(Boolean).join(" ")}
       aria-label={etiqueta}
       /* La parada de tabulación es lo que le da al teclado una
