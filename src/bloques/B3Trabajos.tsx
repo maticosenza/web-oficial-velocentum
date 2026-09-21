@@ -100,6 +100,21 @@ import { TextoBoton } from "../componentes/TextoBoton";
    columna izquierda, 1 y 3 en la derecha. */
 const PIEZAS = CASOS_EN_LA_HOME;
 
+/* Safari de escritorio ya aporta una inercia de trackpad muy buena y,
+   desde Safari 26, puede resolver la view timeline directamente en el
+   compositor. Evitamos detectar iPhone/iPad: mobile conserva exactamente
+   el camino actual. Los otros motores tampoco entran en esta excepción. */
+function esSafariDeEscritorio() {
+  if (typeof navigator === "undefined") return false;
+
+  const agente = navigator.userAgent;
+  const esSafari =
+    /Safari\//.test(agente) && !/(?:Chrome|Chromium|CriOS|Edg|OPR|FxiOS)\//.test(agente);
+  const tienePunteroFino = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  return esSafari && tienePunteroFino;
+}
+
 /* Lofty amortigua el scroll con Lenis. En mobile dejamos el gesto
    nativo de iOS, que ya tiene la inercia aprobada y evita trabajo
    extra en el dispositivo mas sensible. Desde tablet, Lenis suaviza
@@ -108,6 +123,11 @@ const PIEZAS = CASOS_EN_LA_HOME;
    solo mientras la Home esta montada. */
 function useScrollSuaveDeTrabajos() {
   useEffect(() => {
+    /* Lenis agrega una segunda inercia sobre la del trackpad de macOS.
+       En Safari se percibe como demora; ahí dejamos el scroll nativo.
+       Chrome/Firefox y mobile siguen recorriendo el camino anterior. */
+    if (esSafariDeEscritorio()) return;
+
     const media = window.matchMedia(
       "(min-width: 600px) and (prefers-reduced-motion: no-preference)",
     );
@@ -162,6 +182,17 @@ function useMovimientoAmortiguadoDeTrabajos() {
       "(min-width: 600px) and (prefers-reduced-motion: no-preference)",
     );
     if (!seccion) return;
+
+    /* En Safari moderno, la animación declarada abajo con
+       `animation-timeline` corre en el compositor. No la reemplazamos por
+       el resorte JS, que leería cuatro cajas y escribiría cuatro transforms
+       en cada cuadro. El fallback JS se conserva para Safari antiguo. */
+    if (esSafariDeEscritorio() && CSS.supports("animation-timeline: view()")) {
+      seccion.dataset.motorMovimiento = "compositor";
+      return () => {
+        delete seccion.dataset.motorMovimiento;
+      };
+    }
 
     let desactivar = () => {};
 
