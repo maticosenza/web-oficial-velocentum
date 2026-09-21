@@ -74,7 +74,6 @@ import { EnlaceConCortina } from "../componentes/RouteCurtain";
 import { Reveal } from "../componentes/Reveal";
 import { Flecha } from "../componentes/Flecha";
 import { TextoBoton } from "../componentes/TextoBoton";
-import { esSafariDeEscritorio } from "../lib/navegador";
 
 /* La categoría dejó de ser marcador: es el rubro que definió
    Matías, el mismo que se muestra en `/casos`. Sale de
@@ -100,60 +99,6 @@ import { esSafariDeEscritorio } from "../lib/navegador";
    Dos filas de dos. El orden es el de la grilla: 0 y 2 caen en la
    columna izquierda, 1 y 3 en la derecha. */
 const PIEZAS = CASOS_EN_LA_HOME;
-
-/* Safari de escritorio ya aporta una inercia de trackpad muy buena y,
-   desde Safari 26, puede resolver la view timeline directamente en el
-   compositor. Evitamos detectar iPhone/iPad: mobile conserva exactamente
-   el camino actual. Los otros motores tampoco entran en esta excepción. */
-/* Lofty amortigua el scroll con Lenis. En mobile dejamos el gesto
-   nativo de iOS, que ya tiene la inercia aprobada y evita trabajo
-   extra en el dispositivo mas sensible. Desde tablet, Lenis suaviza
-   la rueda/trackpad para que las dos cards de una fila no parezcan
-   abrirse de golpe hacia los costados. Se carga en un chunk aparte y
-   solo mientras la Home esta montada. */
-function useScrollSuaveDeTrabajos() {
-  useEffect(() => {
-    /* Lenis agrega una segunda inercia sobre la del trackpad de macOS.
-       En Safari se percibe como demora; ahí dejamos el scroll nativo.
-       Chrome/Firefox y mobile siguen recorriendo el camino anterior. */
-    if (esSafariDeEscritorio()) return;
-
-    const media = window.matchMedia("(prefers-reduced-motion: no-preference)");
-    let instancia: { destroy: () => void } | null = null;
-    let version = 0;
-
-    const sincronizar = async () => {
-      const estaVersion = ++version;
-
-      if (!media.matches) {
-        instancia?.destroy();
-        instancia = null;
-        return;
-      }
-
-      const { default: Lenis } = await import("lenis");
-      if (estaVersion !== version || !media.matches) return;
-
-      instancia?.destroy();
-      instancia = new Lenis({
-        autoRaf: true,
-        autoToggle: true,
-        anchors: true,
-        smoothWheel: true,
-      });
-    };
-
-    const alCambiar = () => void sincronizar();
-    media.addEventListener("change", alCambiar);
-    void sincronizar();
-
-    return () => {
-      version += 1;
-      media.removeEventListener("change", alCambiar);
-      instancia?.destroy();
-    };
-  }, []);
-}
 
 /* La referencia no enlaza el transform directamente al scroll: filtra
    el progreso con un resorte sobreamortiguado (damping 60, stiffness
@@ -302,7 +247,6 @@ function direccionDe(indice: number): number {
 }
 
 export function B3Trabajos() {
-  useScrollSuaveDeTrabajos();
   const referencia = useMovimientoAmortiguadoDeTrabajos();
 
   return (

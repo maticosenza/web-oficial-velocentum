@@ -12,6 +12,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { RouteCurtain } from "../componentes/RouteCurtain";
 import { TextoBoton } from "../componentes/TextoBoton";
+import { useScrollSuaveDelSitio } from "../lib/scrollSuave";
 
 function NotFoundComponent() {
   return (
@@ -146,6 +147,7 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  useScrollSuaveDelSitio();
 
   return (
     <QueryClientProvider client={queryClient}>

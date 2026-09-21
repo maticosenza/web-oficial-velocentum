@@ -21,12 +21,16 @@
     padding: var(--space-3) var(--page-gutter);
     pointer-events: none;
     transition: transform var(--motion-reveal) var(--motion-ease);
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+    backface-visibility: hidden;
+    contain: paint;
   }
 
   /* Se esconde al bajar y vuelve al subir. El estado lo escribe
      `useNavAlScrollear`; acá sólo se dice cómo se ve. */
   .b0[data-oculto="sí"] {
-    transform: translateY(-100%);
+    transform: translate3d(0, -100%, 0);
   }
 
   /* La card recupera los eventos: el resto de la banda es aire y
@@ -612,6 +616,11 @@
   @media (prefers-reduced-motion: no-preference) {
     .b1[data-motor-mancha="compositor"] .b1__mancha-flotar {
       animation: mancha-flotar-safari 18s ease-in-out infinite alternate;
+      animation-play-state: paused;
+    }
+
+    .b1[data-motor-mancha="compositor"][data-mancha-activa="sí"] .b1__mancha-flotar {
+      animation-play-state: running;
     }
   }
 
@@ -825,9 +834,17 @@
     pointer-events: none;
     display: grid;
     place-items: center;
-    /* Centrado en el puntero restando la mitad de la caja. */
-    transform: translate(calc(var(--x, -200px) - 50px), calc(var(--y, -200px) - 50px));
+    /* El componente escribe un único transform por cuadro. */
+    transform: translate3d(-250px, -250px, 0);
     filter: drop-shadow(0 4px 10px rgb(20 16 36 / 0.28));
+    will-change: transform;
+  }
+
+  /* WebKit rasteriza el drop-shadow del cursor al moverlo y puede
+     competir con el scroll. El contorno blanco del SVG conserva
+     contraste suficiente sin esa sombra secundaria. */
+  .cursor-propio[data-motor="webkit"] {
+    filter: none;
   }
 
   .cursor-propio[data-visible="no"] {

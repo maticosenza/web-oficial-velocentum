@@ -85,8 +85,17 @@ export function useParallaxDelHero(ref: RefObject<HTMLElement | null>) {
        misma deriva vive como keyframes en el compositor. */
     if (esSafariDeEscritorio() && !mqReduce.matches) {
       nodo.dataset.motorMancha = "compositor";
+      const observador = new IntersectionObserver(
+        ([entrada]) => {
+          nodo.dataset.manchaActiva = entrada?.isIntersecting ? "sí" : "no";
+        },
+        { rootMargin: "25% 0px" },
+      );
+      observador.observe(nodo);
       return () => {
+        observador.disconnect();
         delete nodo.dataset.motorMancha;
+        delete nodo.dataset.manchaActiva;
       };
     }
 

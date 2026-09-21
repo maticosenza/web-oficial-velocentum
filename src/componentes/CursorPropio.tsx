@@ -59,6 +59,7 @@
 import { useEffect, useRef } from "react";
 
 import { prefiereMenosMovimiento } from "../lib/tokens";
+import { esSafariWebKit } from "../lib/navegador";
 
 /**
  * ¿Algún ancestro le crea al cursor un contexto de apilado?
@@ -104,6 +105,16 @@ export function CursorPropio() {
     if (atrapadoEnUnContexto(nodo)) return;
 
     let activo = false;
+    let cuadro = 0;
+    let x = -200;
+    let y = -200;
+
+    if (esSafariWebKit()) nodo.dataset.motor = "webkit";
+
+    const pintar = () => {
+      cuadro = 0;
+      nodo.style.transform = `translate3d(${x - 50}px, ${y - 50}px, 0)`;
+    };
 
     const mover = (e: PointerEvent) => {
       /* Recién en el primer movimiento real se esconde el cursor
@@ -115,8 +126,9 @@ export function CursorPropio() {
         document.documentElement.classList.add("con-cursor-propio");
         nodo.dataset["visible"] = "sí";
       }
-      nodo.style.setProperty("--x", `${e.clientX}px`);
-      nodo.style.setProperty("--y", `${e.clientY}px`);
+      x = e.clientX;
+      y = e.clientY;
+      if (!cuadro) cuadro = requestAnimationFrame(pintar);
     };
 
     const esconder = () => {
@@ -134,6 +146,9 @@ export function CursorPropio() {
       window.removeEventListener("pointermove", mover);
       document.removeEventListener("pointerleave", esconder);
       document.removeEventListener("pointerenter", mostrar);
+      if (cuadro) cancelAnimationFrame(cuadro);
+      nodo.style.removeProperty("transform");
+      delete nodo.dataset.motor;
       document.documentElement.classList.remove("con-cursor-propio");
     };
   }, []);

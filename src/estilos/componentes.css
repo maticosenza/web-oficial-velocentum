@@ -306,6 +306,11 @@
     animation: ticker-correr var(--ticker-duracion, 30s) linear infinite;
   }
 
+  .ticker[data-en-viewport="no"] .ticker__pista,
+  .ticker[data-en-viewport="no"] .pildora {
+    animation-play-state: paused;
+  }
+
   @keyframes ticker-correr {
     from {
       transform: translateX(0);
@@ -728,6 +733,10 @@
 
   .cortina:not([data-estado="idle"]) {
     will-change: transform;
+  }
+
+  .cortina[data-estado="idle"] {
+    visibility: hidden;
   }
 
   /* Destino del foco tras una navegación con cortina. No debe
