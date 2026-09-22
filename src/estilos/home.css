@@ -986,10 +986,11 @@
      interior. */
   @media (max-width: 809px) {
     .b2 {
-      /* En teléfono el contenido ya entra holgado antes de llegar
-         al ticker; reducir el recorrido evita el vacío entre el
-         CTA y la franja de capacidades. */
-      min-height: 52dvh;
+      /* El bloque que sube necesita, como mínimo, el mismo recorrido
+         que el hero fijado (94dvh). Con 52dvh el contenedor común se
+         terminaba cuando la onda todavía estaba a media pantalla y
+         dejaba parte del H1 visible al empezar la segunda sección. */
+      min-height: 94dvh;
     }
 
     .b2__contenido {

@@ -419,9 +419,18 @@
     }
 
     .cas-caso__cuerpo {
-      --scroll-media-contraccion: 0.42;
-      --scroll-media-zoom-extra: 0.16;
       gap: var(--space-4);
+    }
+
+    /* En móvil la apertura continua escalaba simultáneamente el marco
+       y el video. Al invertir el scroll Safari recompone ambas capas
+       con redondeos distintos y el contenido parece deformarse. La
+       composición apilada ya tiene entrada/salida por el viewport, así
+       que se conserva el encuadre estable durante todo el recorrido. */
+    .cas-caso__cuerpo > .scroll-medio__marco,
+    .cas-caso__cuerpo > .scroll-medio__marco > .scroll-medio__interior {
+      transform: none;
+      will-change: auto;
     }
 
     /* ⚠ EL `order` VA EN LOS ENVOLTORIOS DE `ScrollMedia`, NO EN
