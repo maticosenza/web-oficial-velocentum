@@ -94,9 +94,18 @@ export function useProgresoDeScroll(
     destino?: RefObject<HTMLElement | null>;
     /** Nombre de la custom property. Por defecto `--progreso`. */
     variable?: string;
+    /** Valor estable cuando el controlador no se registra. Por defecto, estado final. */
+    valorInactivo?: number;
   } = {},
 ) {
-  const { activo = true, recorrido = 0.6, media, destino, variable = "--progreso" } = opciones;
+  const {
+    activo = true,
+    recorrido = 0.6,
+    media,
+    destino,
+    variable = "--progreso",
+    valorInactivo = 1,
+  } = opciones;
 
   useEffect(() => {
     const elemento = ref.current;
@@ -106,13 +115,11 @@ export function useProgresoDeScroll(
     /* Con movimiento reducido el elemento arranca y se queda en
        su estado final. No se anota, no se escucha nada.
 
-       Ojo: el "estado final" es 1 porque quien lo usa interpola
-       DESDE el valor y termina en 1 —el giro de ServiceStack, la
-       entrada de B3—. Un consumidor donde 1 signifique lo
-       contrario, como la cobertura de B1, no puede apoyarse en
-       esto: tiene que apagar su regla con la media query. */
+       El estado estable predeterminado es 1 porque la mayoria de
+       consumidores interpola hasta ese valor. Los casos inversos,
+       como la cobertura del hero, declaran `valorInactivo: 0`. */
     if (!activo || prefiereMenosMovimiento() || (media && !window.matchMedia(media).matches)) {
-      donde.style.setProperty(variable, "1");
+      donde.style.setProperty(variable, String(valorInactivo));
       return;
     }
 
@@ -144,5 +151,5 @@ export function useProgresoDeScroll(
       anotados.delete(anotado);
       delete donde.dataset.scrollActivo;
     };
-  }, [ref, activo, recorrido, media, destino, variable]);
+  }, [ref, activo, recorrido, media, destino, variable, valorInactivo]);
 }

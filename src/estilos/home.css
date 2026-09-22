@@ -706,6 +706,46 @@
     }
   }
 
+  /* En mobile el scroll nativo de Safari no pasa por Lenis. Actualizar
+     `--cobertura` en el ancestro y resolver transform + opacidad desde esa
+     variable obliga a recalcular estilos durante el gesto y puede verse a
+     saltos. Cuando el navegador ofrece scroll timelines, el mismo recorrido
+     se ejecuta en el compositor, atado directamente al scroll de la pagina.
+
+     El tramo termina a 62dvh: el texto sale antes de que la onda llegue a su
+     caja y evita el choque visual que aparecia con los 94dvh completos. La
+     opacidad termina al 58.8%, igual que el calculo existente
+     `1 - cobertura * 1.7`; el desplazamiento conserva los 10dvh actuales.
+     Tablet y desktop siguen usando `--cobertura`. */
+  @supports (animation-timeline: scroll()) {
+    @media (max-width: 599px) and (prefers-reduced-motion: no-preference) {
+      .b1__contenido {
+        animation-name: b1-hundimiento-mobile;
+        animation-duration: 1ms;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: scroll(root block);
+        animation-range: 0 62dvh;
+      }
+    }
+  }
+
+  @keyframes b1-hundimiento-mobile {
+    0% {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+    }
+
+    58.8% {
+      opacity: 0;
+    }
+
+    100% {
+      transform: translate3d(0, 10dvh, 0);
+      opacity: 0;
+    }
+  }
+
   .b1__titular {
     position: relative;
     /* No `--medida-titular` (850px): ese ancho es para titulares
