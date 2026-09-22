@@ -65,9 +65,52 @@
    NO ES Reveal. Es continuo y reversible.
    =========================================================== */
 
-import { useRef, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useRef, type CSSProperties, type ReactNode, type RefObject } from "react";
 
 import { useProgresoDeScroll } from "../lib/progresoDeScroll";
+
+function useAperturaMobile(ref: RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    const elemento = ref.current;
+    if (!elemento) return;
+
+    const media = window.matchMedia("(max-width: 809px)");
+    let observador: IntersectionObserver | null = null;
+
+    const iniciar = () => {
+      observador?.disconnect();
+      observador = null;
+
+      if (!media.matches) {
+        delete elemento.dataset.scrollVisible;
+        return;
+      }
+
+      observador = new IntersectionObserver(
+        ([entrada]) => {
+          elemento.dataset.scrollVisible = entrada?.isIntersecting ? "si" : "no";
+        },
+        {
+          /* La tarjeta abre cuando ya entro con presencia real y vuelve
+             a cerrarse al salir. Es un cambio de estado corto, no una
+             transformacion recalculada en cada pixel del scroll. */
+          rootMargin: "-8% 0px -8% 0px",
+          threshold: 0.12,
+        },
+      );
+      observador.observe(elemento);
+    };
+
+    iniciar();
+    media.addEventListener("change", iniciar);
+
+    return () => {
+      observador?.disconnect();
+      media.removeEventListener("change", iniciar);
+      delete elemento.dataset.scrollVisible;
+    };
+  }, [ref]);
+}
 
 export function ScrollMedia({
   medio,
@@ -90,7 +133,11 @@ export function ScrollMedia({
   recorrido?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  useProgresoDeScroll(ref, { recorrido });
+  /* Desktop conserva la interpolacion continua. En mobile usamos una
+     entrada/salida por visibilidad para que Safari no recomponga el video
+     dos veces en cada frame mientras el dedo mueve la pagina. */
+  useProgresoDeScroll(ref, { recorrido, media: "(min-width: 810px)" });
+  useAperturaMobile(ref);
 
   return (
     <div
