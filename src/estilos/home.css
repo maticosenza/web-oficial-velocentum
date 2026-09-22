@@ -706,19 +706,6 @@
     }
   }
 
-  /* En teléfono la onda ya cubre físicamente el hero. Mover y
-     mezclar la capa tipográfica completa mientras Safari también
-     desplaza la página agrega trabajo visual y deja una estela
-     perceptible con el modo de bajo consumo. La cobertura natural
-     conserva el gesto y responde directamente al dedo. */
-  @media (max-width: 599px) and (prefers-reduced-motion: no-preference) {
-    .b1__contenido {
-      transform: none;
-      opacity: 1;
-      will-change: auto;
-    }
-  }
-
   .b1__titular {
     position: relative;
     /* No `--medida-titular` (850px): ese ancho es para titulares
