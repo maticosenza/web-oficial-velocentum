@@ -68,6 +68,7 @@ export function HeroSticky({
   siguiente,
   offset,
   className,
+  mediaProgreso,
 }: {
   /** El bloque que se fija. Ocupa el viewport menos el offset. */
   hero: ReactNode;
@@ -76,6 +77,8 @@ export function HeroSticky({
   /** Alto al que se fija. Por defecto 0, que es el hero a pantalla completa. */
   offset?: string;
   className?: string;
+  /** Limita el controlador JS cuando una variante usa una timeline CSS nativa. */
+  mediaProgreso?: string;
 }) {
   /* CUÁNTO TAPÓ YA EL BLOQUE QUE SUBE.
      Se mide el bloque que sube y el valor se escribe en el
@@ -90,6 +93,8 @@ export function HeroSticky({
     recorrido: 1,
     destino: contenedorRef,
     variable: "--cobertura",
+    media: mediaProgreso,
+    valorInactivo: 0,
   });
 
   return (

@@ -50,7 +50,12 @@ function Inicio() {
       <B0Nav />
 
       {/* B1 y B2 van cosidos: el hero se fija y B2 sube encima. */}
-      <HeroSticky className="home-hero-nube" hero={<B1Hero />} siguiente={<B2QuienesSomos />} />
+      <HeroSticky
+        className="home-hero-nube"
+        hero={<B1Hero />}
+        siguiente={<B2QuienesSomos />}
+        mediaProgreso="(min-width: 600px)"
+      />
 
       {/* B3 y B4 van fuera del HeroSticky: cada uno tiene su
           mecánica de scroll y ninguna comparte contenedor con el
