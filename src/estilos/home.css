@@ -52,9 +52,7 @@
     background: var(--fondo);
     border: 1px solid rgb(20 16 36 / 0.1);
     border-radius: var(--r-pill);
-    box-shadow:
-      0 3px 0 rgb(20 16 36 / 0.12),
-      0 14px 34px rgb(20 16 36 / 0.16);
+    box-shadow: none;
   }
 
   .b0__marca {
