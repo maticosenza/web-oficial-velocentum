@@ -20,9 +20,9 @@ import { Reveal } from "../componentes/Reveal";
 import { LOGOS, MARCAS_DEL_MARQUEE } from "../data/casos";
 
 /* El marquee arranca con los ocho casos en su orden y sigue con
-   los cinco clientes que tienen logo pero no caso: Patagonia
-   Vessels, BuyNow, Lámina, Uprise e Imaginarios. Las trece ranuras
-   tienen nombre real — ya no queda ningún marcador.
+   los clientes que tienen logo pero no caso. Lámina queda oculta
+   temporalmente sólo en esta sección; se conserva en los datos y
+   sus assets para poder restaurarla sin reconstruir la marca.
 
    Imaginarios está sólo acá: tiene logo y va en la banda, pero no
    tiene caso escrito, así que no entra en `/casos`.
@@ -44,7 +44,7 @@ const ACENTOS = [
   "var(--acento-5)",
 ];
 
-const RANURAS = MARCAS_DEL_MARQUEE;
+const RANURAS = MARCAS_DEL_MARQUEE.filter((marca) => marca !== "Lámina");
 
 export function B7Clientes() {
   return (
