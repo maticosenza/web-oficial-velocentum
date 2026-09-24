@@ -13,6 +13,30 @@
 
 import { useEffect } from "react";
 
+type InstanciaDeScroll = {
+  destroy: () => void;
+  scrollTo: (
+    destino: number,
+    opciones?: { immediate?: boolean; force?: boolean; programmatic?: boolean },
+  ) => void;
+};
+
+let instanciaActiva: InstanciaDeScroll | null = null;
+
+/* TanStack restaura el scroll nativo al cambiar de ruta. En
+   escritorio Lenis también conserva una posición propia; si ambas
+   no se actualizan juntas, su siguiente frame puede devolver la
+   página nueva a la altura de la anterior. En táctil no hay Lenis,
+   así que el scroll nativo alcanza. */
+export function reiniciarScrollDeRuta() {
+  instanciaActiva?.scrollTo(0, {
+    immediate: true,
+    force: true,
+    programmatic: true,
+  });
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+}
+
 export function useScrollSuaveDelSitio() {
   useEffect(() => {
     const media = window.matchMedia(
@@ -27,6 +51,7 @@ export function useScrollSuaveDelSitio() {
       if (!media.matches) {
         instancia?.destroy();
         instancia = null;
+        instanciaActiva = null;
         return;
       }
 
@@ -40,6 +65,7 @@ export function useScrollSuaveDelSitio() {
         anchors: true,
         smoothWheel: true,
       });
+      instanciaActiva = instancia;
     };
 
     const alCambiar = () => void sincronizar();
@@ -50,6 +76,7 @@ export function useScrollSuaveDelSitio() {
       version += 1;
       media.removeEventListener("change", alCambiar);
       instancia?.destroy();
+      if (instanciaActiva === instancia) instanciaActiva = null;
     };
   }, []);
 }

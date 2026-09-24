@@ -32,6 +32,7 @@ import {
 
 import { duracionDeToken, textoDeToken, prefiereMenosMovimiento } from "../lib/tokens";
 import { precargarImagenesDeRuta } from "../lib/precargarRuta";
+import { reiniciarScrollDeRuta } from "../lib/scrollSuave";
 
 type Estado = "idle" | "cubriendo" | "tapado" | "descubriendo";
 
@@ -199,7 +200,8 @@ export function RouteCurtain({ children }: { children: ReactNode }) {
       /* Movimiento reducido, o cortina no montada: navegación
          directa. Sin espera artificial. */
       if (!cortina || prefiereMenosMovimiento()) {
-        await router.navigate({ to: destino });
+        await router.navigate({ to: destino, resetScroll: true });
+        reiniciarScrollDeRuta();
         enfocarContenido(destino);
         return;
       }
@@ -225,7 +227,15 @@ export function RouteCurtain({ children }: { children: ReactNode }) {
 
         // --- Cambio de ruta, bajo cobertura ---
         setEstado("tapado");
-        await conTiempoMaximo(router.navigate({ to: destino }), MS_MAXIMO_DE_ESPERA);
+        await conTiempoMaximo(
+          router.navigate({ to: destino, resetScroll: true }),
+          MS_MAXIMO_DE_ESPERA,
+        );
+        /* La página nueva tiene que descubrirse desde arriba. Esto
+           sincroniza la posición nativa y la posición interna de
+           Lenis; sin esa segunda parte, su RAF podía restaurar la
+           altura del footer de la página anterior. */
+        reiniciarScrollDeRuta();
 
         // --- Fase 2: destapar, siguiendo hacia arriba ---
         setEstado("descubriendo");
